@@ -1,0 +1,20 @@
+---
+title: "Анализ данных для лингвистов"
+author: "Г. Мороз"
+output:
+  html_document:
+    toc: false
+editor_options: 
+  chunk_output_type: console
+---
+
+### Общее
+
+Финальная оценка = 0.6 $\times$ накопленная + 0.4 $\times$ экзамен
+
+### Библиотеки:
+```{r, message=FALSE}
+packageVersion("tidyverse")
+packageVersion("brms")
+packageVersion("lme4")
+```
