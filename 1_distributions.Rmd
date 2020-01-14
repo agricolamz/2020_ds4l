@@ -29,19 +29,19 @@ library(tidyverse)
 
 ```{r}
 tibble(x = 1:100,
-           PDF = dnorm(x = x, mean = 50, sd = 10)) %>% 
+       PDF = dnorm(x = x, mean = 50, sd = 10)) %>% 
   ggplot(aes(x, PDF))+
   geom_point()+
   labs(title = "PDF нормального распределения (μ = 50, sd = 10)")
 
 tibble(x = 1:100,
-           CDF = pnorm(x, mean = 50, sd = 10)) %>% 
+       CDF = pnorm(x, mean = 50, sd = 10)) %>% 
   ggplot(aes(x, CDF))+
   geom_point()+
   labs(title = "CDF нормального распределения (μ = 50, sd = 10)")
 
 tibble(quantiles = seq(0, 1, by = 0.01),
-           value = qnorm(quantiles, mean = 50, sd = 10)) %>% 
+       value = qnorm(quantiles, mean = 50, sd = 10)) %>% 
   ggplot(aes(quantiles, value))+
   geom_point()+
   labs(title = "inverse CDF нормального распределения (μ = 50, sd = 10)")
@@ -90,7 +90,7 @@ $$ 0 \leq p \leq 1; n, k > 0$$
 
 ```{r}
 tibble(x = 0:50,
-           density = dbinom(x = x, size = 50, prob = 0.16)) %>% 
+       density = dbinom(x = x, size = 50, prob = 0.16)) %>% 
   ggplot(aes(x, density))+
   geom_point()+
   geom_line()+
@@ -106,7 +106,7 @@ $$k\in\{1, 2, \dots\}$$
 
 ```{r}
 tibble(x = 0:50,
-           density = dgeom(x = x, prob = 0.16)) %>% 
+       density = dgeom(x = x, prob = 0.16)) %>% 
   ggplot(aes(x, density))+
   geom_point()+
   geom_line()+
@@ -156,7 +156,7 @@ $$\mu \in \mathbb{R}; \sigma^2 > 0$$
 
 ```{r}
 tibble(x = 1:100,
-           PDF = dnorm(x = x, mean = 50, sd = 10)) %>% 
+       PDF = dnorm(x = x, mean = 50, sd = 10)) %>% 
   ggplot(aes(x, PDF))+
   geom_point()+
   geom_line()+
@@ -171,7 +171,7 @@ $$\mu \in \mathbb{R}; \sigma^2 > 0$$
 
 ```{r}
 tibble(x = 1:100,
-           PDF = dlnorm(x = x, mean = 3, sd = 0.5)) %>% 
+       PDF = dlnorm(x = x, mean = 3, sd = 0.5)) %>% 
   ggplot(aes(x, PDF))+
   geom_point()+
   geom_line()+
@@ -184,7 +184,7 @@ $$P(x)= \lambda \times e^{-\lambda x}$$
 
 ```{r}
 tibble(x = 1:20,
-           PDF = dexp(x = x, rate = 5)) %>% 
+       PDF = dexp(x = x, rate = 5)) %>% 
   ggplot(aes(x, PDF))+
   geom_point()+
   geom_line()+
@@ -196,7 +196,7 @@ tibble(x = 1:20,
 
 ```{r}
 tibble(x = 1:20,
-           PDF = dunif(x = x, min = 5, max = 10)) %>% 
+       PDF = dunif(x = x, min = 5, max = 10)) %>% 
   ggplot(aes(x, PDF))+
   geom_point()+
   geom_line()+

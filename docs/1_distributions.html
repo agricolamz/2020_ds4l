@@ -524,19 +524,19 @@ div.tocify {
 </ul>
 <p>Рассмотрим все это на примере нормального распределения.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">100</span>,</span>
-<span id="cb2-2"><a href="#cb2-2"></a>           <span class="dt">PDF =</span> <span class="kw">dnorm</span>(<span class="dt">x =</span> x, <span class="dt">mean =</span> <span class="dv">50</span>, <span class="dt">sd =</span> <span class="dv">10</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb2-2"><a href="#cb2-2"></a>       <span class="dt">PDF =</span> <span class="kw">dnorm</span>(<span class="dt">x =</span> x, <span class="dt">mean =</span> <span class="dv">50</span>, <span class="dt">sd =</span> <span class="dv">10</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb2-3"><a href="#cb2-3"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(x, PDF))<span class="op">+</span></span>
 <span id="cb2-4"><a href="#cb2-4"></a><span class="st">  </span><span class="kw">geom_point</span>()<span class="op">+</span></span>
 <span id="cb2-5"><a href="#cb2-5"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;PDF нормального распределения (μ = 50, sd = 10)&quot;</span>)</span></code></pre></div>
 <p><img src="1_distributions_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">100</span>,</span>
-<span id="cb3-2"><a href="#cb3-2"></a>           <span class="dt">CDF =</span> <span class="kw">pnorm</span>(x, <span class="dt">mean =</span> <span class="dv">50</span>, <span class="dt">sd =</span> <span class="dv">10</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb3-2"><a href="#cb3-2"></a>       <span class="dt">CDF =</span> <span class="kw">pnorm</span>(x, <span class="dt">mean =</span> <span class="dv">50</span>, <span class="dt">sd =</span> <span class="dv">10</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb3-3"><a href="#cb3-3"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(x, CDF))<span class="op">+</span></span>
 <span id="cb3-4"><a href="#cb3-4"></a><span class="st">  </span><span class="kw">geom_point</span>()<span class="op">+</span></span>
 <span id="cb3-5"><a href="#cb3-5"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;CDF нормального распределения (μ = 50, sd = 10)&quot;</span>)</span></code></pre></div>
 <p><img src="1_distributions_files/figure-html/unnamed-chunk-2-2.png" width="672" /></p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="kw">tibble</span>(<span class="dt">quantiles =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">by =</span> <span class="fl">0.01</span>),</span>
-<span id="cb4-2"><a href="#cb4-2"></a>           <span class="dt">value =</span> <span class="kw">qnorm</span>(quantiles, <span class="dt">mean =</span> <span class="dv">50</span>, <span class="dt">sd =</span> <span class="dv">10</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb4-2"><a href="#cb4-2"></a>       <span class="dt">value =</span> <span class="kw">qnorm</span>(quantiles, <span class="dt">mean =</span> <span class="dv">50</span>, <span class="dt">sd =</span> <span class="dv">10</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb4-3"><a href="#cb4-3"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(quantiles, value))<span class="op">+</span></span>
 <span id="cb4-4"><a href="#cb4-4"></a><span class="st">  </span><span class="kw">geom_point</span>()<span class="op">+</span></span>
 <span id="cb4-5"><a href="#cb4-5"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;inverse CDF нормального распределения (μ = 50, sd = 10)&quot;</span>)</span></code></pre></div>
@@ -569,7 +569,7 @@ div.tocify {
 <p>Биномиальное распределение — распределение количетсва успехов эксперементов Бернулли из <em>n</em> попыток с вероятностью успеха <em>p</em>.</p>
 <p><span class="math display">\[P(k | n, p) = \frac{n!}{k!(n-k)!} \times p^k \times (1-p)^{n-k} =  {n \choose k} \times p^k \times (1-p)^{n-k}\]</span> <span class="math display">\[ 0 \leq p \leq 1; n, k &gt; 0\]</span></p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="dv">0</span><span class="op">:</span><span class="dv">50</span>,</span>
-<span id="cb6-2"><a href="#cb6-2"></a>           <span class="dt">density =</span> <span class="kw">dbinom</span>(<span class="dt">x =</span> x, <span class="dt">size =</span> <span class="dv">50</span>, <span class="dt">prob =</span> <span class="fl">0.16</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb6-2"><a href="#cb6-2"></a>       <span class="dt">density =</span> <span class="kw">dbinom</span>(<span class="dt">x =</span> x, <span class="dt">size =</span> <span class="dv">50</span>, <span class="dt">prob =</span> <span class="fl">0.16</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb6-3"><a href="#cb6-3"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(x, density))<span class="op">+</span></span>
 <span id="cb6-4"><a href="#cb6-4"></a><span class="st">  </span><span class="kw">geom_point</span>()<span class="op">+</span></span>
 <span id="cb6-5"><a href="#cb6-5"></a><span class="st">  </span><span class="kw">geom_line</span>()<span class="op">+</span></span>
@@ -581,7 +581,7 @@ div.tocify {
 <p>Геометрическое распределение — распределение количетсва эксперементов Бернулли с вероятностью успеха <em>p</em> до первого успеха.</p>
 <p><span class="math display">\[P(k | p) = (1-p)^k\times p\]</span> <span class="math display">\[k\in\{1, 2, \dots\}\]</span></p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="dv">0</span><span class="op">:</span><span class="dv">50</span>,</span>
-<span id="cb7-2"><a href="#cb7-2"></a>           <span class="dt">density =</span> <span class="kw">dgeom</span>(<span class="dt">x =</span> x, <span class="dt">prob =</span> <span class="fl">0.16</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb7-2"><a href="#cb7-2"></a>       <span class="dt">density =</span> <span class="kw">dgeom</span>(<span class="dt">x =</span> x, <span class="dt">prob =</span> <span class="fl">0.16</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb7-3"><a href="#cb7-3"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(x, density))<span class="op">+</span></span>
 <span id="cb7-4"><a href="#cb7-4"></a><span class="st">  </span><span class="kw">geom_point</span>()<span class="op">+</span></span>
 <span id="cb7-5"><a href="#cb7-5"></a><span class="st">  </span><span class="kw">geom_line</span>()<span class="op">+</span></span>
@@ -606,7 +606,7 @@ div.tocify {
 <p><span class="math display">\[P(x) = \frac{1}{\sigma\sqrt{2\pi}}\times e^{-\frac{\left(x-\mu\right)^2}{2\sigma^2}}\]</span></p>
 <p><span class="math display">\[\mu \in \mathbb{R}; \sigma^2 &gt; 0\]</span></p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">100</span>,</span>
-<span id="cb10-2"><a href="#cb10-2"></a>           <span class="dt">PDF =</span> <span class="kw">dnorm</span>(<span class="dt">x =</span> x, <span class="dt">mean =</span> <span class="dv">50</span>, <span class="dt">sd =</span> <span class="dv">10</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb10-2"><a href="#cb10-2"></a>       <span class="dt">PDF =</span> <span class="kw">dnorm</span>(<span class="dt">x =</span> x, <span class="dt">mean =</span> <span class="dv">50</span>, <span class="dt">sd =</span> <span class="dv">10</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb10-3"><a href="#cb10-3"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(x, PDF))<span class="op">+</span></span>
 <span id="cb10-4"><a href="#cb10-4"></a><span class="st">  </span><span class="kw">geom_point</span>()<span class="op">+</span></span>
 <span id="cb10-5"><a href="#cb10-5"></a><span class="st">  </span><span class="kw">geom_line</span>()<span class="op">+</span></span>
@@ -618,7 +618,7 @@ div.tocify {
 <p><span class="math display">\[P(x) = \frac{1}{\sqrt{x\sigma2\pi}}\times e^{-\frac{\left(\ln(x)-\mu\right)^2}{2\sigma^2}}\]</span></p>
 <p><span class="math display">\[\mu \in \mathbb{R}; \sigma^2 &gt; 0\]</span></p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">100</span>,</span>
-<span id="cb11-2"><a href="#cb11-2"></a>           <span class="dt">PDF =</span> <span class="kw">dlnorm</span>(<span class="dt">x =</span> x, <span class="dt">mean =</span> <span class="dv">3</span>, <span class="dt">sd =</span> <span class="fl">0.5</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb11-2"><a href="#cb11-2"></a>       <span class="dt">PDF =</span> <span class="kw">dlnorm</span>(<span class="dt">x =</span> x, <span class="dt">mean =</span> <span class="dv">3</span>, <span class="dt">sd =</span> <span class="fl">0.5</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb11-3"><a href="#cb11-3"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(x, PDF))<span class="op">+</span></span>
 <span id="cb11-4"><a href="#cb11-4"></a><span class="st">  </span><span class="kw">geom_point</span>()<span class="op">+</span></span>
 <span id="cb11-5"><a href="#cb11-5"></a><span class="st">  </span><span class="kw">geom_line</span>()<span class="op">+</span></span>
@@ -629,7 +629,7 @@ div.tocify {
 <h3>3.3 Экспоненциальное распределение</h3>
 <p><span class="math display">\[P(x)= \lambda \times e^{-\lambda x}\]</span></p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">20</span>,</span>
-<span id="cb12-2"><a href="#cb12-2"></a>           <span class="dt">PDF =</span> <span class="kw">dexp</span>(<span class="dt">x =</span> x, <span class="dt">rate =</span> <span class="dv">5</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb12-2"><a href="#cb12-2"></a>       <span class="dt">PDF =</span> <span class="kw">dexp</span>(<span class="dt">x =</span> x, <span class="dt">rate =</span> <span class="dv">5</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb12-3"><a href="#cb12-3"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(x, PDF))<span class="op">+</span></span>
 <span id="cb12-4"><a href="#cb12-4"></a><span class="st">  </span><span class="kw">geom_point</span>()<span class="op">+</span></span>
 <span id="cb12-5"><a href="#cb12-5"></a><span class="st">  </span><span class="kw">geom_line</span>()<span class="op">+</span></span>
@@ -639,7 +639,7 @@ div.tocify {
 <div id="унимодальное-распределение" class="section level3">
 <h3>3.4 Унимодальное распределение</h3>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">20</span>,</span>
-<span id="cb13-2"><a href="#cb13-2"></a>           <span class="dt">PDF =</span> <span class="kw">dunif</span>(<span class="dt">x =</span> x, <span class="dt">min =</span> <span class="dv">5</span>, <span class="dt">max =</span> <span class="dv">10</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb13-2"><a href="#cb13-2"></a>       <span class="dt">PDF =</span> <span class="kw">dunif</span>(<span class="dt">x =</span> x, <span class="dt">min =</span> <span class="dv">5</span>, <span class="dt">max =</span> <span class="dv">10</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb13-3"><a href="#cb13-3"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(x, PDF))<span class="op">+</span></span>
 <span id="cb13-4"><a href="#cb13-4"></a><span class="st">  </span><span class="kw">geom_point</span>()<span class="op">+</span></span>
 <span id="cb13-5"><a href="#cb13-5"></a><span class="st">  </span><span class="kw">geom_line</span>()<span class="op">+</span></span>
