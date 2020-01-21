@@ -37,7 +37,7 @@ $$P(θ|Data) \propto P(Data|θ)\times P(θ)$$
 Предположим что распределение количества согласных в языках мира можно описать нормальным распределением со средним 22 и стандартным отклонением 6:
 
 ```{r, echo=FALSE}
-data_frame(x = 0:80) %>% 
+tibble(x = 0:80) %>% 
   ggplot(aes(x)) +
   stat_function(fun = function(x) dnorm(x, 22, 6))+
   labs(title = "Количество согласных в языках мира (фэйк)")
@@ -46,7 +46,7 @@ data_frame(x = 0:80) %>%
 Тогда вероятность того, что в выбранных произвольно языках окажется от 23 до 32 согласных, равна интегралу нормального распределения в указанном промежутке:
 
 ```{r, echo = FALSE}
-data_frame(x = 0:80) %>% 
+tibble(x = 0:80) %>% 
   ggplot(aes(x)) +
   stat_function(fun = function(x) dnorm(x, 22, 6))+
   stat_function(fun = function(x) dnorm(x, 22, 6), 
@@ -65,7 +65,7 @@ pnorm(32, mean = 22, sd = 6) - pnorm(23, mean = 22, sd = 6)
 Когда мы говорим про функцию правдоподобия, мы нашли еще один язык в котором оказалось 33 согласных, и нас интересует, насколько правдоподобна функция нормального распределения со средним 22 и стандартным отклонением 6 при значении переменной 33. Это значение равно функции плотности:
 
 ```{r, echo = FALSE}
-data_frame(x = 0:80) %>% 
+tibble(x = 0:80) %>% 
   ggplot(aes(x)) +
   stat_function(fun = function(x) dnorm(x, 22, 6))+
   geom_segment(aes(x = 33, xend = 33, y = 0, yend = dnorm(33, 22, 6)), color = "red")+
@@ -85,7 +85,7 @@ dnorm(33, 22, 6)
 В результате мы можем пострить график, на котором будет правдоподобие моделей с разными средними и фиксированным стандартным отклонением.
 
 ```{r}
-data_frame(x = 0:80) %>% 
+tibble(x = 0:80) %>% 
   ggplot(aes(x)) +
   stat_function(fun = function(x) dnorm(33, x, 6))+
   scale_x_continuous(breaks = c(0:4*20, 33))+
@@ -97,7 +97,7 @@ data_frame(x = 0:80) %>%
 А что если у нас не одно наблюдение, а несколько? Например, мы наблюдаем языки с 33 и 26 согласными? События независимы друг от друга, значит, мы можем перемножить получаемые вероятности.
 
 ```{r}
-data_frame(x = 0:80) %>% 
+tibble(x = 0:80) %>% 
   ggplot(aes(x)) +
   stat_function(fun = function(x) dnorm(33, x, 6)*dnorm(26, x, 6))+
   scale_x_continuous(breaks = c(0:4*20, 33, 26))+
@@ -154,7 +154,7 @@ df %>%
 Мы нашли некоторый новый вид грибов на лужайке (`grasses`). Какой это может быть гриб: съедобный или ядовитый? У нас нет никаких идей, почему бы нам отдать предпочтения той или иной гипотезе, так что будем использовать неинформативное априорное распределение:
 
 ```{r}
-data_frame(model = c("edible", "poisonous"),
+tibble(model = c("edible", "poisonous"),
            prior = 0.5,
            likelihood = c(0.335, 0.189),
            product = prior*likelihood,
@@ -164,7 +164,7 @@ data_frame(model = c("edible", "poisonous"),
 Вот мы и сделали байесовский апдейт. Теперь апостериорное распределение, которые мы получили на предыдущем шаге, мы можем использовать в новом апдейте. Допустим, мы опять нашли этот же вид гриба, но в этот раз в лесу (`woods`).
 
 ```{r}
-data_frame(model = c("edible", "poisonous"),
+tibble(model = c("edible", "poisonous"),
            prior_2 = c(0.639, 0.361),
            likelihood_2 = c(0.447, 0.324),
            product_2 = prior_2*likelihood_2,
@@ -185,7 +185,7 @@ df %>%
   geom_col()+
   geom_text(position = position_stack(vjust = 0.5), color = "white")
 
-data_frame(model = c("Auckland", "Beijing", "Chicago", "Mumbai", "San Diego"),
+tibble(model = c("Auckland", "Beijing", "Chicago", "Mumbai", "San Diego"),
            prior_1 = 0.2,
            likelihood_1 = c(0.484, 0, 0.161, 0, 0.29),
            product_1 = prior_1*likelihood_1,
@@ -212,7 +212,7 @@ $$P(k | n, p) = \frac{n!}{k!(n-k)!} \times p^k \times (1-p)^{n-k} =  {n \choose 
 $$ 0 \leq p \leq 1; n, k > 0$$
 
 ```{r}
-data_frame(x = 0:50,
+tibble(x = 0:50,
            density = dbinom(x = x, size = 50, prob = 0.16)) %>% 
   ggplot(aes(x, density))+
   geom_point()+
@@ -230,7 +230,7 @@ $$Β(α, β) = \frac{Γ(α)\times Γ(β)}{Γ(α+β)} = \frac{(α-1)!(β-1)!}{(α
 
 
 ```{r}
-data_frame(x = seq(0, 1, length.out = 100),
+tibble(x = seq(0, 1, length.out = 100),
            density = dbeta(x = x, shape1 = 8, shape2 = 42)) %>% 
   ggplot(aes(x, density))+
   geom_point()+
@@ -263,7 +263,7 @@ shiny::runGitHub("agricolamz/bayes_for_binomial_app")
 
 
 ```{r}
-data_frame(x = rep(seq(0, 1, length.out = 100), 6),
+tibble(x = rep(seq(0, 1, length.out = 100), 6),
            density = c(dbeta(unique(x), shape1 = 8, shape2 = 42),
                        dbeta(unique(x), shape1 = 16, shape2 = 34),
                        dbeta(unique(x), shape1 = 24, shape2 = 26),
@@ -301,7 +301,7 @@ chicks %>%
 Мы можем рассматривать эту задачу как выбор между несколькими моделями с разными средними:
 
 ```{r}
-data_frame(x = rep(1:400, 6),
+tibble(x = rep(1:400, 6),
            density = c(dnorm(unique(x), mean = 125, sd = 70),
                        dnorm(unique(x), mean = 150, sd = 70),
                        dnorm(unique(x), mean = 175, sd = 70),
@@ -316,7 +316,7 @@ data_frame(x = rep(1:400, 6),
 Дальше мы можем точно так же апдейтить, как мы делали раньше:
 
 ```{r}
-data_frame(mu = seq(125, 250, by = 25),
+tibble(mu = seq(125, 250, by = 25),
            prior = 0.2,
            likelihood = c(prod(dnorm(chicks$weight, mean = 125, sd = 70)),
                           prod(dnorm(chicks$weight, mean = 150, sd = 70)),
@@ -358,7 +358,7 @@ mean_prior <- 180
 mean_data <- mean(chicks$weight)
 mean_post <- weighted.mean(c(mean_prior, mean_data), c(1/sd_prior, 1/sd_data))
 
-data_frame(x = rep(1:400, 3),
+tibble(x = rep(1:400, 3),
            density = c(dnorm(unique(x), mean = mean_prior, sd = sd_prior),
                        dnorm(unique(x), mean = mean_data, sd = sd_data),
                        dnorm(unique(x), mean = mean_post, sd = sd_post)),

@@ -544,7 +544,7 @@ div.tocify {
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="kw">dnorm</span>(<span class="dv">33</span>, <span class="dv">22</span>, <span class="dv">6</span>)</span></code></pre></div>
 <pre><code>[1] 0.01238519</code></pre>
 <p>В результате мы можем пострить график, на котором будет правдоподобие моделей с разными средними и фиксированным стандартным отклонением.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="kw">data_frame</span>(<span class="dt">x =</span> <span class="dv">0</span><span class="op">:</span><span class="dv">80</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="dv">0</span><span class="op">:</span><span class="dv">80</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb6-2"><a href="#cb6-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(x)) <span class="op">+</span></span>
 <span id="cb6-3"><a href="#cb6-3"></a><span class="st">  </span><span class="kw">stat_function</span>(<span class="dt">fun =</span> <span class="cf">function</span>(x) <span class="kw">dnorm</span>(<span class="dv">33</span>, x, <span class="dv">6</span>))<span class="op">+</span></span>
 <span id="cb6-4"><a href="#cb6-4"></a><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks =</span> <span class="kw">c</span>(<span class="dv">0</span><span class="op">:</span><span class="dv">4</span><span class="op">*</span><span class="dv">20</span>, <span class="dv">33</span>))<span class="op">+</span></span>
@@ -553,7 +553,7 @@ div.tocify {
 <span id="cb6-7"><a href="#cb6-7"></a>       <span class="dt">title =</span> <span class="st">&quot;Насколько правдоподобны модели с разными μ, если мы наблюдаем значение 33?&quot;</span>)</span></code></pre></div>
 <p><img src="2_Bayesian_inference_files/figure-html/unnamed-chunk-7-1.png" width="864" /></p>
 <p>А что если у нас не одно наблюдение, а несколько? Например, мы наблюдаем языки с 33 и 26 согласными? События независимы друг от друга, значит, мы можем перемножить получаемые вероятности.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="kw">data_frame</span>(<span class="dt">x =</span> <span class="dv">0</span><span class="op">:</span><span class="dv">80</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="dv">0</span><span class="op">:</span><span class="dv">80</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb7-2"><a href="#cb7-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(x)) <span class="op">+</span></span>
 <span id="cb7-3"><a href="#cb7-3"></a><span class="st">  </span><span class="kw">stat_function</span>(<span class="dt">fun =</span> <span class="cf">function</span>(x) <span class="kw">dnorm</span>(<span class="dv">33</span>, x, <span class="dv">6</span>)<span class="op">*</span><span class="kw">dnorm</span>(<span class="dv">26</span>, x, <span class="dv">6</span>))<span class="op">+</span></span>
 <span id="cb7-4"><a href="#cb7-4"></a><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks =</span> <span class="kw">c</span>(<span class="dv">0</span><span class="op">:</span><span class="dv">4</span><span class="op">*</span><span class="dv">20</span>, <span class="dv">33</span>, <span class="dv">26</span>))<span class="op">+</span></span>
@@ -598,7 +598,7 @@ div.tocify {
 <span id="cb8-8"><a href="#cb8-8"></a><span class="st">  </span><span class="kw">geom_text</span>(<span class="dt">position =</span> <span class="kw">position_stack</span>(<span class="dt">vjust =</span> <span class="fl">0.5</span>), <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>)</span></code></pre></div>
 <p><img src="2_Bayesian_inference_files/figure-html/unnamed-chunk-10-1.png" width="864" /></p>
 <p>Мы нашли некоторый новый вид грибов на лужайке (<code>grasses</code>). Какой это может быть гриб: съедобный или ядовитый? У нас нет никаких идей, почему бы нам отдать предпочтения той или иной гипотезе, так что будем использовать неинформативное априорное распределение:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw">data_frame</span>(<span class="dt">model =</span> <span class="kw">c</span>(<span class="st">&quot;edible&quot;</span>, <span class="st">&quot;poisonous&quot;</span>),</span>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw">tibble</span>(<span class="dt">model =</span> <span class="kw">c</span>(<span class="st">&quot;edible&quot;</span>, <span class="st">&quot;poisonous&quot;</span>),</span>
 <span id="cb9-2"><a href="#cb9-2"></a>           <span class="dt">prior =</span> <span class="fl">0.5</span>,</span>
 <span id="cb9-3"><a href="#cb9-3"></a>           <span class="dt">likelihood =</span> <span class="kw">c</span>(<span class="fl">0.335</span>, <span class="fl">0.189</span>),</span>
 <span id="cb9-4"><a href="#cb9-4"></a>           <span class="dt">product =</span> prior<span class="op">*</span>likelihood,</span>
@@ -609,7 +609,7 @@ div.tocify {
   </script>
 </div>
 <p>Вот мы и сделали байесовский апдейт. Теперь апостериорное распределение, которые мы получили на предыдущем шаге, мы можем использовать в новом апдейте. Допустим, мы опять нашли этот же вид гриба, но в этот раз в лесу (<code>woods</code>).</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="kw">data_frame</span>(<span class="dt">model =</span> <span class="kw">c</span>(<span class="st">&quot;edible&quot;</span>, <span class="st">&quot;poisonous&quot;</span>),</span>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="kw">tibble</span>(<span class="dt">model =</span> <span class="kw">c</span>(<span class="st">&quot;edible&quot;</span>, <span class="st">&quot;poisonous&quot;</span>),</span>
 <span id="cb10-2"><a href="#cb10-2"></a>           <span class="dt">prior_2 =</span> <span class="kw">c</span>(<span class="fl">0.639</span>, <span class="fl">0.361</span>),</span>
 <span id="cb10-3"><a href="#cb10-3"></a>           <span class="dt">likelihood_2 =</span> <span class="kw">c</span>(<span class="fl">0.447</span>, <span class="fl">0.324</span>),</span>
 <span id="cb10-4"><a href="#cb10-4"></a>           <span class="dt">product_2 =</span> prior_<span class="dv">2</span><span class="op">*</span>likelihood_<span class="dv">2</span>,</span>
@@ -635,7 +635,7 @@ div.tocify {
 <h3>4.1 Биномиальное распределение</h3>
 <p>Биномиальное распределение — распределение количества успехов эксперементов Бернулли из <em>n</em> попыток с вероятностью успеха <em>p</em>.</p>
 <p><span class="math display">\[P(k | n, p) = \frac{n!}{k!(n-k)!} \times p^k \times (1-p)^{n-k} =  {n \choose k} \times p^k \times (1-p)^{n-k}\]</span> <span class="math display">\[ 0 \leq p \leq 1; n, k &gt; 0\]</span></p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="kw">data_frame</span>(<span class="dt">x =</span> <span class="dv">0</span><span class="op">:</span><span class="dv">50</span>,</span>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="dv">0</span><span class="op">:</span><span class="dv">50</span>,</span>
 <span id="cb11-2"><a href="#cb11-2"></a>           <span class="dt">density =</span> <span class="kw">dbinom</span>(<span class="dt">x =</span> x, <span class="dt">size =</span> <span class="dv">50</span>, <span class="dt">prob =</span> <span class="fl">0.16</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb11-3"><a href="#cb11-3"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(x, density))<span class="op">+</span></span>
 <span id="cb11-4"><a href="#cb11-4"></a><span class="st">  </span><span class="kw">geom_point</span>()<span class="op">+</span></span>
@@ -648,7 +648,7 @@ div.tocify {
 <p><span class="math display">\[P(x; α, β) = \frac{x^{α-1}\times (1-x)^{β-1}}{B(α, β)}; 0 \leq x \leq 1; α, β &gt; 0\]</span></p>
 <p>Бета функция:</p>
 <p><span class="math display">\[Β(α, β) = \frac{Γ(α)\times Γ(β)}{Γ(α+β)} = \frac{(α-1)!(β-1)!}{(α+β-1)!} \]</span></p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="kw">data_frame</span>(<span class="dt">x =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">length.out =</span> <span class="dv">100</span>),</span>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">length.out =</span> <span class="dv">100</span>),</span>
 <span id="cb12-2"><a href="#cb12-2"></a>           <span class="dt">density =</span> <span class="kw">dbeta</span>(<span class="dt">x =</span> x, <span class="dt">shape1 =</span> <span class="dv">8</span>, <span class="dt">shape2 =</span> <span class="dv">42</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb12-3"><a href="#cb12-3"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(x, density))<span class="op">+</span></span>
 <span id="cb12-4"><a href="#cb12-4"></a><span class="st">  </span><span class="kw">geom_point</span>()<span class="op">+</span></span>
@@ -667,7 +667,7 @@ div.tocify {
 </div>
 <div id="байесовский-апдейт-биномиальных-данных-несколько-моделей" class="section level3">
 <h3>4.3 Байесовский апдейт биномиальных данных: несколько моделей</h3>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="kw">data_frame</span>(<span class="dt">x =</span> <span class="kw">rep</span>(<span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">length.out =</span> <span class="dv">100</span>), <span class="dv">6</span>),</span>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="kw">rep</span>(<span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">length.out =</span> <span class="dv">100</span>), <span class="dv">6</span>),</span>
 <span id="cb15-2"><a href="#cb15-2"></a>           <span class="dt">density =</span> <span class="kw">c</span>(<span class="kw">dbeta</span>(<span class="kw">unique</span>(x), <span class="dt">shape1 =</span> <span class="dv">8</span>, <span class="dt">shape2 =</span> <span class="dv">42</span>),</span>
 <span id="cb15-3"><a href="#cb15-3"></a>                       <span class="kw">dbeta</span>(<span class="kw">unique</span>(x), <span class="dt">shape1 =</span> <span class="dv">16</span>, <span class="dt">shape2 =</span> <span class="dv">34</span>),</span>
 <span id="cb15-4"><a href="#cb15-4"></a>                       <span class="kw">dbeta</span>(<span class="kw">unique</span>(x), <span class="dt">shape1 =</span> <span class="dv">24</span>, <span class="dt">shape2 =</span> <span class="dv">26</span>),</span>
@@ -699,7 +699,7 @@ div.tocify {
 <div id="байесовский-апдейт-нормального-распределения-дискретный-вариант" class="section level3">
 <h3>5.1 Байесовский апдейт нормального распределения: дискретный вариант</h3>
 <p>Мы можем рассматривать эту задачу как выбор между несколькими моделями с разными средними:</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="kw">data_frame</span>(<span class="dt">x =</span> <span class="kw">rep</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">400</span>, <span class="dv">6</span>),</span>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="kw">rep</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">400</span>, <span class="dv">6</span>),</span>
 <span id="cb17-2"><a href="#cb17-2"></a>           <span class="dt">density =</span> <span class="kw">c</span>(<span class="kw">dnorm</span>(<span class="kw">unique</span>(x), <span class="dt">mean =</span> <span class="dv">125</span>, <span class="dt">sd =</span> <span class="dv">70</span>),</span>
 <span id="cb17-3"><a href="#cb17-3"></a>                       <span class="kw">dnorm</span>(<span class="kw">unique</span>(x), <span class="dt">mean =</span> <span class="dv">150</span>, <span class="dt">sd =</span> <span class="dv">70</span>),</span>
 <span id="cb17-4"><a href="#cb17-4"></a>                       <span class="kw">dnorm</span>(<span class="kw">unique</span>(x), <span class="dt">mean =</span> <span class="dv">175</span>, <span class="dt">sd =</span> <span class="dv">70</span>),</span>
@@ -711,7 +711,7 @@ div.tocify {
 <span id="cb17-10"><a href="#cb17-10"></a><span class="st">  </span><span class="kw">geom_line</span>()</span></code></pre></div>
 <p><img src="2_Bayesian_inference_files/figure-html/unnamed-chunk-20-1.png" width="864" /></p>
 <p>Дальше мы можем точно так же апдейтить, как мы делали раньше:</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="kw">data_frame</span>(<span class="dt">mu =</span> <span class="kw">seq</span>(<span class="dv">125</span>, <span class="dv">250</span>, <span class="dt">by =</span> <span class="dv">25</span>),</span>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="kw">tibble</span>(<span class="dt">mu =</span> <span class="kw">seq</span>(<span class="dv">125</span>, <span class="dv">250</span>, <span class="dt">by =</span> <span class="dv">25</span>),</span>
 <span id="cb18-2"><a href="#cb18-2"></a>           <span class="dt">prior =</span> <span class="fl">0.2</span>,</span>
 <span id="cb18-3"><a href="#cb18-3"></a>           <span class="dt">likelihood =</span> <span class="kw">c</span>(<span class="kw">prod</span>(<span class="kw">dnorm</span>(chicks<span class="op">$</span>weight, <span class="dt">mean =</span> <span class="dv">125</span>, <span class="dt">sd =</span> <span class="dv">70</span>)),</span>
 <span id="cb18-4"><a href="#cb18-4"></a>                          <span class="kw">prod</span>(<span class="kw">dnorm</span>(chicks<span class="op">$</span>weight, <span class="dt">mean =</span> <span class="dv">150</span>, <span class="dt">sd =</span> <span class="dv">70</span>)),</span>
@@ -751,7 +751,7 @@ div.tocify {
 <span id="cb20-5"><a href="#cb20-5"></a>mean_data &lt;-<span class="st"> </span><span class="kw">mean</span>(chicks<span class="op">$</span>weight)</span>
 <span id="cb20-6"><a href="#cb20-6"></a>mean_post &lt;-<span class="st"> </span><span class="kw">weighted.mean</span>(<span class="kw">c</span>(mean_prior, mean_data), <span class="kw">c</span>(<span class="dv">1</span><span class="op">/</span>sd_prior, <span class="dv">1</span><span class="op">/</span>sd_data))</span>
 <span id="cb20-7"><a href="#cb20-7"></a></span>
-<span id="cb20-8"><a href="#cb20-8"></a><span class="kw">data_frame</span>(<span class="dt">x =</span> <span class="kw">rep</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">400</span>, <span class="dv">3</span>),</span>
+<span id="cb20-8"><a href="#cb20-8"></a><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="kw">rep</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">400</span>, <span class="dv">3</span>),</span>
 <span id="cb20-9"><a href="#cb20-9"></a>           <span class="dt">density =</span> <span class="kw">c</span>(<span class="kw">dnorm</span>(<span class="kw">unique</span>(x), <span class="dt">mean =</span> mean_prior, <span class="dt">sd =</span> sd_prior),</span>
 <span id="cb20-10"><a href="#cb20-10"></a>                       <span class="kw">dnorm</span>(<span class="kw">unique</span>(x), <span class="dt">mean =</span> mean_data, <span class="dt">sd =</span> sd_data),</span>
 <span id="cb20-11"><a href="#cb20-11"></a>                       <span class="kw">dnorm</span>(<span class="kw">unique</span>(x), <span class="dt">mean =</span> mean_post, <span class="dt">sd =</span> sd_post)),</span>
