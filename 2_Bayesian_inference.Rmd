@@ -113,6 +113,29 @@ data_frame(x = 0:80) %>%
 
 Интеграл распределения вероятностей равен 1. [Интеграл правдоподобия может быть не равен 1](https://stats.stackexchange.com/a/31241/225843).
 
+### 2.1
+Функция правдоподобия, конечно, определена и на дискретных распределениях. Посчитайте функцию правдаподобия для модели предполагающей "честный" шестигранный кубик, если выпало три раза шесть (ответ округлите до 3 знаков после запятой)?
+
+L(p⚅ = 1/6|x = ⚅⚅⚅) = ...
+
+<form name="Form1" onsubmit="return validateForm1()" method="post">
+<input type="text" name="answer1">
+<input type="submit" value="check">
+</form><br>
+
+
+### 2.2
+Посчитайте значение правдоподобия модели $\mathcal{N}(\mu = 910,\, \sigma=150)$ для встроенного датасета `Nile`.
+
+```{r, include=FALSE}
+prod(dnorm(Nile, 910, 150))
+```
+
+<form name="Form2" onsubmit="return validateForm2()" method="post">
+<input type="text" name="answer2">
+<input type="submit" value="check">
+</form><br>
+
 ## 3. Категориальные данные 
 
 [В датасете c грибами](https://raw.githubusercontent.com/agricolamz/2019_BayesDan_winter/master/datasets/mushrooms.csv) (взят c [kaggle](https://www.kaggle.com/uciml/mushroom-classification)) представлено следующее распределение по месту обитания:
@@ -148,6 +171,35 @@ data_frame(model = c("edible", "poisonous"),
            posterior_2 = product_2/sum(product_2))
 ```
 
+### 3.1
+
+Вашего друга похитили а на почту отправили [датасет](https://raw.githubusercontent.com/agricolamz/2019_BayesDan_winter/master/datasets/weather.csv), в котором записаны данные о погоде из пяти городов. Ваш телефон зазвонил, и друг сказал, что не знает куда его похитили, но за окном легкий дождь (`Rain`). А на следующий день --- сильный дождь (`Rain, Thunderstorm`). Сделайте байесовский апдейт и предположите, в какой город вероятнее всего похитили друга (форма принимает латиницу).
+
+```{r, include=FALSE}
+df <- read.csv("https://raw.githubusercontent.com/agricolamz/2019_BayesDan_winter/master/datasets/weather.csv")
+df %>%
+  count(city, events) %>% 
+  group_by(city) %>% 
+  mutate(prop = n/sum(n)) %>% 
+  ggplot(aes(city, prop, fill = events, label = round(prop, 3)))+
+  geom_col()+
+  geom_text(position = position_stack(vjust = 0.5), color = "white")
+
+data_frame(model = c("Auckland", "Beijing", "Chicago", "Mumbai", "San Diego"),
+           prior_1 = 0.2,
+           likelihood_1 = c(0.484, 0, 0.161, 0, 0.29),
+           product_1 = prior_1*likelihood_1,
+           posterior_1 = product_1/sum(product_1),
+           likelihood_2 = c(0.032, 0, 0, 0, 0.065),
+           product_2 = posterior_1*likelihood_2,
+           posterior_2 = product_2/sum(product_2))
+```
+
+<form name="Form3" onsubmit="return validateForm3()" method="post">
+<input type="text" name="answer3">
+<input type="submit" value="check">
+</form><br>
+
 ## 4. Биномиальные данные
 
 Биномиальные данные возникают, когда нас интересует доля успехов в какой-то серии эксперементов Бернулли.
@@ -168,7 +220,7 @@ data_frame(x = 0:50,
   labs(title = "Биномиальное распределение p = 0.16, n = 50")
 ```
 
-### 3.2 Бета распределение
+### 4.2 Бета распределение
 
 $$P(x; α, β) = \frac{x^{α-1}\times (1-x)^{β-1}}{B(α, β)}; 0 \leq x \leq 1; α, β > 0$$
 
@@ -227,7 +279,7 @@ data_frame(x = rep(seq(0, 1, length.out = 100), 6),
   labs(title = "data = 4, 16")
 ```
 
-## 4. Нормальное распределение
+## 5. Нормальное распределение
 
 Встроенный датасет `ChickWeight` содержит вес цыплят (`weight`) в зависимости от типа диеты (`Diet`). Мы будем анализировать 20-дневных птенцов.
 
@@ -244,7 +296,7 @@ chicks %>%
 Начнем с апостериорных параметров для наблюдений $x_1, ... x_n$ со средним $\mu_{data}$ известной дисперсией $\sigma_{known}^2$
 
 
-### 4.1 Байесовский апдейт нормального распределения: дискретный вариант
+### 5.1 Байесовский апдейт нормального распределения: дискретный вариант
 
 Мы можем рассматривать эту задачу как выбор между несколькими моделями с разными средними:
 
@@ -285,7 +337,7 @@ results %>%
        x = "μ")
 ```
 
-### 4.2 Байесовский апдейт нормального распределения: непрерывный вариант
+### 5.2 Байесовский апдейт нормального распределения: непрерывный вариант
 
 Во первых, нам понадобиться некоторая мера, которая называется *точность* (precision):
 
@@ -319,6 +371,50 @@ data_frame(x = rep(1:400, 3),
 shiny::runGitHub("agricolamz/bayes_for_normal_app") 
 ```
 
-## 5. Домашнее задание 2
+Подробнее см.:
+
+* [Murphy K. P. (2007) Conjugate Bayesian analysis of the Gaussian distribution](https://www.cs.ubc.ca/~murphyk/Papers/bayesGauss.pdf)
+* [Jordan M. I. (2010) The Conjugate Prior for the Normal Distribution](https://people.eecs.berkeley.edu/~jordan/courses/260-spring10/lectures/lecture5.pdf)
+* раздел 2.5 в Gelman A. et. al (2014) Bayesian Data Analysis
+
+
+## 6. Домашнее задание 2
 
 ...
+
+
+<script>
+function validateForm1() {
+    var x = document.forms["Form1"]["answer1"].value;
+    if (x != "0.005") {
+        alert("У меня другой ответ...");
+        return false;
+    } else {
+        alert("Да, все правильно");
+        return false;
+    }
+}
+
+function validateForm2() {
+    var x = document.forms["Form2"]["answer2"].value;
+    if (x != "1.085036e-285") {
+        alert("У меня другой ответ...");
+        return false;
+    } else {
+        alert("Да, все правильно");
+        return false;
+    }
+}
+
+function validateForm3() {
+    var x = document.forms["Form3"]["answer3"].value;
+    if (x != "San Diego") {
+        alert("У меня другой ответ...");
+        return false;
+    } else {
+        alert("Да, все правильно");
+        return false;
+    }
+}
+
+</script>
