@@ -173,7 +173,7 @@ tibble(model = c("edible", "poisonous"),
 
 ### 3.1
 
-Вашего друга похитили а на почту отправили [датасет](https://raw.githubusercontent.com/agricolamz/2019_BayesDan_winter/master/datasets/weather.csv), в котором записаны данные о погоде из пяти городов. Ваш телефон зазвонил, и друг сказал, что не знает куда его похитили, но за окном легкий дождь (`Rain`). А на следующий день --- сильный дождь (`Rain, Thunderstorm`). Сделайте байесовский апдейт и предположите, в какой город вероятнее всего похитили друга (форма принимает латиницу).
+Вашего друга похитили а на почту отправили [датасет](https://raw.githubusercontent.com/agricolamz/2019_BayesDan_winter/master/datasets/weather.csv), в котором записаны данные о погоде из пяти городов. Ваш телефон зазвонил, и друг сказал, что не знает куда его похитили, но за окном легкий дождь (`Rain`). А в какой-то из следующих дней --- сильный дождь (`Rain, Thunderstorm`). Сделайте байесовский апдейт и предположите, в какой город вероятнее всего похитили друга (форма принимает латиницу).
 
 ```{r, include=FALSE}
 df <- read.csv("https://raw.githubusercontent.com/agricolamz/2019_BayesDan_winter/master/datasets/weather.csv")
