@@ -279,97 +279,6 @@ tibble(x = rep(seq(0, 1, length.out = 100), 6),
   labs(title = "data = 4, 16")
 ```
 
-## 5. Нормальное распределение
-
-Встроенный датасет `ChickWeight` содержит вес цыплят (`weight`) в зависимости от типа диеты (`Diet`). Мы будем анализировать 20-дневных птенцов.
-
-```{r}
-ChickWeight %>% 
-  filter(Time == 20) ->
-  chicks
-
-chicks %>% 
-  ggplot(aes(weight))+
-  geom_density()
-```
-
-Начнем с апостериорных параметров для наблюдений $x_1, ... x_n$ со средним $\mu_{data}$ известной дисперсией $\sigma_{known}^2$
-
-
-### 5.1 Байесовский апдейт нормального распределения: дискретный вариант
-
-Мы можем рассматривать эту задачу как выбор между несколькими моделями с разными средними:
-
-```{r}
-tibble(x = rep(1:400, 6),
-           density = c(dnorm(unique(x), mean = 125, sd = 70),
-                       dnorm(unique(x), mean = 150, sd = 70),
-                       dnorm(unique(x), mean = 175, sd = 70),
-                       dnorm(unique(x), mean = 200, sd = 70),
-                       dnorm(unique(x), mean = 225, sd = 70),
-                       dnorm(unique(x), mean = 250, sd = 70)),
-           dataset = rep(1:6, each = 400)) %>% 
-  ggplot(aes(x, density, color = factor(dataset)))+
-  geom_line()
-```
-
-Дальше мы можем точно так же апдейтить, как мы делали раньше:
-
-```{r}
-tibble(mu = seq(125, 250, by = 25),
-           prior = 0.2,
-           likelihood = c(prod(dnorm(chicks$weight, mean = 125, sd = 70)),
-                          prod(dnorm(chicks$weight, mean = 150, sd = 70)),
-                          prod(dnorm(chicks$weight, mean = 175, sd = 70)),
-                          prod(dnorm(chicks$weight, mean = 200, sd = 70)),
-                          prod(dnorm(chicks$weight, mean = 225, sd = 70)),
-                          prod(dnorm(chicks$weight, mean = 250, sd = 70))),
-           product = prior*likelihood,
-           posterior = product/sum(product)) ->
-  results
-results
-results %>% 
-  select(mu, prior, posterior) %>% 
-  gather(type, probability, prior:posterior) %>% 
-  ggplot(aes(mu, probability, color = type))+
-  geom_point()+
-  labs(title = "изменение вероятностей для каждой из моделей",
-       x = "μ")
-```
-
-### 5.2 Байесовский апдейт нормального распределения: непрерывный вариант
-
-Во первых, нам понадобиться некоторая мера, которая называется *точность* (precision):
-
-$$\tau = \frac{1}{\sigma^2}$$
-
-$$\tau_{post} = \tau_{prior} + \tau_{data} \Rightarrow \sigma^2_{post} = \frac{1}{\tau_{post}}$$
-
-
-$$\mu_{post} = \frac{\mu_{prior} \times \tau_{prior} + \mu_{data} \times \tau_{data}}{\tau_{post}}$$
-
-Так что если нашим априорным распределением мы назовем нормальное распределение со средним около 180 и стандартным отклонением 90, то процесс байсовского апдейта будет выглядеть вот так:
-
-```{r}
-sd_prior <- 90 
-sd_data <- sd(chicks$weight)
-sd_post <- (1/sd_prior+1/sd_data)^(-1)
-mean_prior <- 180
-mean_data <- mean(chicks$weight)
-mean_post <- weighted.mean(c(mean_prior, mean_data), c(1/sd_prior, 1/sd_data))
-
-tibble(x = rep(1:400, 3),
-           density = c(dnorm(unique(x), mean = mean_prior, sd = sd_prior),
-                       dnorm(unique(x), mean = mean_data, sd = sd_data),
-                       dnorm(unique(x), mean = mean_post, sd = sd_post)),
-           dataset = rep(c("prior", "data", "posterior"), each = 400)) %>% 
-  ggplot(aes(x, density, color = dataset))+
-  geom_line()
-```
-
-```{r, eval = FALSE}
-shiny::runGitHub("agricolamz/bayes_for_normal_app") 
-```
 
 Подробнее см.:
 
@@ -378,9 +287,9 @@ shiny::runGitHub("agricolamz/bayes_for_normal_app")
 * раздел 2.5 в Gelman A. et. al (2014) Bayesian Data Analysis
 
 
-## 6. Домашнее задание 2
+## 5. Домашнее задание 2
 
-...
+Ссылка на [домашнее задание 2](https://classroom.github.com/a/2jowa_pW)
 
 
 <script>
