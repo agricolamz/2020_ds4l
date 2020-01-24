@@ -289,7 +289,7 @@ tibble(x = rep(seq(0, 1, length.out = 100), 6),
 
 ## 5. Домашнее задание 2
 
-Ссылка на [домашнее задание 2](https://classroom.github.com/a/2jowa_pW)
+Ссылка на [домашнее задание 2](https://classroom.github.com/a/7Fx2tQ4d)
 
 
 <script>
