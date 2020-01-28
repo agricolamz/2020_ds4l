@@ -136,6 +136,58 @@ prod(dnorm(Nile, 910, 150))
 <input type="submit" value="check">
 </form><br>
 
+### 2.3 Короткое замечание
+
+Только что мы обсудили, что вероятность, выделенная на графике, равна интегралу нормального распределения в указанном промежутке:
+
+```{r, echo = FALSE}
+tibble(x = 0:80) %>% 
+  ggplot(aes(x)) +
+  stat_function(fun = function(x) dnorm(x, 22, 6))+
+  stat_function(fun = function(x) dnorm(x, 22, 6), 
+                xlim = c(23,32), 
+                geom = "area",
+                fill = "lightblue")+
+  scale_x_continuous(breaks = c(0, 15, 23, 32, 40, 60, 80))+
+  labs(title = TeX("$X \\sim N(\\mu = 22,\\, \\sigma^{2}=6)$"))
+```
+
+Ее можно посчитать двумя способами:
+
+```{r}
+integrate(function(x){dnorm(x, 22, 6)}, lower = 23, upper = 32)
+pnorm(32, mean = 22, sd = 6) - pnorm(23, mean = 22, sd = 6)
+```
+
+Рассмотрим теперь дискретное распределение. Какова вероятность, выделенная на графике?
+
+```{r}
+tibble(x = 0:80,
+       y = dbinom(x, 80, 0.4),
+       z = ifelse(x >= 23 & x <= 32, TRUE, FALSE)) %>% 
+  ggplot(aes(x, y, fill = z)) +
+  geom_col(show.legend = FALSE)+
+  scale_x_continuous(breaks = c(0, 15, 23, 32, 40, 60, 80))+
+  labs(title = TeX("$X \\sim Binom(n = 80,\\, p=0.4)$"))
+```
+
+Ее тоже можно посчитать двумя способами:
+
+```{r}
+sum(dbinom(23:32, size = 80, p = 0.4))
+```
+
+Однако, если мы попробуем посчитать это при помощи функции `pbinom()`, мы получим другой результат:
+```{r}
+pbinom(32, size = 80, p = 0.4) - pbinom(23, size = 80, p = 0.4)
+```
+
+Дело в том, что в непрерывном варианте, мы не исключаем значение, когда вычитаем: (-∞, 32) - (-∞, 23) = (23, 32). Однако в дискретном варианте происходит другое (-∞, 32] - (-∞, 23] = [24, 32]. Так что, верным способом посчитать выделенную вероятность будет следующий:
+
+```{r}
+pbinom(32, size = 80, p = 0.4) - pbinom(22, size = 80, p = 0.4)
+```
+
 ## 3. Категориальные данные 
 
 [В датасете c грибами](https://raw.githubusercontent.com/agricolamz/2019_BayesDan_winter/master/datasets/mushrooms.csv) (взят c [kaggle](https://www.kaggle.com/uciml/mushroom-classification)) представлено следующее распределение по месту обитания:
