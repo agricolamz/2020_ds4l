@@ -1,4 +1,5 @@
 ---
+title: "Байесовский апдейт опять"
 author: "Г. Мороз"
 editor_options: 
   chunk_output_type: console
@@ -61,11 +62,11 @@ sum(dbinom(23:32, size = 80, p = 0.4))
 pbinom(32, size = 80, p = 0.4) - pbinom(23, size = 80, p = 0.4)
 ```
 
-Дело в том, что в непрерывном варианте, мы не исключаем значение, когда вычитаем: (-∞, 32) - (-∞, 23) = (23, 32). Однако в дискретном варианте происходит другое (-∞, 32] - (-∞, 23] = [24, 32]. Так что, верным способом посчитать выделенную вероятность будет следующий:
+Дело в том, что в непрерывном варианте, мы не исключаем значение, когда вычитаем: (-∞, 32) - (-∞, 23) = (23, 32). Однако в дискретном варианте происходит другое: (-∞, 32] - (-∞, 23] = [24, 32]. Так что верным способом посчитать выделенную вероятность будет следующий:
 
 ```{r}
 pbinom(32, size = 80, p = 0.4) - pbinom(22, size = 80, p = 0.4)
-```
+``` 
 
 ## 1. Байесовский апдейт нормального распределения
 
@@ -105,7 +106,7 @@ tibble(x = rep(1:400, 6),
 
 ```{r}
 tibble(mu = seq(125, 250, by = 25),
-           prior = 0.2,
+           prior = 1/6,
            likelihood = c(prod(dnorm(chicks$weight, mean = 125, sd = 70)),
                           prod(dnorm(chicks$weight, mean = 150, sd = 70)),
                           prod(dnorm(chicks$weight, mean = 175, sd = 70)),
@@ -127,7 +128,7 @@ results %>%
 
 ### 1.2 Байесовский апдейт нормального распределения: непрерывный вариант
 
-Во первых, нам понадобиться некоторая мера, которая называется *точность* (precision):
+Во первых, нам понадобится некоторая мера, которая называется *точность* (precision):
 
 $$\tau = \frac{1}{\sigma^2}$$
 
@@ -163,7 +164,7 @@ shiny::runGitHub("agricolamz/bayes_for_normal_app")
 
 > A frequentist uses impeccable logic to answer the wrong question, while a Bayesian answers the right question by making assumptions that nobody can fully believe in. (P. G. Hammer)
 
-1) попытка оценить параметр θ и какой-нибудь интервал, в котором он лежит (см. предыдущий раздел).
+1) попытка оценить параметр θ и какой-нибудь интервал, в котором он лежит.
 2) ответить на вопросы вроде
     * какая вероятность что значение θ больше некоторого значения $x$?
     * какая вероятность что значение θ лежит в интервале $[x; y]$?
@@ -172,9 +173,9 @@ shiny::runGitHub("agricolamz/bayes_for_normal_app")
 И это не p-value! Это настоящие вероятности!
 
 
-## 3. Фриквентистские доверительные интервалы
+## 3. Фреквентистские доверительные интервалы
 
-Интерпретация доверительных интервалов не легкое дело. Если вы знакомы с этим понятием и считаете, что все ясно: [раз](https://www.statisticssolutions.com/misconceptions-about-confidence-intervals/), [два](https://stats.stackexchange.com/questions/26450/why-does-a-95-confidence-interval-ci-not-imply-a-95-chance-of-containing-the), [три](http://thinkcognitive.org/ru/blog/golova-professora-bambldorfa#.W-ax_zln00M), [четыре](https://andrewgelman.com/2016/11/23/abraham-lincoln-confidence-intervals/), [пять](https://andrewgelman.com/2016/11/26/reminder-instead-confidence-interval-lets-say-uncertainty-interval/).
+Интерпретация доверительных интервалов нелегкое дело. Если вы знакомы с этим понятием и считаете, что все ясно: [раз](https://www.statisticssolutions.com/misconceptions-about-confidence-intervals/), [два](https://stats.stackexchange.com/questions/26450/why-does-a-95-confidence-interval-ci-not-imply-a-95-chance-of-containing-the), [три](http://thinkcognitive.org/ru/blog/golova-professora-bambldorfa#.W-ax_zln00M), [четыре](https://andrewgelman.com/2016/11/23/abraham-lincoln-confidence-intervals/), [пять](https://andrewgelman.com/2016/11/26/reminder-instead-confidence-interval-lets-say-uncertainty-interval/).
 
 <center> Так что дальше я излагаю **свое мнение**... </br> ... и мне больше не интересно про это спорить  </br> </br> </center>
 
@@ -312,131 +313,6 @@ df %>%
 <input type="submit" value="check">
 </form><br>
 
-
-##  4. Байесовский доверительный интервал
-
-### 4.1 Симметричный интервал (equal-tailed interval): медиана и квантили
-Байесовский доверительный $k$-% интервал (по-английски credible interval) --- это интервал $[\frac{k}{2}, 1-\frac{k}{2}]$ от апостериорного распределения. Давайте проапдейтим данные рассказов Чехова при помощи априорного распределения с параметрами ($\alpha = 5.283022$, $\beta = 231.6328$), а дальше можем использовать функцию `qbeta()`, чтобы получить интервал, в котором находятся центральные $k$%.
-
-```{r, fig.height=7}
-chekhov %>% 
-  slice(1:30) %>%
-  group_by(trunc_titles) %>% 
-  mutate(beta_prior = n_words-n,
-         alpha_post = n + 5.283022,
-         beta_post = beta_prior + 231.6328,
-         median_post = qbeta(.5, alpha_post, beta_post),
-         eq_t_int_l = qbeta(.025, alpha_post, beta_post),
-         eq_t_int_h = qbeta(.975, alpha_post, beta_post),
-         low_ci = mosaic::binom.test(x = n, n = n_words)$conf.int[1],
-         up_ci = mosaic::binom.test(x = n, n = n_words)$conf.int[2]) %>% 
-  ggplot(aes(x= trunc_titles))+
-  geom_pointrange(aes(y = average, ymin = low_ci, ymax = up_ci), color = "royalblue")+
-  geom_pointrange(aes(y = median_post, ymin = eq_t_int_l, ymax = eq_t_int_h), color = "tomato", position = position_nudge(x = -0.35))+
-  coord_flip()+
-  labs(title = 'Доверительные интервалы употребления "не" в рассказах А. Чехова',
-       x = "", y = "",
-       caption = "красные --- фриквентистский; синий --- байесовский eq-t")
-```
-
-### 4.2 Интервал максимальной (апостериорной) плотности (Highest (posterior) density interval): мода и HDI
-
-```{r, fig.height=11}
-chekhov %>% 
-  slice(1:30) %>%
-  group_by(trunc_titles) %>% 
-  mutate(beta_prior = n_words-n,
-         alpha_post = n + 5.283022,
-         beta_post = beta_prior + 231.6328,
-         median_post = qbeta(.5, alpha_post, beta_post),
-         moda_post = (alpha_post-1)/(alpha_post+beta_post-2),
-         hdi_int_l = hdi(qbeta, shape1 = alpha_post, shape2 = beta_post, credMass = 0.95)[1],
-         hdi_int_h = hdi(qbeta, shape1 = alpha_post, shape2 = beta_post, credMass = 0.95)[2],
-         eq_t_int_l = qbeta(.025, alpha_post, beta_post),
-         eq_t_int_h = qbeta(.975, alpha_post, beta_post),
-         low_ci = mosaic::binom.test(x = n, n = n_words)$conf.int[1],
-         up_ci = mosaic::binom.test(x = n, n = n_words)$conf.int[2]) %>% 
-  ggplot(aes(x= trunc_titles))+
-  geom_pointrange(aes(y = average, ymin = low_ci, ymax = up_ci), color = "royalblue", position = position_nudge(x = 0.25))+
-  geom_pointrange(aes(y = median_post, ymin = eq_t_int_l, ymax = eq_t_int_h), color = "tomato")+
-  geom_pointrange(aes(y = moda_post, ymin = hdi_int_l, ymax = hdi_int_h), color = "palegreen3", position = position_nudge(x = -0.25))+
-  coord_flip()+
-  labs(title = 'Доверительные интервалы употребления "не" в рассказах А. Чехова',
-       x = "", y = "",
-       caption = "красные --- фриквентистский; синий --- байесовский eq-t; зеленый --- байсовский hdi")
-```
-
-В качестве аргумента в пользу HDI всегда приводят вот такое распределение:
-
-![](datasets/HDIbimodal.jpg)
-
-### 4.4
-В базе данных [Phoible](http://phoible.org/), в которой собраны фонологические инвентари в языках мира. В [датасет](https://raw.githubusercontent.com/agricolamz/2019_BayesDan_winter/master/datasets/phoible_n_consonants.csv) записано три переменных:
-
-* language --- язык;
-* consonants --- количество согласных;
-* phonemes --- количество фонем.
-
-Посчитайте медиану и 80% симметричный интервал, которую составляет согласные от всего фонологического набора каждого языка, используя априорное бета распределение с параметрами α = 9.300246 и β = 4.4545. В ответе укажите язык, у которого интервал равен 0.083.
-
-```{r, include=FALSE}
-phoible <- read_csv("https://raw.githubusercontent.com/agricolamz/2019_BayesDan_winter/master/datasets/phoible_n_consonants.csv") 
-
-phoible %>% 
-  mutate(beta_prior = phonemes-consonants,
-         alpha_post = consonants + 9.300246,
-         beta_post = beta_prior + 4.4545,
-         median_post = qbeta(.5, alpha_post, beta_post),
-         eq_t_int_l = qbeta(.1, alpha_post, beta_post),
-         eq_t_int_h = qbeta(.9, alpha_post, beta_post),
-         interval = round(eq_t_int_h - eq_t_int_l, 3)) %>% 
-  filter(interval == 0.083)
-```
-
-<form name="FormThree" onsubmit="return validateFormThree()" method="post">
-<input type="text" name="answerThree">
-<input type="submit" value="check">
-</form><br>
-
-### 4.5
-В базе данных [Phoible](http://phoible.org/), в которой собраны фонологические инвентари в языках мира. В [датасет](https://raw.githubusercontent.com/agricolamz/2019_BayesDan_winter/master/datasets/phoible_n_consonants.csv) записано три переменных:
-
-* language --- язык;
-* consonants --- количество согласных;
-* phonemes --- количество фонем.
-
-Посчитайте моду и 80% интервал максимальной апостериорной плотности, которую составляет согласные от всего фонологического набора каждого языка, используя априорное бета распределение с параметрами α = 9.300246 и β = 4.4545. В ответе укажите язык, у которого интервал равен 0.091.
-
-```{r, eval=FALSE}
-phoible <- read_csv("https://raw.githubusercontent.com/agricolamz/2019_BayesDan_winter/master/datasets/phoible_n_consonants.csv") 
-
-phoible %>%
-  group_by(language) %>% 
-  rowwise() %>% # это нужно, так как авторы HDInterval не векторизовали hdi
-  mutate(...) %>% 
-```
-
-
-```{r, include=FALSE}
-phoible <- read_csv("https://raw.githubusercontent.com/agricolamz/2019_BayesDan_winter/master/datasets/phoible_n_consonants.csv") 
-
-phoible %>%
-  group_by(language) %>% 
-  rowwise() %>% # это нужно, так как авторы HDInterval не векторизовали hdi
-  mutate(beta_prior = phonemes-consonants,
-         alpha_post = consonants + 9.300246,
-         beta_post = beta_prior + 4.4545,
-         moda_post = (alpha_post-1)/(alpha_post+beta_post-2),
-         hdi_int_l = hdi(qbeta, shape1 = alpha_post, shape2 = beta_post, credMass = 0.8)[1],
-         hdi_int_h = hdi(qbeta, shape1 = alpha_post, shape2 = beta_post, credMass = 0.8)[2],
-         interval = round(hdi_int_h - hdi_int_l, 3)) %>% 
-  filter(interval == 0.091)
-```
-
-<form name="FormFour" onsubmit="return validateFormFour()" method="post">
-<input type="text" name="answerFour">
-<input type="submit" value="check">
-</form><br>
 
 <script>
 function validateFormOne() {
