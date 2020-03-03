@@ -84,6 +84,32 @@ chekhov %>%
 
 Полученное распределение можно использовать как априорное распределение для апдейта значений из каждого рассказа. Этот трюк и называется Empirical Bayes estimation.
 
+### 1.1
+В датасете собраны данные по числу людей владеющих русским в разных селах Дагестана, родившихся до 1950 года. Проведите эмпирическую байесовскую оценку и постройте следующий график:
+
+```{r, echo = FALSE}
+df <- read_csv("data/russian_in_daghestan.csv")
+
+mu <- mean(df$average)
+var <- var(df$average)
+alpha0 <- ((1 - mu) / var - 1 / mu) * mu ^ 2
+beta0 <- alpha0 * (1 / mu - 1)
+alpha0
+beta0
+
+
+estimation <- data_frame(
+  x = seq(0, 1, length = 1000),
+  density = c(dbeta(x, shape1 = alpha0, shape2 = beta0)))
+
+df %>% 
+  ggplot(aes(average)) +
+  geom_density(fill = "lightblue")+
+  geom_line(data = estimation, aes(x, density))+
+  labs(x = "доля владеющих русским языком")
+```
+
+
 ## 2. Фреквентисткий доверительный интервал
 Основная соль фреквинтистского доверительного интервала (по-английски confidence interval) основано на правиле трех сигм нормального распределения:
 
