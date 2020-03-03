@@ -93,9 +93,6 @@ mu <- mean(df$average)
 var <- var(df$average)
 alpha0 <- ((1 - mu) / var - 1 / mu) * mu ^ 2
 beta0 <- alpha0 * (1 / mu - 1)
-alpha0
-beta0
-
 
 estimation <- data_frame(
   x = seq(0, 1, length = 1000),
