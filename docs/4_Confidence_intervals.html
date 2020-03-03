@@ -566,10 +566,9 @@ div.tocify {
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>beta0</span></code></pre></div>
 <pre><code>## [1] 231.6328</code></pre>
 <p>Посмотрим, насколько хорошо, получившееся распределение подходит к нашим данным:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>x &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">0</span>, <span class="fl">0.1</span>, <span class="dt">length =</span> <span class="dv">1000</span>)</span>
-<span id="cb11-2"><a href="#cb11-2"></a>estimation &lt;-<span class="st"> </span><span class="kw">data_frame</span>(</span>
-<span id="cb11-3"><a href="#cb11-3"></a>  <span class="dt">x =</span> x,</span>
-<span id="cb11-4"><a href="#cb11-4"></a>  <span class="dt">density =</span> <span class="kw">c</span>(<span class="kw">dbeta</span>(x, <span class="dt">shape1 =</span> alpha0, <span class="dt">shape2 =</span> beta0)))</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>estimation &lt;-<span class="st"> </span><span class="kw">data_frame</span>(</span>
+<span id="cb11-2"><a href="#cb11-2"></a>  <span class="dt">x =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="fl">0.1</span>, <span class="dt">length =</span> <span class="dv">1000</span>),</span>
+<span id="cb11-3"><a href="#cb11-3"></a>  <span class="dt">density =</span> <span class="kw">c</span>(<span class="kw">dbeta</span>(x, <span class="dt">shape1 =</span> alpha0, <span class="dt">shape2 =</span> beta0)))</span></code></pre></div>
 <pre><code>## Warning: `data_frame()` is deprecated, use `tibble()`.
 ## This warning is displayed once per session.</code></pre>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>chekhov <span class="op">%&gt;%</span><span class="st"> </span></span>
@@ -584,7 +583,7 @@ div.tocify {
 <p>Полученное распределение можно использовать как априорное распределение для апдейта значений из каждого рассказа. Этот трюк и называется Empirical Bayes estimation.</p>
 <div id="section" class="section level3">
 <h3>1.1</h3>
-<p>В датасете собраны данные по числу людей владеющих русским в разных селах Дагестана, родившихся до 1950 года. Проведите эмпирическую байесовскую оценку и постройте следующий график:</p>
+<p>В <a href="https://raw.githubusercontent.com/agricolamz/2020_ds4l/master/data/russian_in_daghestan.csv">датасете</a> собраны данные по числу людей владеющих русским в разных селах Дагестана, родившихся до 1950 года. Проведите эмпирическую байесовскую оценку и постройте следующий график:</p>
 <pre><code>## Parsed with column specification:
 ## cols(
 ##   residence = col_character(),
