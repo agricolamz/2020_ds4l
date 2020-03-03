@@ -584,36 +584,64 @@ div.tocify {
 </form>
 <p><br></p>
 </div>
+<div id="короткое-замечание" class="section level3">
+<h3>2.3 Короткое замечание</h3>
+<p>Только что мы обсудили, что вероятность, выделенная на графике, равна интегралу нормального распределения в указанном промежутке:</p>
+<p><img src="2_Bayesian_inference_files/figure-html/unnamed-chunk-10-1.png" width="864" /></p>
+<p>Ее можно посчитать двумя способами:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="kw">integrate</span>(<span class="cf">function</span>(x){<span class="kw">dnorm</span>(x, <span class="dv">22</span>, <span class="dv">6</span>)}, <span class="dt">lower =</span> <span class="dv">23</span>, <span class="dt">upper =</span> <span class="dv">32</span>)</span></code></pre></div>
+<pre><code>0.3860258 with absolute error &lt; 0.0000000000000043</code></pre>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="kw">pnorm</span>(<span class="dv">32</span>, <span class="dt">mean =</span> <span class="dv">22</span>, <span class="dt">sd =</span> <span class="dv">6</span>) <span class="op">-</span><span class="st"> </span><span class="kw">pnorm</span>(<span class="dv">23</span>, <span class="dt">mean =</span> <span class="dv">22</span>, <span class="dt">sd =</span> <span class="dv">6</span>)</span></code></pre></div>
+<pre><code>[1] 0.3860258</code></pre>
+<p>Рассмотрим теперь дискретное распределение. Какова вероятность, выделенная на графике?</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="dv">0</span><span class="op">:</span><span class="dv">80</span>,</span>
+<span id="cb12-2"><a href="#cb12-2"></a>       <span class="dt">y =</span> <span class="kw">dbinom</span>(x, <span class="dv">80</span>, <span class="fl">0.4</span>),</span>
+<span id="cb12-3"><a href="#cb12-3"></a>       <span class="dt">z =</span> <span class="kw">ifelse</span>(x <span class="op">&gt;=</span><span class="st"> </span><span class="dv">23</span> <span class="op">&amp;</span><span class="st"> </span>x <span class="op">&lt;=</span><span class="st"> </span><span class="dv">32</span>, <span class="ot">TRUE</span>, <span class="ot">FALSE</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb12-4"><a href="#cb12-4"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(x, y, <span class="dt">fill =</span> z)) <span class="op">+</span></span>
+<span id="cb12-5"><a href="#cb12-5"></a><span class="st">  </span><span class="kw">geom_col</span>(<span class="dt">show.legend =</span> <span class="ot">FALSE</span>)<span class="op">+</span></span>
+<span id="cb12-6"><a href="#cb12-6"></a><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks =</span> <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">15</span>, <span class="dv">23</span>, <span class="dv">32</span>, <span class="dv">40</span>, <span class="dv">60</span>, <span class="dv">80</span>))<span class="op">+</span></span>
+<span id="cb12-7"><a href="#cb12-7"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="kw">TeX</span>(<span class="st">&quot;$X </span><span class="ch">\\</span><span class="st">sim Binom(n = 80,</span><span class="ch">\\</span><span class="st">, p=0.4)$&quot;</span>))</span></code></pre></div>
+<p><img src="2_Bayesian_inference_files/figure-html/unnamed-chunk-12-1.png" width="864" /></p>
+<p>Ее тоже можно посчитать двумя способами:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="kw">sum</span>(<span class="kw">dbinom</span>(<span class="dv">23</span><span class="op">:</span><span class="dv">32</span>, <span class="dt">size =</span> <span class="dv">80</span>, <span class="dt">p =</span> <span class="fl">0.4</span>))</span></code></pre></div>
+<pre><code>[1] 0.534717</code></pre>
+<p>Однако, если мы попробуем посчитать это при помощи функции <code>pbinom()</code>, мы получим другой результат:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="kw">pbinom</span>(<span class="dv">32</span>, <span class="dt">size =</span> <span class="dv">80</span>, <span class="dt">p =</span> <span class="fl">0.4</span>) <span class="op">-</span><span class="st"> </span><span class="kw">pbinom</span>(<span class="dv">23</span>, <span class="dt">size =</span> <span class="dv">80</span>, <span class="dt">p =</span> <span class="fl">0.4</span>)</span></code></pre></div>
+<pre><code>[1] 0.5238404</code></pre>
+<p>Дело в том, что в непрерывном варианте, мы не исключаем значение, когда вычитаем: (-∞, 32) - (-∞, 23) = (23, 32). Однако в дискретном варианте происходит другое (-∞, 32] - (-∞, 23] = [24, 32]. Так что, верным способом посчитать выделенную вероятность будет следующий:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="kw">pbinom</span>(<span class="dv">32</span>, <span class="dt">size =</span> <span class="dv">80</span>, <span class="dt">p =</span> <span class="fl">0.4</span>) <span class="op">-</span><span class="st"> </span><span class="kw">pbinom</span>(<span class="dv">22</span>, <span class="dt">size =</span> <span class="dv">80</span>, <span class="dt">p =</span> <span class="fl">0.4</span>)</span></code></pre></div>
+<pre><code>[1] 0.534717</code></pre>
+</div>
 </div>
 <div id="категориальные-данные" class="section level2">
 <h2>3. Категориальные данные</h2>
 <p><a href="https://raw.githubusercontent.com/agricolamz/2019_BayesDan_winter/master/datasets/mushrooms.csv">В датасете c грибами</a> (взят c <a href="https://www.kaggle.com/uciml/mushroom-classification">kaggle</a>) представлено следующее распределение по месту обитания:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>df &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;https://github.com/agricolamz/2019_BayesDan_winter/blob/master/datasets/mushrooms.csv?raw=true&quot;</span>)</span>
-<span id="cb8-2"><a href="#cb8-2"></a>df <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb8-3"><a href="#cb8-3"></a><span class="st">  </span><span class="kw">count</span>(class, habitat) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb8-4"><a href="#cb8-4"></a><span class="st">  </span><span class="kw">group_by</span>(class) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb8-5"><a href="#cb8-5"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prop =</span> n<span class="op">/</span><span class="kw">sum</span>(n)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb8-6"><a href="#cb8-6"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(class, prop, <span class="dt">fill =</span> habitat, <span class="dt">label =</span> <span class="kw">round</span>(prop, <span class="dv">3</span>)))<span class="op">+</span></span>
-<span id="cb8-7"><a href="#cb8-7"></a><span class="st">  </span><span class="kw">geom_col</span>()<span class="op">+</span></span>
-<span id="cb8-8"><a href="#cb8-8"></a><span class="st">  </span><span class="kw">geom_text</span>(<span class="dt">position =</span> <span class="kw">position_stack</span>(<span class="dt">vjust =</span> <span class="fl">0.5</span>), <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>)</span></code></pre></div>
-<p><img src="2_Bayesian_inference_files/figure-html/unnamed-chunk-10-1.png" width="864" /></p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a>df &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;https://github.com/agricolamz/2019_BayesDan_winter/blob/master/datasets/mushrooms.csv?raw=true&quot;</span>)</span>
+<span id="cb19-2"><a href="#cb19-2"></a>df <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb19-3"><a href="#cb19-3"></a><span class="st">  </span><span class="kw">count</span>(class, habitat) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb19-4"><a href="#cb19-4"></a><span class="st">  </span><span class="kw">group_by</span>(class) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb19-5"><a href="#cb19-5"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prop =</span> n<span class="op">/</span><span class="kw">sum</span>(n)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb19-6"><a href="#cb19-6"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(class, prop, <span class="dt">fill =</span> habitat, <span class="dt">label =</span> <span class="kw">round</span>(prop, <span class="dv">3</span>)))<span class="op">+</span></span>
+<span id="cb19-7"><a href="#cb19-7"></a><span class="st">  </span><span class="kw">geom_col</span>()<span class="op">+</span></span>
+<span id="cb19-8"><a href="#cb19-8"></a><span class="st">  </span><span class="kw">geom_text</span>(<span class="dt">position =</span> <span class="kw">position_stack</span>(<span class="dt">vjust =</span> <span class="fl">0.5</span>), <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>)</span></code></pre></div>
+<p><img src="2_Bayesian_inference_files/figure-html/unnamed-chunk-16-1.png" width="864" /></p>
 <p>Мы нашли некоторый новый вид грибов на лужайке (<code>grasses</code>). Какой это может быть гриб: съедобный или ядовитый? У нас нет никаких идей, почему бы нам отдать предпочтения той или иной гипотезе, так что будем использовать неинформативное априорное распределение:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw">tibble</span>(<span class="dt">model =</span> <span class="kw">c</span>(<span class="st">&quot;edible&quot;</span>, <span class="st">&quot;poisonous&quot;</span>),</span>
-<span id="cb9-2"><a href="#cb9-2"></a>           <span class="dt">prior =</span> <span class="fl">0.5</span>,</span>
-<span id="cb9-3"><a href="#cb9-3"></a>           <span class="dt">likelihood =</span> <span class="kw">c</span>(<span class="fl">0.335</span>, <span class="fl">0.189</span>),</span>
-<span id="cb9-4"><a href="#cb9-4"></a>           <span class="dt">product =</span> prior<span class="op">*</span>likelihood,</span>
-<span id="cb9-5"><a href="#cb9-5"></a>           <span class="dt">posterior =</span> product<span class="op">/</span><span class="kw">sum</span>(product))</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="kw">tibble</span>(<span class="dt">model =</span> <span class="kw">c</span>(<span class="st">&quot;edible&quot;</span>, <span class="st">&quot;poisonous&quot;</span>),</span>
+<span id="cb20-2"><a href="#cb20-2"></a>           <span class="dt">prior =</span> <span class="fl">0.5</span>,</span>
+<span id="cb20-3"><a href="#cb20-3"></a>           <span class="dt">likelihood =</span> <span class="kw">c</span>(<span class="fl">0.335</span>, <span class="fl">0.189</span>),</span>
+<span id="cb20-4"><a href="#cb20-4"></a>           <span class="dt">product =</span> prior<span class="op">*</span>likelihood,</span>
+<span id="cb20-5"><a href="#cb20-5"></a>           <span class="dt">posterior =</span> product<span class="op">/</span><span class="kw">sum</span>(product))</span></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["model"],"name":[1],"type":["chr"],"align":["left"]},{"label":["prior"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["likelihood"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["product"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["posterior"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"edible","2":"0.5","3":"0.335","4":"0.1675","5":"0.639313"},{"1":"poisonous","2":"0.5","3":"0.189","4":"0.0945","5":"0.360687"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <p>Вот мы и сделали байесовский апдейт. Теперь апостериорное распределение, которые мы получили на предыдущем шаге, мы можем использовать в новом апдейте. Допустим, мы опять нашли этот же вид гриба, но в этот раз в лесу (<code>woods</code>).</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="kw">tibble</span>(<span class="dt">model =</span> <span class="kw">c</span>(<span class="st">&quot;edible&quot;</span>, <span class="st">&quot;poisonous&quot;</span>),</span>
-<span id="cb10-2"><a href="#cb10-2"></a>           <span class="dt">prior_2 =</span> <span class="kw">c</span>(<span class="fl">0.639</span>, <span class="fl">0.361</span>),</span>
-<span id="cb10-3"><a href="#cb10-3"></a>           <span class="dt">likelihood_2 =</span> <span class="kw">c</span>(<span class="fl">0.447</span>, <span class="fl">0.324</span>),</span>
-<span id="cb10-4"><a href="#cb10-4"></a>           <span class="dt">product_2 =</span> prior_<span class="dv">2</span><span class="op">*</span>likelihood_<span class="dv">2</span>,</span>
-<span id="cb10-5"><a href="#cb10-5"></a>           <span class="dt">posterior_2 =</span> product_<span class="dv">2</span><span class="op">/</span><span class="kw">sum</span>(product_<span class="dv">2</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a><span class="kw">tibble</span>(<span class="dt">model =</span> <span class="kw">c</span>(<span class="st">&quot;edible&quot;</span>, <span class="st">&quot;poisonous&quot;</span>),</span>
+<span id="cb21-2"><a href="#cb21-2"></a>           <span class="dt">prior_2 =</span> <span class="kw">c</span>(<span class="fl">0.639</span>, <span class="fl">0.361</span>),</span>
+<span id="cb21-3"><a href="#cb21-3"></a>           <span class="dt">likelihood_2 =</span> <span class="kw">c</span>(<span class="fl">0.447</span>, <span class="fl">0.324</span>),</span>
+<span id="cb21-4"><a href="#cb21-4"></a>           <span class="dt">product_2 =</span> prior_<span class="dv">2</span><span class="op">*</span>likelihood_<span class="dv">2</span>,</span>
+<span id="cb21-5"><a href="#cb21-5"></a>           <span class="dt">posterior_2 =</span> product_<span class="dv">2</span><span class="op">/</span><span class="kw">sum</span>(product_<span class="dv">2</span>))</span></code></pre></div>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["model"],"name":[1],"type":["chr"],"align":["left"]},{"label":["prior_2"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["likelihood_2"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["product_2"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["posterior_2"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"edible","2":"0.639","3":"0.447","4":"0.285633","5":"0.7094762"},{"1":"poisonous","2":"0.361","3":"0.324","4":"0.116964","5":"0.2905238"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -635,53 +663,53 @@ div.tocify {
 <h3>4.1 Биномиальное распределение</h3>
 <p>Биномиальное распределение — распределение количества успехов эксперементов Бернулли из <em>n</em> попыток с вероятностью успеха <em>p</em>.</p>
 <p><span class="math display">\[P(k | n, p) = \frac{n!}{k!(n-k)!} \times p^k \times (1-p)^{n-k} =  {n \choose k} \times p^k \times (1-p)^{n-k}\]</span> <span class="math display">\[ 0 \leq p \leq 1; n, k &gt; 0\]</span></p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="dv">0</span><span class="op">:</span><span class="dv">50</span>,</span>
-<span id="cb11-2"><a href="#cb11-2"></a>           <span class="dt">density =</span> <span class="kw">dbinom</span>(<span class="dt">x =</span> x, <span class="dt">size =</span> <span class="dv">50</span>, <span class="dt">prob =</span> <span class="fl">0.16</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb11-3"><a href="#cb11-3"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(x, density))<span class="op">+</span></span>
-<span id="cb11-4"><a href="#cb11-4"></a><span class="st">  </span><span class="kw">geom_point</span>()<span class="op">+</span></span>
-<span id="cb11-5"><a href="#cb11-5"></a><span class="st">  </span><span class="kw">geom_line</span>()<span class="op">+</span></span>
-<span id="cb11-6"><a href="#cb11-6"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Биномиальное распределение p = 0.16, n = 50&quot;</span>)</span></code></pre></div>
-<p><img src="2_Bayesian_inference_files/figure-html/unnamed-chunk-14-1.png" width="864" /></p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="dv">0</span><span class="op">:</span><span class="dv">50</span>,</span>
+<span id="cb22-2"><a href="#cb22-2"></a>           <span class="dt">density =</span> <span class="kw">dbinom</span>(<span class="dt">x =</span> x, <span class="dt">size =</span> <span class="dv">50</span>, <span class="dt">prob =</span> <span class="fl">0.16</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb22-3"><a href="#cb22-3"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(x, density))<span class="op">+</span></span>
+<span id="cb22-4"><a href="#cb22-4"></a><span class="st">  </span><span class="kw">geom_point</span>()<span class="op">+</span></span>
+<span id="cb22-5"><a href="#cb22-5"></a><span class="st">  </span><span class="kw">geom_line</span>()<span class="op">+</span></span>
+<span id="cb22-6"><a href="#cb22-6"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Биномиальное распределение p = 0.16, n = 50&quot;</span>)</span></code></pre></div>
+<p><img src="2_Bayesian_inference_files/figure-html/unnamed-chunk-20-1.png" width="864" /></p>
 </div>
 <div id="бета-распределение" class="section level3">
 <h3>4.2 Бета распределение</h3>
 <p><span class="math display">\[P(x; α, β) = \frac{x^{α-1}\times (1-x)^{β-1}}{B(α, β)}; 0 \leq x \leq 1; α, β &gt; 0\]</span></p>
 <p>Бета функция:</p>
 <p><span class="math display">\[Β(α, β) = \frac{Γ(α)\times Γ(β)}{Γ(α+β)} = \frac{(α-1)!(β-1)!}{(α+β-1)!} \]</span></p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">length.out =</span> <span class="dv">100</span>),</span>
-<span id="cb12-2"><a href="#cb12-2"></a>           <span class="dt">density =</span> <span class="kw">dbeta</span>(<span class="dt">x =</span> x, <span class="dt">shape1 =</span> <span class="dv">8</span>, <span class="dt">shape2 =</span> <span class="dv">42</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb12-3"><a href="#cb12-3"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(x, density))<span class="op">+</span></span>
-<span id="cb12-4"><a href="#cb12-4"></a><span class="st">  </span><span class="kw">geom_point</span>()<span class="op">+</span></span>
-<span id="cb12-5"><a href="#cb12-5"></a><span class="st">  </span><span class="kw">geom_line</span>()<span class="op">+</span></span>
-<span id="cb12-6"><a href="#cb12-6"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Бета распределение α = 8, β = 42&quot;</span>)</span></code></pre></div>
-<p><img src="2_Bayesian_inference_files/figure-html/unnamed-chunk-15-1.png" width="864" /></p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">length.out =</span> <span class="dv">100</span>),</span>
+<span id="cb23-2"><a href="#cb23-2"></a>           <span class="dt">density =</span> <span class="kw">dbeta</span>(<span class="dt">x =</span> x, <span class="dt">shape1 =</span> <span class="dv">8</span>, <span class="dt">shape2 =</span> <span class="dv">42</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb23-3"><a href="#cb23-3"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(x, density))<span class="op">+</span></span>
+<span id="cb23-4"><a href="#cb23-4"></a><span class="st">  </span><span class="kw">geom_point</span>()<span class="op">+</span></span>
+<span id="cb23-5"><a href="#cb23-5"></a><span class="st">  </span><span class="kw">geom_line</span>()<span class="op">+</span></span>
+<span id="cb23-6"><a href="#cb23-6"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Бета распределение α = 8, β = 42&quot;</span>)</span></code></pre></div>
+<p><img src="2_Bayesian_inference_files/figure-html/unnamed-chunk-21-1.png" width="864" /></p>
 <p>Можно поиграть с разными параметрами:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>shiny<span class="op">::</span><span class="kw">runGitHub</span>(<span class="st">&quot;agricolamz/beta_distribution_shiny&quot;</span>) </span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a>shiny<span class="op">::</span><span class="kw">runGitHub</span>(<span class="st">&quot;agricolamz/beta_distribution_shiny&quot;</span>) </span></code></pre></div>
 <p><span class="math display">\[\mu = \frac{\alpha}{\alpha+\beta}\]</span></p>
 <p><span class="math display">\[\sigma^2 = \frac{\alpha\times\beta}{(\alpha+\beta)^2\times(\alpha+\beta+1)}\]</span></p>
 </div>
 <div id="байесовский-апдейт-биномиальных-данных" class="section level3">
 <h3>4.3 Байесовский апдейт биномиальных данных</h3>
 <p><span class="math display">\[Beta_{post}(\alpha_{post}, \beta_{post}) = Beta(\alpha_{prior}+\alpha_{data}, \beta_{prior}+\beta_{data}),\]</span> где <span class="math inline">\(Beta\)</span> — это бета распределение</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>shiny<span class="op">::</span><span class="kw">runGitHub</span>(<span class="st">&quot;agricolamz/bayes_for_binomial_app&quot;</span>) </span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a>shiny<span class="op">::</span><span class="kw">runGitHub</span>(<span class="st">&quot;agricolamz/bayes_for_binomial_app&quot;</span>) </span></code></pre></div>
 </div>
 <div id="байесовский-апдейт-биномиальных-данных-несколько-моделей" class="section level3">
 <h3>4.3 Байесовский апдейт биномиальных данных: несколько моделей</h3>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="kw">rep</span>(<span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">length.out =</span> <span class="dv">100</span>), <span class="dv">6</span>),</span>
-<span id="cb15-2"><a href="#cb15-2"></a>           <span class="dt">density =</span> <span class="kw">c</span>(<span class="kw">dbeta</span>(<span class="kw">unique</span>(x), <span class="dt">shape1 =</span> <span class="dv">8</span>, <span class="dt">shape2 =</span> <span class="dv">42</span>),</span>
-<span id="cb15-3"><a href="#cb15-3"></a>                       <span class="kw">dbeta</span>(<span class="kw">unique</span>(x), <span class="dt">shape1 =</span> <span class="dv">16</span>, <span class="dt">shape2 =</span> <span class="dv">34</span>),</span>
-<span id="cb15-4"><a href="#cb15-4"></a>                       <span class="kw">dbeta</span>(<span class="kw">unique</span>(x), <span class="dt">shape1 =</span> <span class="dv">24</span>, <span class="dt">shape2 =</span> <span class="dv">26</span>),</span>
-<span id="cb15-5"><a href="#cb15-5"></a>                       <span class="kw">dbeta</span>(<span class="kw">unique</span>(x), <span class="dt">shape1 =</span> <span class="dv">8</span><span class="op">+</span><span class="dv">4</span>, <span class="dt">shape2 =</span> <span class="dv">42</span><span class="op">+</span><span class="dv">16</span>),</span>
-<span id="cb15-6"><a href="#cb15-6"></a>                       <span class="kw">dbeta</span>(<span class="kw">unique</span>(x), <span class="dt">shape1 =</span> <span class="dv">16</span><span class="op">+</span><span class="dv">4</span>, <span class="dt">shape2 =</span> <span class="dv">34</span><span class="op">+</span><span class="dv">16</span>),</span>
-<span id="cb15-7"><a href="#cb15-7"></a>                       <span class="kw">dbeta</span>(<span class="kw">unique</span>(x), <span class="dt">shape1 =</span> <span class="dv">24</span><span class="op">+</span><span class="dv">4</span>, <span class="dt">shape2 =</span> <span class="dv">26</span><span class="op">+</span><span class="dv">16</span>)),</span>
-<span id="cb15-8"><a href="#cb15-8"></a>           <span class="dt">type =</span> <span class="kw">rep</span>(<span class="kw">c</span>(<span class="st">&quot;prior&quot;</span>, <span class="st">&quot;prior&quot;</span>, <span class="st">&quot;prior&quot;</span>, <span class="st">&quot;posterior&quot;</span>, <span class="st">&quot;posterior&quot;</span>, <span class="st">&quot;posterior&quot;</span>), <span class="dt">each =</span> <span class="dv">100</span>),</span>
-<span id="cb15-9"><a href="#cb15-9"></a>           <span class="dt">dataset =</span> <span class="kw">rep</span>(<span class="kw">c</span>(<span class="st">&quot;prior: 8, 42&quot;</span>, <span class="st">&quot;prior: 16, 34&quot;</span>, <span class="st">&quot;prior: 24, 26&quot;</span>,</span>
-<span id="cb15-10"><a href="#cb15-10"></a>                           <span class="st">&quot;prior: 8, 42&quot;</span>, <span class="st">&quot;prior: 16, 34&quot;</span>, <span class="st">&quot;prior: 24, 26&quot;</span>), <span class="dt">each =</span> <span class="dv">100</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb15-11"><a href="#cb15-11"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(x, density, <span class="dt">color =</span> type))<span class="op">+</span></span>
-<span id="cb15-12"><a href="#cb15-12"></a><span class="st">  </span><span class="kw">geom_line</span>()<span class="op">+</span></span>
-<span id="cb15-13"><a href="#cb15-13"></a><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>dataset)<span class="op">+</span></span>
-<span id="cb15-14"><a href="#cb15-14"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;data = 4, 16&quot;</span>)</span></code></pre></div>
-<p><img src="2_Bayesian_inference_files/figure-html/unnamed-chunk-18-1.png" width="864" /></p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="kw">rep</span>(<span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">length.out =</span> <span class="dv">100</span>), <span class="dv">6</span>),</span>
+<span id="cb26-2"><a href="#cb26-2"></a>           <span class="dt">density =</span> <span class="kw">c</span>(<span class="kw">dbeta</span>(<span class="kw">unique</span>(x), <span class="dt">shape1 =</span> <span class="dv">8</span>, <span class="dt">shape2 =</span> <span class="dv">42</span>),</span>
+<span id="cb26-3"><a href="#cb26-3"></a>                       <span class="kw">dbeta</span>(<span class="kw">unique</span>(x), <span class="dt">shape1 =</span> <span class="dv">16</span>, <span class="dt">shape2 =</span> <span class="dv">34</span>),</span>
+<span id="cb26-4"><a href="#cb26-4"></a>                       <span class="kw">dbeta</span>(<span class="kw">unique</span>(x), <span class="dt">shape1 =</span> <span class="dv">24</span>, <span class="dt">shape2 =</span> <span class="dv">26</span>),</span>
+<span id="cb26-5"><a href="#cb26-5"></a>                       <span class="kw">dbeta</span>(<span class="kw">unique</span>(x), <span class="dt">shape1 =</span> <span class="dv">8</span><span class="op">+</span><span class="dv">4</span>, <span class="dt">shape2 =</span> <span class="dv">42</span><span class="op">+</span><span class="dv">16</span>),</span>
+<span id="cb26-6"><a href="#cb26-6"></a>                       <span class="kw">dbeta</span>(<span class="kw">unique</span>(x), <span class="dt">shape1 =</span> <span class="dv">16</span><span class="op">+</span><span class="dv">4</span>, <span class="dt">shape2 =</span> <span class="dv">34</span><span class="op">+</span><span class="dv">16</span>),</span>
+<span id="cb26-7"><a href="#cb26-7"></a>                       <span class="kw">dbeta</span>(<span class="kw">unique</span>(x), <span class="dt">shape1 =</span> <span class="dv">24</span><span class="op">+</span><span class="dv">4</span>, <span class="dt">shape2 =</span> <span class="dv">26</span><span class="op">+</span><span class="dv">16</span>)),</span>
+<span id="cb26-8"><a href="#cb26-8"></a>           <span class="dt">type =</span> <span class="kw">rep</span>(<span class="kw">c</span>(<span class="st">&quot;prior&quot;</span>, <span class="st">&quot;prior&quot;</span>, <span class="st">&quot;prior&quot;</span>, <span class="st">&quot;posterior&quot;</span>, <span class="st">&quot;posterior&quot;</span>, <span class="st">&quot;posterior&quot;</span>), <span class="dt">each =</span> <span class="dv">100</span>),</span>
+<span id="cb26-9"><a href="#cb26-9"></a>           <span class="dt">dataset =</span> <span class="kw">rep</span>(<span class="kw">c</span>(<span class="st">&quot;prior: 8, 42&quot;</span>, <span class="st">&quot;prior: 16, 34&quot;</span>, <span class="st">&quot;prior: 24, 26&quot;</span>,</span>
+<span id="cb26-10"><a href="#cb26-10"></a>                           <span class="st">&quot;prior: 8, 42&quot;</span>, <span class="st">&quot;prior: 16, 34&quot;</span>, <span class="st">&quot;prior: 24, 26&quot;</span>), <span class="dt">each =</span> <span class="dv">100</span>)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb26-11"><a href="#cb26-11"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(x, density, <span class="dt">color =</span> type))<span class="op">+</span></span>
+<span id="cb26-12"><a href="#cb26-12"></a><span class="st">  </span><span class="kw">geom_line</span>()<span class="op">+</span></span>
+<span id="cb26-13"><a href="#cb26-13"></a><span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>dataset)<span class="op">+</span></span>
+<span id="cb26-14"><a href="#cb26-14"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;data = 4, 16&quot;</span>)</span></code></pre></div>
+<p><img src="2_Bayesian_inference_files/figure-html/unnamed-chunk-24-1.png" width="864" /></p>
 <p>Подробнее см.:</p>
 <ul>
 <li><a href="https://www.cs.ubc.ca/~murphyk/Papers/bayesGauss.pdf">Murphy K. P. (2007) Conjugate Bayesian analysis of the Gaussian distribution</a></li>

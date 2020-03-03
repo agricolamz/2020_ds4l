@@ -1,4 +1,11 @@
 base
+methods
+datasets
+utils
+grDevices
+graphics
+stats
+checkdown
 tidyverse
 ggplot2
 tibble
@@ -8,7 +15,4 @@ purrr
 dplyr
 stringr
 forcats
-latex2exp
-HDInterval
 bootstrap
-ggtern

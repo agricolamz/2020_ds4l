@@ -11,8 +11,8 @@ navbar:
       href: 2_Bayesian_inference.html
     - text: 3. Продвинутая байесовская статистика
       href: 3_Advanced_Bayesian.html
-    - text: 4. Байесовская регрессия
-      href: 4_Bayesian_regression.html
+    - text: 4. Доверительные интервалы
+      href: 4_Confidence_intervals.html
   - text: уменьшение размерности
     menu:
     - text: 5. PCA, LDA
