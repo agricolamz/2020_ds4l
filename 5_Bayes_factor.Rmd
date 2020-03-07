@@ -11,6 +11,11 @@ editor_options:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+```{r}
+library(tidyverse)
+```
+
+
 ## 4. Коэффициент Байеса
 
 ### 4.1 Формула Байеса опять
@@ -65,4 +70,53 @@ tibble(x = 0:699,
   geom_col()
 ```
 
-### 4.3 [Интерпретация байесовского фактора](https://en.wikipedia.org/wiki/Bayes_factor#Interpretation)
+[Интерпретация коэффициента Байеса](https://en.wikipedia.org/wiki/Bayes_factor#Interpretation)
+
+[В датасете c грибами](https://raw.githubusercontent.com/agricolamz/2019_BayesDan_winter/master/datasets/mushrooms.csv) (взят c [kaggle](https://www.kaggle.com/uciml/mushroom-classification)) представлено следующее распределение по месту обитания:
+
+```{r}
+df <- read_csv("https://github.com/agricolamz/2019_BayesDan_winter/blob/master/datasets/mushrooms.csv?raw=true")
+df %>% 
+  count(class, habitat) %>% 
+  group_by(class) %>% 
+  mutate(prop = n/sum(n)) %>% 
+  ggplot(aes(class, prop, fill = habitat, label = round(prop, 3)))+
+  geom_col()+
+  geom_text(position = position_stack(vjust = 0.5), color = "white")
+```
+
+Мы нашли некоторый новый вид грибов на лужайке (`grasses`), а потом в лесу (`woods`). Давайте посчитаем $BF_{edible\ poisonous}$:
+
+
+$$L(grasses,\ wood|edible) = 0.335 \times 0.447 = 0.149745$$
+
+$$L(grasses,\ wood|poisonous) = 0.189 \times 0.324 = 0.061236$$
+
+$$BF_{edible\ poisonous} = \frac{L(grasses,\ wood|edible)}{L(grasses,\ wood|poisonous)} = \frac{0.149745}{0.061236} = 2.445375$$
+
+### 4.2 
+Вашего друга похитили а на почту отправили [датасет](https://raw.githubusercontent.com/agricolamz/2019_BayesDan_winter/master/datasets/weather.csv), в котором записаны данные о погоде из пяти городов. Ваш телефон зазвонил, и друг сказал, что не знает куда его похитили, но за окном легкий дождь (`Rain`). А на следующий день --- сильный дождь (`Rain Thunderstorm`). Посчитайте $BH_{San\_Diego\ Auckland}$ с точностью до 1 знака после запятой.
+
+```{r, include=FALSE}
+df <- read.csv("https://raw.githubusercontent.com/agricolamz/2019_BayesDan_winter/master/datasets/weather.csv")
+df %>%
+  count(city, events) %>% 
+  group_by(city) %>% 
+  mutate(prop = n/sum(n)) %>% 
+  ggplot(aes(city, prop, fill = events, label = round(prop, 3)))+
+  geom_col()+
+  geom_text(position = position_stack(vjust = 0.5), color = "white")
+
+df %>%
+  count(city, events) %>% 
+  group_by(city) %>% 
+  mutate(prop = n/sum(n)) %>% 
+  select(-n) %>% 
+  spread(events, prop, fill = 0) %>% 
+  mutate(likelihood_r_rt = `Rain , Thunderstorm` * Rain) ->
+  results
+
+BF <- round(results$likelihood_r_rt[5]/results$likelihood_r_rt[1], 3)
+```
+
+
