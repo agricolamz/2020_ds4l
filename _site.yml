@@ -13,6 +13,11 @@ navbar:
       href: 3_Advanced_Bayesian.html
     - text: 4. Доверительные интервалы
       href: 4_Confidence_intervals.html
+    - text: 5. Коэффициент Байеса
+      href: 5_Bayes_factore.html
+    - text: 6. Байесовская регрессия
+      href: 6_Bayesian_regressian.html
+      
   - text: уменьшение размерности
     menu:
     - text: 5. PCA, LDA
