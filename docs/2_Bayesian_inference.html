@@ -533,6 +533,7 @@ div.tocify {
 </ul>
 <p>В литературе можно еще встретить такую запись:</p>
 <p><span class="math display">\[P(θ|Data) \propto P(Data|θ)\times P(θ)\]</span></p>
+<p>Стоп, в прошлый раз мы говорили, что <a href="https://stats.stackexchange.com/a/31241/225843">функция правдоподобия не обязана интегрироваться до 1</a>, тогда почему, назвав часть формулы Байеса <span class="math inline">\(P(Data|θ)\)</span> функцией правдоподобия, мы оставляем нотацию будто это функция вероятностей? Потому что это условная вероятность, <a href="https://stats.stackexchange.com/q/448852/225843">она не обязана интегрироваться до 1</a>.</p>
 </div>
 </div>
 <div id="вероятность-vs.-функция-правдободобия" class="section level2">
@@ -596,7 +597,7 @@ div.tocify {
 <p><img src="2_Bayesian_inference_files/figure-html/unnamed-chunk-10-1.png" width="864" /></p>
 <p>Ее можно посчитать двумя способами:</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="kw">integrate</span>(<span class="cf">function</span>(x){<span class="kw">dnorm</span>(x, <span class="dv">22</span>, <span class="dv">6</span>)}, <span class="dt">lower =</span> <span class="dv">23</span>, <span class="dt">upper =</span> <span class="dv">32</span>)</span></code></pre></div>
-<pre><code>0.3860258 with absolute error &lt; 0.0000000000000043</code></pre>
+<pre><code>0.3860258 with absolute error &lt; 4.3e-15</code></pre>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="kw">pnorm</span>(<span class="dv">32</span>, <span class="dt">mean =</span> <span class="dv">22</span>, <span class="dt">sd =</span> <span class="dv">6</span>) <span class="op">-</span><span class="st"> </span><span class="kw">pnorm</span>(<span class="dv">23</span>, <span class="dt">mean =</span> <span class="dv">22</span>, <span class="dt">sd =</span> <span class="dv">6</span>)</span></code></pre></div>
 <pre><code>[1] 0.3860258</code></pre>
 <p>Рассмотрим теперь дискретное распределение. Какова вероятность, выделенная на графике?</p>
