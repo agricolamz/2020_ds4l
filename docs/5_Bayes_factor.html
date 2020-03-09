@@ -11,8 +11,9 @@
 
 <meta name="author" content="G. Moroz" />
 
+<meta name="date" content="2020-10-03" />
 
-<title>Bayes Factor</title>
+<title>Коэффициент Байеса</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -512,25 +513,63 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Bayes Factor</h1>
+<h1 class="title toc-ignore">Коэффициент Байеса</h1>
 <h4 class="author">G. Moroz</h4>
-<h4 class="date">3/7/2020</h4>
+<h4 class="date">10/03/2020</h4>
 
 </div>
 
 
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(tidyverse)</span></code></pre></div>
-<div id="коэффициент-байеса" class="section level2">
-<h2>4. Коэффициент Байеса</h2>
-<div id="формула-байеса-опять" class="section level3">
-<h3>4.1 Формула Байеса опять</h3>
+<div id="вероятность-vs.-функция-правдободобия" class="section level2">
+<h2>1. Вероятность vs. функция правдободобия</h2>
+<p>Предположим что распределение количества согласных в языках мира можно описать логнормальным распределением с логсредним 3, и логстандартным отклонением 0.37:</p>
+<p><img src="5_Bayes_factor_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p>Тогда вероятность того, что в выбранных произвольно языках окажется от 23 до 32 согласных равна интегралу нормального распределения в указанном промежутке:</p>
+<p><img src="5_Bayes_factor_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p><span class="math display">\[P\left(X \in (23,\, 32) | X \sim \ln\mathcal{N}(\mu = 3,\, \sigma^{2}=0.37)\right) = ...\]</span></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">plnorm</span>(<span class="dv">32</span>, <span class="dt">meanlog =</span> <span class="dv">3</span>, <span class="dt">sdlog =</span> <span class="fl">0.37</span>) <span class="op">-</span><span class="st"> </span><span class="kw">plnorm</span>(<span class="dv">23</span>, <span class="dt">meanlog =</span> <span class="dv">3</span>, <span class="dt">sdlog =</span> <span class="fl">0.37</span>)</span></code></pre></div>
+<pre><code>## [1] 0.2530466</code></pre>
+<p>Когда мы говорим про функцию правдоподобия, то мы уже нашли еще один язык в котором оказалось 33 согласных. Нас интересует, насколько правдоподобна функция логнормального распределения с логсредним 3 и логстандартным отклонением 0.37 при значении переменной 33. Это значение равно функции плотности:</p>
+<p><img src="5_Bayes_factor_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p><span class="math display">\[L\left(X \sim \ln\mathcal{N}(\mu = 3,\, \sigma^{2}=0.37)|x = 33\right) = ...\]</span></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="kw">dlnorm</span>(<span class="dv">33</span>, <span class="dv">3</span>, <span class="fl">0.37</span>)</span></code></pre></div>
+<pre><code>## [1] 0.01327918</code></pre>
+<p>А что если у нас не одно наблюдение, а несколько? Например, мы наблюдаем языки с 33 и 26 согласными? События независимы друг от друга, значит, мы можем перемножить получаемые вероятности. Так как результат перемножения маленьких чисел дает маленькие числа, с которыми компьютер не всегда хорошо справляется, для практических вычислений вместо функции правдоподобия используют ее натуральный логарифм (логарифмическая функция правдоподобия).</p>
+<p><img src="5_Bayes_factor_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="kw">dlnorm</span>(<span class="dv">33</span>, <span class="dv">3</span>, <span class="fl">0.37</span>)<span class="op">*</span><span class="kw">dlnorm</span>(<span class="dv">26</span>, <span class="dv">3</span>, <span class="fl">0.37</span>)</span></code></pre></div>
+<pre><code>## [1] 0.0004317626</code></pre>
+<p>В итоге:</p>
+<ul>
+<li>вероятность — P(data|distribution parameter(s))</li>
+<li>правдоподобие — L(distribution parameter(s)|data)</li>
+</ul>
+<p>Интеграл распределения или сумма вероятностей равен 1. <a href="https://stats.stackexchange.com/a/31241/225843">Интеграл функции правдоподобия может быть не равен 1</a>.</p>
+<p><strong>The Law of Likelihood</strong> states that “within the framework of a statistical model, a particular set of data supports one statistical hypothesis better than another if the likelihood of the first hypothesis, on the data, exceeds the likelihood of the second hypothesis” (Edwards, 1992, p. 30).</p>
+</div>
+<div id="отношение-правдободобий" class="section level2">
+<h2>2. Отношение правдободобий</h2>
+<p>Важно понимать, что само по себе значение правдоподобия бессмысленно, оно важно для сравнения со значениями правдоподобия разных моделей. Представим, что мы пытаемся выбрать между двумя моделями:</p>
+<ul>
+<li><span class="math inline">\(H_1 = X \sim \ln\mathcal{N}(\mu = 3,\, \sigma^{2}= 0.37)\)</span></li>
+<li><span class="math inline">\(H_2 = X \sim \ln\mathcal{N}(\mu = 3.5,\, \sigma^{2}= 0.25)\)</span></li>
+</ul>
+<p><img src="5_Bayes_factor_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>L1 &lt;-<span class="st"> </span><span class="kw">dlnorm</span>(<span class="dv">33</span>, <span class="dv">3</span>, <span class="fl">0.37</span>)<span class="op">*</span><span class="kw">dlnorm</span>(<span class="dv">26</span>, <span class="dv">3</span>, <span class="fl">0.37</span>)</span>
+<span id="cb8-2"><a href="#cb8-2"></a>L2 &lt;-<span class="st"> </span><span class="kw">dlnorm</span>(<span class="dv">33</span>, <span class="fl">3.5</span>, <span class="fl">0.25</span>)<span class="op">*</span><span class="kw">dlnorm</span>(<span class="dv">26</span>, <span class="fl">3.5</span>, <span class="fl">0.25</span>)</span>
+<span id="cb8-3"><a href="#cb8-3"></a>L2<span class="op">/</span>L1</span></code></pre></div>
+<pre><code>## [1] 4.303835</code></pre>
+<p>Как мы видим, на основании наших (фейковых) данных <span class="math inline">\(H_2\)</span> в 4 раза более вероятнее, чем <span class="math inline">\(H_1\)</span>. Надо отметить, что не все тепло относятся к сравнению моделей (см. <a href="https://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.44.6443">Gelman, Rubin 1994</a>).</p>
+</div>
+<div id="формула-байеса-опять" class="section level2">
+<h2>3 Формула Байеса опять</h2>
 <p>Представим себе, что у нас есть <span class="math inline">\(k\)</span> гипотез <span class="math inline">\(M\)</span>. Тогда формула Байеса может выглядеть вот так:</p>
 <p><span class="math display">\[P(θ|Data, M_k) = \frac{P(Data|θ, M_k) \times  P(θ| M_k) }{P(Data|M_k)}\]</span></p>
-<p>Коэффициент Байеса определяют как соотношение предельных правдоподобий (<span class="math inline">\(P(Data, M_k)\)</span>) моделей (в принципе их может быть больше двух:</p>
+<p>Коэффициент Байеса определяют как соотношение предельных правдоподобий (<span class="math inline">\(P(Data, M_k)\)</span>) моделей (в принципе их может быть больше двух):</p>
 <p><span class="math display">\[
-BF_{12} = \frac{P(Data | M_1)}{P(Data | M_2)} 
+BF_{12} = \frac{P(Data | M_1 )}{P(Data | M_2)}
 \]</span></p>
-<p>Вычислять предельные правдоподобия достаточно просто, так что порой используют численную аппроксимацию.</p>
+<p>Вычислять предельные правдоподобия порой достаточно сложно, так что иногда используют численную аппроксимацию.</p>
 <p>Рассмотрим пример эксперимента Бернулли:</p>
 <ul>
 <li>мы посчитали количество букв “а” в рассказе А. П. Чехова и получили 58 букв из рассказа длинной 699 букв (пробелы и латинские буквы выкинуты);</li>
@@ -540,46 +579,49 @@ BF_{12} = \frac{P(Data | M_1)}{P(Data | M_2)}
 <p><span class="math display">\[P(k | n, p) = \frac{n!}{k!(n-k)!} \times p^k \times (1-p)^{n-k} =  {n \choose k} \times p^k \times (1-p)^{n-k}\]</span></p>
 <p>Так что в случае наших моделей будет:</p>
 <p><span class="math display">\[P(Data | M_1) = {n \choose k} \times p^k \times (1-p)^{n-k} = {699 \choose 58} \times 0.08^{58} \times (1-0.08)^{699-58} = 0.0523985\]</span></p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">dbinom</span>(<span class="dv">58</span>, <span class="dv">699</span>, <span class="dt">prob =</span> <span class="fl">0.08</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="kw">dbinom</span>(<span class="dv">58</span>, <span class="dv">699</span>, <span class="dt">prob =</span> <span class="fl">0.08</span>)</span></code></pre></div>
 <pre><code>## [1] 0.0523985</code></pre>
 <p><span class="math display">\[P(Data | M_2) = {n \choose k} \times p^k \times (1-p)^{n-k} = {699 \choose 58} \times 0.085^{58} \times (1-0.085)^{699-58} = 0.04402509\]</span></p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="kw">dbinom</span>(<span class="dv">58</span>, <span class="dv">699</span>, <span class="dt">prob =</span> <span class="fl">0.09</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="kw">dbinom</span>(<span class="dv">58</span>, <span class="dv">699</span>, <span class="dt">prob =</span> <span class="fl">0.09</span>)</span></code></pre></div>
 <pre><code>## [1] 0.04402509</code></pre>
 <p>Тогда коэфициент Байеса будет</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>BF_<span class="dv">12</span> =<span class="st"> </span><span class="kw">dbinom</span>(<span class="dv">58</span>, <span class="dv">699</span>, <span class="dt">prob =</span> <span class="fl">0.08</span>)<span class="op">/</span><span class="kw">dbinom</span>(<span class="dv">58</span>, <span class="dv">699</span>, <span class="dt">prob =</span> <span class="fl">0.09</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="dv">0</span><span class="op">:</span><span class="dv">699</span>,</span>
-<span id="cb7-2"><a href="#cb7-2"></a>       <span class="dt">m_1 =</span> <span class="kw">dbinom</span>(x, <span class="dt">size =</span> <span class="dv">699</span>, <span class="dt">prob =</span> <span class="fl">0.08</span>),</span>
-<span id="cb7-3"><a href="#cb7-3"></a>       <span class="dt">m_2 =</span> <span class="op">-</span><span class="kw">dbinom</span>(x, <span class="dt">size =</span> <span class="dv">699</span>, <span class="dt">prob =</span> <span class="fl">0.09</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb7-4"><a href="#cb7-4"></a><span class="st">  </span><span class="kw">gather</span>(model, value, m_<span class="dv">1</span><span class="op">:</span>m_<span class="dv">2</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb7-5"><a href="#cb7-5"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">model =</span> <span class="kw">ifelse</span>(x <span class="op">==</span><span class="st"> </span><span class="dv">58</span>, <span class="st">&quot;result&quot;</span>, model)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb7-6"><a href="#cb7-6"></a><span class="st">  </span><span class="kw">filter</span>(x <span class="op">&lt;</span><span class="st"> </span><span class="dv">100</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb7-7"><a href="#cb7-7"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(x, value, <span class="dt">fill =</span> model))<span class="op">+</span></span>
-<span id="cb7-8"><a href="#cb7-8"></a><span class="st">  </span><span class="kw">geom_col</span>()</span></code></pre></div>
-<p><img src="5_Bayes_factor_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
-<p><a href="https://en.wikipedia.org/wiki/Bayes_factor#Interpretation">Интерпретация коэффициента Байеса</a></p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>BF_<span class="dv">12</span> =<span class="st"> </span><span class="kw">dbinom</span>(<span class="dv">58</span>, <span class="dv">699</span>, <span class="dt">prob =</span> <span class="fl">0.08</span>)<span class="op">/</span><span class="kw">dbinom</span>(<span class="dv">58</span>, <span class="dv">699</span>, <span class="dt">prob =</span> <span class="fl">0.09</span>)</span>
+<span id="cb14-2"><a href="#cb14-2"></a>BF_<span class="dv">12</span></span></code></pre></div>
+<pre><code>## [1] 1.190196</code></pre>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="kw">tibble</span>(<span class="dt">x =</span> <span class="dv">0</span><span class="op">:</span><span class="dv">699</span>,</span>
+<span id="cb16-2"><a href="#cb16-2"></a>       <span class="dt">m_1 =</span> <span class="kw">dbinom</span>(x, <span class="dt">size =</span> <span class="dv">699</span>, <span class="dt">prob =</span> <span class="fl">0.08</span>),</span>
+<span id="cb16-3"><a href="#cb16-3"></a>       <span class="dt">m_2 =</span> <span class="op">-</span><span class="kw">dbinom</span>(x, <span class="dt">size =</span> <span class="dv">699</span>, <span class="dt">prob =</span> <span class="fl">0.09</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb16-4"><a href="#cb16-4"></a><span class="st">  </span><span class="kw">gather</span>(model, value, m_<span class="dv">1</span><span class="op">:</span>m_<span class="dv">2</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb16-5"><a href="#cb16-5"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">model =</span> <span class="kw">ifelse</span>(x <span class="op">==</span><span class="st"> </span><span class="dv">58</span>, <span class="st">&quot;result&quot;</span>, model)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb16-6"><a href="#cb16-6"></a><span class="st">  </span><span class="kw">filter</span>(x <span class="op">&lt;</span><span class="st"> </span><span class="dv">100</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb16-7"><a href="#cb16-7"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(x, value, <span class="dt">fill =</span> model))<span class="op">+</span></span>
+<span id="cb16-8"><a href="#cb16-8"></a><span class="st">  </span><span class="kw">geom_col</span>()</span></code></pre></div>
+<p><img src="5_Bayes_factor_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<div id="интерпретация-коэффициента-байеса" class="section level3">
+<h3>3.1 <a href="https://en.wikipedia.org/wiki/Bayes_factor#Interpretation">Интерпретация коэффициента Байеса</a></h3>
 <p><a href="https://raw.githubusercontent.com/agricolamz/2019_BayesDan_winter/master/datasets/mushrooms.csv">В датасете c грибами</a> (взят c <a href="https://www.kaggle.com/uciml/mushroom-classification">kaggle</a>) представлено следующее распределение по месту обитания:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>df &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;https://github.com/agricolamz/2019_BayesDan_winter/blob/master/datasets/mushrooms.csv?raw=true&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a>df &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;https://github.com/agricolamz/2019_BayesDan_winter/blob/master/datasets/mushrooms.csv?raw=true&quot;</span>)</span></code></pre></div>
 <pre><code>## Parsed with column specification:
 ## cols(
 ##   .default = col_character(),
 ##   ring_number = col_double()
 ## )</code></pre>
 <pre><code>## See spec(...) for full column specifications.</code></pre>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>df <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb11-2"><a href="#cb11-2"></a><span class="st">  </span><span class="kw">count</span>(class, habitat) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb11-3"><a href="#cb11-3"></a><span class="st">  </span><span class="kw">group_by</span>(class) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb11-4"><a href="#cb11-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prop =</span> n<span class="op">/</span><span class="kw">sum</span>(n)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb11-5"><a href="#cb11-5"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(class, prop, <span class="dt">fill =</span> habitat, <span class="dt">label =</span> <span class="kw">round</span>(prop, <span class="dv">3</span>)))<span class="op">+</span></span>
-<span id="cb11-6"><a href="#cb11-6"></a><span class="st">  </span><span class="kw">geom_col</span>()<span class="op">+</span></span>
-<span id="cb11-7"><a href="#cb11-7"></a><span class="st">  </span><span class="kw">geom_text</span>(<span class="dt">position =</span> <span class="kw">position_stack</span>(<span class="dt">vjust =</span> <span class="fl">0.5</span>), <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>)</span></code></pre></div>
-<p><img src="5_Bayes_factor_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a>df <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb20-2"><a href="#cb20-2"></a><span class="st">  </span><span class="kw">count</span>(class, habitat) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb20-3"><a href="#cb20-3"></a><span class="st">  </span><span class="kw">group_by</span>(class) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb20-4"><a href="#cb20-4"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prop =</span> n<span class="op">/</span><span class="kw">sum</span>(n)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb20-5"><a href="#cb20-5"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(class, prop, <span class="dt">fill =</span> habitat, <span class="dt">label =</span> <span class="kw">round</span>(prop, <span class="dv">3</span>)))<span class="op">+</span></span>
+<span id="cb20-6"><a href="#cb20-6"></a><span class="st">  </span><span class="kw">geom_col</span>()<span class="op">+</span></span>
+<span id="cb20-7"><a href="#cb20-7"></a><span class="st">  </span><span class="kw">geom_text</span>(<span class="dt">position =</span> <span class="kw">position_stack</span>(<span class="dt">vjust =</span> <span class="fl">0.5</span>), <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>)</span></code></pre></div>
+<p><img src="5_Bayes_factor_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
 <p>Мы нашли некоторый новый вид грибов на лужайке (<code>grasses</code>), а потом в лесу (<code>woods</code>). Давайте посчитаем <span class="math inline">\(BF_{edible\ poisonous}\)</span>:</p>
 <p><span class="math display">\[L(grasses,\ wood|edible) = 0.335 \times 0.447 = 0.149745\]</span></p>
 <p><span class="math display">\[L(grasses,\ wood|poisonous) = 0.189 \times 0.324 = 0.061236\]</span></p>
 <p><span class="math display">\[BF_{edible\ poisonous} = \frac{L(grasses,\ wood|edible)}{L(grasses,\ wood|poisonous)} = \frac{0.149745}{0.061236} = 2.445375\]</span></p>
 </div>
 <div id="section" class="section level3">
-<h3>4.2</h3>
+<h3>3.2</h3>
 <p>Вашего друга похитили а на почту отправили <a href="https://raw.githubusercontent.com/agricolamz/2019_BayesDan_winter/master/datasets/weather.csv">датасет</a>, в котором записаны данные о погоде из пяти городов. Ваш телефон зазвонил, и друг сказал, что не знает куда его похитили, но за окном легкий дождь (<code>Rain</code>). А на следующий день — сильный дождь (<code>Rain Thunderstorm</code>). Посчитайте <span class="math inline">\(BH_{San\_Diego\ Auckland}\)</span> с точностью до 1 знака после запятой.</p>
 </div>
 </div>

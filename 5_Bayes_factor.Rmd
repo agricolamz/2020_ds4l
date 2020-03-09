@@ -1,7 +1,7 @@
 ---
-title: "Bayes Factor"
+title: "Коэффициент Байеса"
 author: "G. Moroz"
-date: "3/7/2020"
+date: "10/03/2020"
 output: html_document
 editor_options: 
   chunk_output_type: console
@@ -9,28 +9,162 @@ editor_options:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(latex2exp)
+library(tidyverse)
+theme_set(theme_bw())
 ```
 
 ```{r}
 library(tidyverse)
 ```
 
+## 1. Вероятность vs. функция правдободобия
 
-## 4. Коэффициент Байеса
+Предположим что распределение количества согласных в языках мира можно описать логнормальным распределением с логсредним 3, и логстандартным отклонением 0.37:
 
-### 4.1 Формула Байеса опять
+```{r, echo=FALSE}
+tibble(x = 0:80) %>% 
+  ggplot(aes(x)) +
+  stat_function(fun = function(x) dlnorm(x, 3, 0.37))+
+  labs(title = "Количество согласных в языках мира",
+       caption = "по данным PHOIBLE",
+       x = "количество согласных",
+       y = "")
+```
+
+Тогда вероятность того, что в выбранных произвольно языках окажется от 23 до 32 согласных равна интегралу нормального распределения в указанном промежутке:
+
+```{r, echo = FALSE}
+tibble(x = 0:80) %>% 
+  ggplot(aes(x)) +
+  stat_function(fun = function(x) dlnorm(x, 3, 0.37))+
+  stat_function(fun = function(x) dlnorm(x, 3, 0.37), 
+                xlim = c(23,32), 
+                geom = "area",
+                fill = "lightblue")+
+  labs(title = "Количество согласных в языках мира",
+       caption = "по данным PHOIBLE",
+       x = "количество согласных",
+       y = "")
+```
+
+$$P\left(X \in (23,\, 32) | X \sim \ln\mathcal{N}(\mu = 3,\, \sigma^{2}=0.37)\right) = ...$$
+
+```{r}
+plnorm(32, meanlog = 3, sdlog = 0.37) - plnorm(23, meanlog = 3, sdlog = 0.37)
+```
+
+Когда мы говорим про функцию правдоподобия, то мы уже нашли еще один язык в котором оказалось 33 согласных. Нас интересует, насколько правдоподобна функция логнормального распределения с логсредним 3 и логстандартным отклонением 0.37 при значении переменной 33. Это значение равно функции плотности:
+
+```{r, echo = FALSE}
+tibble(x = 0:80) %>% 
+  ggplot(aes(x)) +
+  stat_function(fun = function(x) dlnorm(x, 3, 0.37))+
+  geom_segment(aes(x = 33, xend = 33, y = 0, yend = dlnorm(33, 3, 0.37)), color = "red")+
+  geom_segment(aes(x = 33, xend = 0, y = dlnorm(33, 3, 0.37), yend = dlnorm(33, 3, 0.37)), color = "red",
+               arrow = arrow(length = unit(0.03, "npc")))+
+  scale_x_continuous(breaks = c(0:4*20, 33))+
+  scale_y_continuous(breaks = c(0:3*0.02, round(dlnorm(33, 3, 0.37), 3)))+
+  labs(title = "Количество согласных в языках мира",
+       caption = "по данным PHOIBLE",
+       x = "количество согласных",
+       y = "")
+```
+
+$$L\left(X \sim \ln\mathcal{N}(\mu = 3,\, \sigma^{2}=0.37)|x = 33\right) = ...$$
+
+```{r}
+dlnorm(33, 3, 0.37)
+```
+
+А что если у нас не одно наблюдение, а несколько? Например, мы наблюдаем языки с 33 и 26 согласными? События независимы друг от друга, значит, мы можем перемножить получаемые вероятности. Так как результат перемножения маленьких чисел дает маленькие числа, с которыми компьютер не всегда хорошо справляется, для практических вычислений вместо функции правдоподобия используют ее натуральный логарифм (логарифмическая функция правдоподобия).
+
+```{r, echo=FALSE}
+tibble(x = 0:80) %>% 
+  ggplot(aes(x)) +
+  stat_function(fun = function(x) dlnorm(x, 3, 0.37))+
+  geom_segment(aes(x = 33, xend = 33, y = 0, yend = dlnorm(33, 3, 0.37)), color = "red")+
+  geom_segment(aes(x = 33, xend = 0, y = dlnorm(33, 3, 0.37), yend = dlnorm(33, 3, 0.37)), color = "red",
+               arrow = arrow(length = unit(0.03, "npc")))+
+  geom_segment(aes(x = 26, xend = 26, y = 0, yend = dlnorm(26, 3, 0.37)), color = "red")+
+  geom_segment(aes(x = 26, xend = 0, y = dlnorm(26, 3, 0.37), yend = dlnorm(26, 3, 0.37)), color = "red",
+               arrow = arrow(length = unit(0.03, "npc")))+
+  scale_x_continuous(breaks = c(0:4*20, 33, 26))+
+  scale_y_continuous(breaks = c(0:3*0.02, round(c(dlnorm(33, 3, 0.37), dlnorm(26, 3, 0.37)), 3)))+
+  labs(title = "Количество согласных в языках мира",
+       caption = "по данным PHOIBLE",
+       x = "количество согласных",
+       y = "")
+```
+
+```{r}
+dlnorm(33, 3, 0.37)*dlnorm(26, 3, 0.37)
+```
+
+В итоге:
+
+* вероятность --- P(data|distribution parameter(s))
+* правдоподобие --- L(distribution parameter(s)|data)
+
+Интеграл распределения или сумма вероятностей равен 1. [Интеграл функции правдоподобия может быть не равен 1](https://stats.stackexchange.com/a/31241/225843).
+
+**The Law of Likelihood** states that "within the framework of a statistical model, a particular set of data supports one statistical hypothesis better than another if the likelihood of the first hypothesis, on the data, exceeds the likelihood of the second hypothesis” (Edwards, 1992, p. 30).
+
+## 2. Отношение правдободобий
+
+Важно понимать, что само по себе значение правдоподобия бессмысленно, оно важно для сравнения со значениями правдоподобия разных моделей. Представим, что мы пытаемся выбрать между двумя моделями:
+
+* $H_1 = X \sim \ln\mathcal{N}(\mu = 3,\, \sigma^{2}= 0.37)$
+* $H_2 = X \sim \ln\mathcal{N}(\mu = 3.5,\, \sigma^{2}= 0.25)$
+
+```{r, echo= FALSE}
+tibble(x = 0:80) %>% 
+  ggplot(aes(x)) +
+  geom_abline(intercept = 0, slope = 0, linetype = 2)+
+  stat_function(fun = function(x) dlnorm(x, 3, 0.37))+
+  stat_function(fun = function(x) -dlnorm(x, 3.5, 0.25))+
+  geom_segment(aes(x = 33, xend = 33, y = 0, yend = dlnorm(33, 3, 0.37)), color = "red")+
+    geom_segment(aes(x = 33, xend = 33, y = 0, yend = -dlnorm(33, 3.5, 0.25)), color = "darkgreen")+
+  geom_segment(aes(x = 33, xend = 0, y = dlnorm(33, 3, 0.37), yend = dlnorm(33, 3, 0.37)), color = "red",
+               arrow = arrow(length = unit(0.03, "npc")))+
+    geom_segment(aes(x = 33, xend = 0, y = -dlnorm(33, 3.5, 0.25), yend = -dlnorm(33, 3.5, 0.25)), color = "darkgreen",
+               arrow = arrow(length = unit(0.03, "npc")))+
+  geom_segment(aes(x = 26, xend = 26, y = 0, yend = dlnorm(26, 3, 0.37)), color = "red")+
+  geom_segment(aes(x = 26, xend = 26, y = 0, yend = -dlnorm(26, 3.5, 0.25)), color = "darkgreen")+
+  geom_segment(aes(x = 26, xend = 0, y = dlnorm(26, 3, 0.37), yend = dlnorm(26, 3, 0.37)), color = "red",
+               arrow = arrow(length = unit(0.03, "npc")))+
+  geom_segment(aes(x = 26, xend = 0, y = -dlnorm(26, 3.5, 0.25), yend = -dlnorm(26, 3.5, 0.25)), color = "darkgreen",
+               arrow = arrow(length = unit(0.03, "npc")))+
+  scale_x_continuous(breaks = c(0:4*20, 33, 26))+
+  scale_y_continuous(breaks = c(-2:2*0.05, round(c(dlnorm(33, 3, 0.37), dlnorm(26, 3, 0.37), -dlnorm(33, 3.5, 0.25), -dlnorm(26, 3.5, 0.25)), 3)), labels = abs(c(-2:2*0.05, round(c(dlnorm(33, 3, 0.37), dlnorm(26, 3, 0.37), -dlnorm(33, 3.5, 0.25), -dlnorm(26, 3.5, 0.25)), 3))))+
+  annotate(geom = "text", x = 55, y = c(0.03, -0.03), label = c("lnN(μ = 3, σ²=0.37)", "lnN(μ = 3.5, σ²=0.25)"), size = 5)+
+  labs(title = "Количество согласных в языках мира",
+       caption = "по данным PHOIBLE (верхний)",
+       x = "количество согласных",
+       y = "")
+```
+
+```{r}
+L1 <- dlnorm(33, 3, 0.37)*dlnorm(26, 3, 0.37)
+L2 <- dlnorm(33, 3.5, 0.25)*dlnorm(26, 3.5, 0.25)
+L2/L1
+```
+
+Как мы видим, на основании наших (фейковых) данных $H_2$ в 4 раза более вероятнее, чем $H_1$. Надо отметить, что не все тепло относятся к сравнению моделей (см. [Gelman, Rubin 1994](https://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.44.6443)).
+
+## 3 Формула Байеса опять
 
 Представим себе, что у нас есть $k$ гипотез $M$. Тогда формула Байеса может выглядеть вот так:
 
 $$P(θ|Data, M_k) = \frac{P(Data|θ, M_k) \times  P(θ| M_k) }{P(Data|M_k)}$$
 
-Коэффициент Байеса определяют как соотношение предельных правдоподобий ($P(Data, M_k)$) моделей (в принципе их может быть больше двух:
+Коэффициент Байеса определяют как соотношение предельных правдоподобий ($P(Data, M_k)$) моделей (в принципе их может быть больше двух):
 
 $$
-BF_{12} = \frac{P(Data | M_1)}{P(Data | M_2)} 
+BF_{12} = \frac{P(Data | M_1 )}{P(Data | M_2)}
 $$
 
-Вычислять предельные правдоподобия достаточно просто, так что порой используют численную аппроксимацию.
+Вычислять предельные правдоподобия порой достаточно сложно, так что иногда используют численную аппроксимацию.
 
 Рассмотрим пример эксперимента Бернулли:
 
@@ -57,6 +191,7 @@ dbinom(58, 699, prob = 0.09)
 
 ```{r}
 BF_12 = dbinom(58, 699, prob = 0.08)/dbinom(58, 699, prob = 0.09)
+BF_12
 ```
 
 ```{r}
@@ -70,7 +205,7 @@ tibble(x = 0:699,
   geom_col()
 ```
 
-[Интерпретация коэффициента Байеса](https://en.wikipedia.org/wiki/Bayes_factor#Interpretation)
+### 3.1 [Интерпретация коэффициента Байеса](https://en.wikipedia.org/wiki/Bayes_factor#Interpretation)
 
 [В датасете c грибами](https://raw.githubusercontent.com/agricolamz/2019_BayesDan_winter/master/datasets/mushrooms.csv) (взят c [kaggle](https://www.kaggle.com/uciml/mushroom-classification)) представлено следующее распределение по месту обитания:
 
@@ -94,7 +229,7 @@ $$L(grasses,\ wood|poisonous) = 0.189 \times 0.324 = 0.061236$$
 
 $$BF_{edible\ poisonous} = \frac{L(grasses,\ wood|edible)}{L(grasses,\ wood|poisonous)} = \frac{0.149745}{0.061236} = 2.445375$$
 
-### 4.2 
+### 3.2 
 Вашего друга похитили а на почту отправили [датасет](https://raw.githubusercontent.com/agricolamz/2019_BayesDan_winter/master/datasets/weather.csv), в котором записаны данные о погоде из пяти городов. Ваш телефон зазвонил, и друг сказал, что не знает куда его похитили, но за окном легкий дождь (`Rain`). А на следующий день --- сильный дождь (`Rain Thunderstorm`). Посчитайте $BH_{San\_Diego\ Auckland}$ с точностью до 1 знака после запятой.
 
 ```{r, include=FALSE}
