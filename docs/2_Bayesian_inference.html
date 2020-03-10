@@ -454,7 +454,7 @@ div.tocify {
       <a href="4_Confidence_intervals.html">4. Доверительные интервалы</a>
     </li>
     <li>
-      <a href="5_Bayes_factore.html">5. Коэффициент Байеса</a>
+      <a href="5_Bayes_factor.html">5. Коэффициент Байеса</a>
     </li>
     <li>
       <a href="6_Bayesian_regressian.html">6. Байесовская регрессия</a>
@@ -597,7 +597,7 @@ div.tocify {
 <p><img src="2_Bayesian_inference_files/figure-html/unnamed-chunk-10-1.png" width="864" /></p>
 <p>Ее можно посчитать двумя способами:</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="kw">integrate</span>(<span class="cf">function</span>(x){<span class="kw">dnorm</span>(x, <span class="dv">22</span>, <span class="dv">6</span>)}, <span class="dt">lower =</span> <span class="dv">23</span>, <span class="dt">upper =</span> <span class="dv">32</span>)</span></code></pre></div>
-<pre><code>0.3860258 with absolute error &lt; 4.3e-15</code></pre>
+<pre><code>0.3860258 with absolute error &lt; 0.0000000000000043</code></pre>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="kw">pnorm</span>(<span class="dv">32</span>, <span class="dt">mean =</span> <span class="dv">22</span>, <span class="dt">sd =</span> <span class="dv">6</span>) <span class="op">-</span><span class="st"> </span><span class="kw">pnorm</span>(<span class="dv">23</span>, <span class="dt">mean =</span> <span class="dv">22</span>, <span class="dt">sd =</span> <span class="dv">6</span>)</span></code></pre></div>
 <pre><code>[1] 0.3860258</code></pre>
 <p>Рассмотрим теперь дискретное распределение. Какова вероятность, выделенная на графике?</p>
