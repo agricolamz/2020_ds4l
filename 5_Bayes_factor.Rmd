@@ -261,7 +261,7 @@ df %>%
 BF <- round(results$likelihood_r_rt[5]/results$likelihood_r_rt[1], 3)
 ```
 
-```{r, results="asis"}
+```{r, results="asis", echo=FALSE}
 library(checkdown)
 autocheck_question(question_id = 5.1, answer = BF)
 ```
