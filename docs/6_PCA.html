@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Г. Мороз" />
+
+
+<title>6. Уменьшение размерности: PCA, LDA</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/spacelab.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 52px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 57px;
+  margin-top: -57px;
+}
+.section h2 {
+  padding-top: 57px;
+  margin-top: -57px;
+}
+.section h3 {
+  padding-top: 57px;
+  margin-top: -57px;
+}
+.section h4 {
+  padding-top: 57px;
+  margin-top: -57px;
+}
+.section h5 {
+  padding-top: 57px;
+  margin-top: -57px;
+}
+.section h6 {
+  padding-top: 57px;
+  margin-top: -57px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html"></a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    введение в байесовскую статистику
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="1_distributions.html">1. Распределения</a>
+    </li>
+    <li>
+      <a href="2_Bayesian_inference.html">2. Байесовский вывод</a>
+    </li>
+    <li>
+      <a href="3_Advanced_Bayesian.html">3. Продвинутая байесовская статистика</a>
+    </li>
+    <li>
+      <a href="4_Confidence_intervals.html">4. Доверительные интервалы</a>
+    </li>
+    <li>
+      <a href="5_Bayes_factor.html">5. Коэффициент Байеса</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    уменьшение размерности
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="6_PCA.html">6. PCA, LDA</a>
+    </li>
+    <li>
+      <a href="7_CA_MCA.html">7. CA, DCA, MCA</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    регрессия
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="8_more_linear_regression.html">8. Еще о регрессионных моделях</a>
+    </li>
+    <li>
+      <a href="9_logit_multinom.html">9. Логистическая и мультиномиальная регрессии</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+<style>
+.main-container {
+  margin-left: 0;
+  margin-right: 0;
+}
+</style>
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">6. Уменьшение размерности: PCA, LDA</h1>
+<h4 class="author">Г. Мороз</h4>
+
+</div>
+
+
+<div id="введение" class="section level3">
+<h3>1. Введение</h3>
+<p>Метод главных компонент (PCA, Principal Component Analysis) применим к числовым данным, в которых строчки — это точки наблюдения, а столбцы — это исследуемые переменные. Данный метод часто приводят и используют как метод уменьшения размерности, однако я разделяю мнение, согласно которому это лишь метод смены перспективы, в результаты которого некоторое количество размерностей становится маловажными.</p>
+<div id="библиотеки" class="section level4">
+<h4>1.1 Библиотеки</h4>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="kw">library</span>(ggfortify)</span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="kw">library</span>(GGally)</span></code></pre></div>
+</div>
+<div id="фамильная-честь-вустеров" class="section level4">
+<h4>1.2 Фамильная честь Вустеров</h4>
+<p>В данной лекции я буду использовать данные из романа П. Г. Вудхауза <a href="https://en.wikipedia.org/wiki/The_Code_of_the_Woosters">“Фамильная честь Вустеров”</a>. В датасете собраны несколько переменных:</p>
+<ul>
+<li>chapter — номер главы</li>
+<li>гарольд — частотность появления имени в каждой из глав</li>
+<li>гасси — частотность появления имени в каждой из глав</li>
+<li>далия — частотность появления имени в каждой из глав</li>
+<li>дживс — частотность появления имени в каждой из глав</li>
+<li>мадлен — частотность появления имени в каждой из глав</li>
+<li>оутс — частотность появления имени в каждой из глав</li>
+<li>спод — частотность появления имени в каждой из глав</li>
+<li>стиффи — частотность появления имени в каждой из глав</li>
+<li>сэр — частотность появления имени в каждой из глав</li>
+</ul>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>wodehouse &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;https://goo.gl/8RJDwK&quot;</span>)</span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="kw">library</span>(GGally)</span>
+<span id="cb2-3"><a href="#cb2-3"></a><span class="kw">ggpairs</span>(wodehouse[,<span class="op">-</span><span class="dv">1</span>])</span></code></pre></div>
+<p><img src="6_PCA_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+</div>
+</div>
+<div id="дисперсия-ковариация-корреляция-пирсона" class="section level3">
+<h3>2. Дисперсия, ковариация, корреляция Пирсона</h3>
+<p><span class="math display">\[var(X) = \frac{\sum_{i = 1}^n(x_i - \bar{x})^2}{n - 1}\]</span></p>
+<p><span class="math display">\[cov(X, Y) = \frac{\sum_{i = 1}^n(x_i - \bar{x})(y_i-\bar{y})}{n - 1}\]</span></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw">cov</span>(wodehouse[,<span class="op">-</span><span class="dv">1</span>])</span></code></pre></div>
+<pre><code>##               гарольд         гасси         далия         дживс        мадлен
+## гарольд  1.372875e-06 -1.178804e-06 -6.161597e-07 -1.087033e-06 -5.017748e-07
+## гасси   -1.178804e-06  3.079694e-06  2.170550e-07 -6.615942e-07  1.114755e-06
+## далия   -6.161597e-07  2.170550e-07  2.560710e-06  3.618399e-06 -7.615052e-07
+## дживс   -1.087033e-06 -6.615942e-07  3.618399e-06  1.029295e-05 -2.148603e-06
+## мадлен  -5.017748e-07  1.114755e-06 -7.615052e-07 -2.148603e-06  1.318322e-06
+## оутс     4.177791e-07 -7.493884e-07  1.624905e-07  2.211649e-07 -3.925977e-07
+## спод    -1.654950e-06  3.370561e-06 -4.945526e-07 -2.215768e-06  1.459139e-06
+## стиффи   1.555109e-06 -1.666275e-06 -1.389433e-06 -1.843664e-06 -6.577010e-07
+## сэр     -1.469249e-06 -1.922950e-06  3.155337e-06  1.193258e-05 -2.612465e-06
+##                  оутс          спод        стиффи           сэр
+## гарольд  4.177791e-07 -1.654950e-06  1.555109e-06 -1.469249e-06
+## гасси   -7.493884e-07  3.370561e-06 -1.666275e-06 -1.922950e-06
+## далия    1.624905e-07 -4.945526e-07 -1.389433e-06  3.155337e-06
+## дживс    2.211649e-07 -2.215768e-06 -1.843664e-06  1.193258e-05
+## мадлен  -3.925977e-07  1.459139e-06 -6.577010e-07 -2.612465e-06
+## оутс     1.246261e-06 -1.418115e-06  9.103099e-08  2.625355e-06
+## спод    -1.418115e-06  9.893695e-06 -1.244713e-06 -4.146631e-06
+## стиффи   9.103099e-08 -1.244713e-06  3.568675e-06 -1.999536e-06
+## сэр      2.625355e-06 -4.146631e-06 -1.999536e-06  2.207589e-05</code></pre>
+<p><span class="math display">\[cor(X, Y) = \frac{cov(X, Y)}{\sigma_X\times\sigma_Y}\]</span></p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="kw">cor</span>(wodehouse[,<span class="op">-</span><span class="dv">1</span>])</span></code></pre></div>
+<pre><code>##            гарольд       гасси       далия       дживс     мадлен        оутс
+## гарольд  1.0000000 -0.57328735 -0.32862278 -0.28917272 -0.3729775  0.31939405
+## гасси   -0.5732873  1.00000000  0.07729222 -0.11750818  0.5532418 -0.38251524
+## далия   -0.3286228  0.07729222  1.00000000  0.70480092 -0.4144594  0.09095850
+## дживс   -0.2891727 -0.11750818  0.70480092  1.00000000 -0.5832781  0.06175072
+## мадлен  -0.3729775  0.55324184 -0.41445938 -0.58327808  1.0000000 -0.30628984
+## оутс     0.3193940 -0.38251524  0.09095850  0.06175072 -0.3062898  1.00000000
+## спод    -0.4490452  0.61061743 -0.09825464 -0.21957111  0.4040236 -0.40385722
+## стиффи   0.7025735 -0.50261963 -0.45962545 -0.30419950 -0.3032245  0.04316496
+## сэр     -0.2668830 -0.23321428  0.41966860  0.79159912 -0.4842622  0.50052346
+##                спод      стиффи        сэр
+## гарольд -0.44904519  0.70257349 -0.2668830
+## гасси    0.61061743 -0.50261963 -0.2332143
+## далия   -0.09825464 -0.45962545  0.4196686
+## дживс   -0.21957111 -0.30419950  0.7915991
+## мадлен   0.40402356 -0.30322448 -0.4842622
+## оутс    -0.40385722  0.04316496  0.5005235
+## спод     1.00000000 -0.20947701 -0.2805802
+## стиффи  -0.20947701  1.00000000 -0.2252769
+## сэр     -0.28058019 -0.22527691  1.0000000</code></pre>
+</div>
+<div id="собственный-вектор-собственное-значение" class="section level3">
+<h3>3. Собственный вектор, собственное значение</h3>
+<p>Как вы знаете, матрицы можно перемножать. <a href="https://upload.wikimedia.org/wikipedia/commons/e/eb/Matrix_multiplication_diagram_2.svg">Подсказка</a>.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>m1 &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">1</span>), <span class="dt">nrow =</span> <span class="dv">2</span>)</span>
+<span id="cb7-2"><a href="#cb7-2"></a>m2 &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">3</span>), <span class="dt">nrow =</span> <span class="dv">2</span>)</span>
+<span id="cb7-3"><a href="#cb7-3"></a>m3 &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">2</span>), <span class="dt">nrow =</span> <span class="dv">2</span>)</span>
+<span id="cb7-4"><a href="#cb7-4"></a>m1</span></code></pre></div>
+<pre><code>##      [,1] [,2]
+## [1,]    2    3
+## [2,]    2    1</code></pre>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>m2</span></code></pre></div>
+<pre><code>##      [,1]
+## [1,]    1
+## [2,]    3</code></pre>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>m1 <span class="op">%*%</span><span class="st"> </span>m2</span></code></pre></div>
+<pre><code>##      [,1]
+## [1,]   11
+## [2,]    5</code></pre>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>m1</span></code></pre></div>
+<pre><code>##      [,1] [,2]
+## [1,]    2    3
+## [2,]    2    1</code></pre>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>m3</span></code></pre></div>
+<pre><code>##      [,1]
+## [1,]    3
+## [2,]    2</code></pre>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a>m1 <span class="op">%*%</span><span class="st"> </span>m3</span></code></pre></div>
+<pre><code>##      [,1]
+## [1,]   12
+## [2,]    8</code></pre>
+<p>В первом примере мы получили матрицу <span class="math inline">\(\left(\array{11\\ 5}\right)\)</span>, а во втором случае <span class="math inline">\(\left(\array{12\\ 8}\right) = 4 \times \left(\array{3\\ 2}\right)\)</span>, т. е. при умножении матрицы мы получили значение, равное скалярному умножению той же самой матрицы.</p>
+<p>Мы можем думать об одной матрице, как о векторе <span class="math inline">\(\left(\array{3\\ 2}\right)\)</span> в двумерном пространстве. Тогда матрица <span class="math inline">\(\left(\array{2 &amp; 3\\ 2 &amp; 1}\right)\)</span> — это матрица некоторой трансформации А, которая изменяет вектор <span class="math inline">\(\left(\array{3\\ 2}\right)\)</span>. В таком случае <strong>собственный вектор (eigenvector)</strong> — это тот постоянный объект, который подвергается трансформации, а <strong>собственное значение (eigenvalues)</strong> — это скалярный мультипликатор собсвтенного вектора (в нашем случае собственное значение равно 4).</p>
+<p>Свойства собсвтенных векторов:</p>
+<ul>
+<li>собственные векторы можно найти только для квадратных матриц (и то не для всех)</li>
+<li>все собственные векторы матрицы перпендекулярны друг другу вне зависимости от размерности.</li>
+<li>принято задавать собственные векторы длинной 1, так что найдя собственный вектор <span class="math inline">\(\left(\array{3\\ 2}\right)\)</span>, мы узнаем его длинну <span class="math display">\[\sqrt{3^2+2^2} = \sqrt{13},\]</span> так что теперь можно отмасштабировать вектор: <span class="math display">\[\left(\array{3\\ 2}\right) \times \frac{1}{\sqrt{13}} = \left(\array{3/\sqrt{13}\\ 2/\sqrt{13}}\right)\]</span></li>
+</ul>
+<p>Как найти собственный вектор в R:</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a>m &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">1</span>), <span class="dt">nrow =</span> <span class="dv">2</span>)</span>
+<span id="cb19-2"><a href="#cb19-2"></a><span class="kw">eigen</span>(m)</span></code></pre></div>
+<pre><code>## eigen() decomposition
+## $values
+## [1]  4 -1
+## 
+## $vectors
+##           [,1]       [,2]
+## [1,] 0.8320503 -0.7071068
+## [2,] 0.5547002  0.7071068</code></pre>
+<p>Собственные значения в переменной <code>values</code> функция всегда возвращает в убывающем порядке, а каждая колонка в переменной <code>eigenvectors</code> соответствует элементу в переменной <code>values</code>. Сравните со значениями, которые мы получили руками:</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a><span class="dv">3</span><span class="op">/</span><span class="kw">sqrt</span>(<span class="dv">13</span>)</span></code></pre></div>
+<pre><code>## [1] 0.8320503</code></pre>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a><span class="dv">2</span><span class="op">/</span><span class="kw">sqrt</span>(<span class="dv">13</span>)</span></code></pre></div>
+<pre><code>## [1] 0.5547002</code></pre>
+</div>
+<div id="pca" class="section level3">
+<h3>4. PCA</h3>
+<p>Обычно переменные, которые используют в PCA <strong>нужно обязательно нормализовать</strong>, но так как мы будем использовать частотность, эти переменные не нуждаются в нормализации. Давайте сравним результат работы функций, которые мы рассмотрели перед этим и функции <code>prcomp</code>.</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a><span class="kw">eigen</span>(<span class="kw">cov</span>(wodehouse[,<span class="op">-</span><span class="dv">1</span>]))</span></code></pre></div>
+<pre><code>## eigen() decomposition
+## $values
+## [1] 3.245800e-05 1.196687e-05 4.517294e-06 3.377992e-06 1.319692e-06
+## [6] 9.606964e-07 5.074912e-07 2.534438e-07 4.758608e-08
+## 
+## $vectors
+##              [,1]        [,2]        [,3]       [,4]        [,5]        [,6]
+##  [1,]  0.04446386  0.26045490 -0.07123814 -0.2007927 -0.19032360 -0.21673241
+##  [2,]  0.08779348 -0.38160590  0.15116503  0.2628203  0.33907652 -0.78159891
+##  [3,] -0.15615004 -0.12382054  0.44598913 -0.1200921 -0.57733956 -0.25790782
+##  [4,] -0.50150883 -0.17557608  0.44773479 -0.4588859  0.25194436  0.07393053
+##  [5,]  0.11753413 -0.11397729 -0.02832850  0.3441355  0.25226081  0.13479280
+##  [6,] -0.08429973  0.11600713 -0.21296940  0.2130548 -0.52978937 -0.27686794
+##  [7,]  0.21798564 -0.77103418 -0.39697535 -0.3648273 -0.21338990  0.11194383
+##  [8,]  0.07986552  0.33105390 -0.36958846 -0.5731985  0.24597480 -0.39980733
+##  [9,] -0.79975269 -0.09921106 -0.48203526  0.2003306  0.04069356 -0.05427500
+##              [,7]        [,8]        [,9]
+##  [1,]  0.62957491 -0.34447525  0.53532218
+##  [2,]  0.13186661  0.10619326  0.01443264
+##  [3,] -0.50008339 -0.12601954  0.28487803
+##  [4,]  0.25634369 -0.25181765 -0.32947429
+##  [5,] -0.23614522 -0.84496615  0.04925650
+##  [6,]  0.18859046 -0.22734885 -0.66640912
+##  [7,]  0.06916025 -0.06534478  0.01343150
+##  [8,] -0.40770488 -0.13773815 -0.11544756
+##  [9,] -0.09007671  0.04324016  0.25194682</code></pre>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a>PCA &lt;-<span class="st"> </span><span class="kw">prcomp</span>(wodehouse[,<span class="op">-</span><span class="dv">1</span>])</span>
+<span id="cb27-2"><a href="#cb27-2"></a>PCA</span></code></pre></div>
+<pre><code>## Standard deviations (1, .., p=9):
+## [1] 0.0056971923 0.0034593165 0.0021253926 0.0018379315 0.0011487786
+## [6] 0.0009801512 0.0007123842 0.0005034320 0.0002181423
+## 
+## Rotation (n x k) = (9 x 9):
+##                 PC1         PC2         PC3        PC4         PC5         PC6
+## гарольд  0.04446386 -0.26045490  0.07123814 -0.2007927  0.19032360 -0.21673241
+## гасси    0.08779348  0.38160590 -0.15116503  0.2628203 -0.33907652 -0.78159891
+## далия   -0.15615004  0.12382054 -0.44598913 -0.1200921  0.57733956 -0.25790782
+## дживс   -0.50150883  0.17557608 -0.44773479 -0.4588859 -0.25194436  0.07393053
+## мадлен   0.11753413  0.11397729  0.02832850  0.3441355 -0.25226081  0.13479280
+## оутс    -0.08429973 -0.11600713  0.21296940  0.2130548  0.52978937 -0.27686794
+## спод     0.21798564  0.77103418  0.39697535 -0.3648273  0.21338990  0.11194383
+## стиффи   0.07986552 -0.33105390  0.36958846 -0.5731985 -0.24597480 -0.39980733
+## сэр     -0.79975269  0.09921106  0.48203526  0.2003306 -0.04069356 -0.05427500
+##                 PC7         PC8         PC9
+## гарольд  0.62957491 -0.34447525  0.53532218
+## гасси    0.13186661  0.10619326  0.01443264
+## далия   -0.50008339 -0.12601954  0.28487803
+## дживс    0.25634369 -0.25181765 -0.32947429
+## мадлен  -0.23614522 -0.84496615  0.04925650
+## оутс     0.18859046 -0.22734885 -0.66640912
+## спод     0.06916025 -0.06534478  0.01343150
+## стиффи  -0.40770488 -0.13773815 -0.11544756
+## сэр     -0.09007671  0.04324016  0.25194682</code></pre>
+<p>Как читать полученное? Мы сменили оси координат и в новом пространстве (точно так же 9-мерном) мы можем перейти используя полученные значения:</p>
+<p><span class="math display">\[PC1 = гарольд \times 0.03548428 + гасси \times 0.08477226 + далия \times -0.11013760 + дживс \times -0.48849572 +\]</span> <span class="math display">\[ + мадлен \times 0.12377778 + оутс \times -0.04712363 + спод \times 0.09814424 + стиффи \times 0.05838698 + сэр \times -0.84274152\]</span></p>
+<p>Как полученные компоненты объясняют дисперсию в переменных?</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a><span class="kw">summary</span>(PCA)</span></code></pre></div>
+<pre><code>## Importance of components:
+##                             PC1      PC2      PC3      PC4      PC5       PC6
+## Standard deviation     0.005697 0.003459 0.002125 0.001838 0.001149 0.0009802
+## Proportion of Variance 0.585790 0.215970 0.081530 0.060960 0.023820 0.0173400
+## Cumulative Proportion  0.585790 0.801760 0.883290 0.944250 0.968070 0.9854100
+##                              PC7       PC8       PC9
+## Standard deviation     0.0007124 0.0005034 0.0002181
+## Proportion of Variance 0.0091600 0.0045700 0.0008600
+## Cumulative Proportion  0.9945700 0.9991400 1.0000000</code></pre>
+<p>Т. е. первые две компоненты объясняют почти 80 процентов дисперсии, это достаточно высокое значение, которое позволяет нам применять данный метод.</p>
+<p>В выдаче PCA мы видели порядок, который отображает порядок следования в датасете, чтобы не потерять информацию о главе, мы прибегнем к хитрости:</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a>wodehouse_<span class="dv">2</span> &lt;-<span class="st"> </span>wodehouse[,<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb31-2"><a href="#cb31-2"></a><span class="kw">rownames</span>(wodehouse_<span class="dv">2</span>) &lt;-<span class="st"> </span>wodehouse[, <span class="dv">1</span>]</span>
+<span id="cb31-3"><a href="#cb31-3"></a>PCA &lt;-<span class="st"> </span><span class="kw">prcomp</span>(wodehouse_<span class="dv">2</span>)</span></code></pre></div>
+<p>Дальнейшая визуализация возможна благодаря пакету <code>ggfortify</code>:</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1"></a><span class="kw">library</span>(ggfortify)</span>
+<span id="cb32-2"><a href="#cb32-2"></a><span class="kw">autoplot</span>(PCA,</span>
+<span id="cb32-3"><a href="#cb32-3"></a>         <span class="dt">shape =</span> <span class="ot">FALSE</span>,</span>
+<span id="cb32-4"><a href="#cb32-4"></a>         <span class="dt">loadings =</span> <span class="ot">TRUE</span>,</span>
+<span id="cb32-5"><a href="#cb32-5"></a>         <span class="dt">label =</span> <span class="ot">TRUE</span>,</span>
+<span id="cb32-6"><a href="#cb32-6"></a>         <span class="dt">loadings.label =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<p><img src="6_PCA_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p>Числа на этом графике — номера глав романа, красные линии — оси старых осей координат. Сам график называется биплот. Чем ближе друг к другустарые оси координат, тем больше скоррелированы переменные (вообще, косинус угла между ними равен коэфициенту корреляции между соответствующими переменными).</p>
+</div>
+<div id="что-дальше" class="section level3">
+<h3>5. Что дальше?</h3>
+<ul>
+<li>После того как преобразование сделано можно запскать стандартные методы регрессии, кластеризации и т. д.</li>
+<li>можно использовать некоторые не затронутые в PCA переменные, для анализа в новом пространстве</li>
+</ul>
+</div>
+<div id="d-пример-от-ильи-щурова" class="section level3">
+<h3>6. 3d пример от Ильи Щурова</h3>
+<p><a href="http://math-info.hse.ru/f/2015-16/ling-mag-quant/lecture-pca.html#%D0%A2%D1%80%D1%91%D1%85%D0%BC%D0%B5%D1%80%D0%BD%D1%8B%D0%B9%20%D0%BF%D1%80%D0%B8%D0%BC%D0%B5%D1%80">ссылка</a></p>
+</div>
+<div id="евангелия" class="section level3">
+<h3>7. Евангелия</h3>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1"></a>gospels &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;https://tinyurl.com/y8tcf3uw&quot;</span>)</span></code></pre></div>
+<p>Постройте PCA и нарисуйте биплот. Чем вызвано такое расхождение евангелистов?</p>
+</div>
+<div id="линейный-дискриминантный-анализ" class="section level3">
+<h3>8. Линейный дискриминантный анализ</h3>
+<p>Линейный дискриминантный анализ (Linear Discriminant Analysis, LDA) очень близок к PCA, но его основная цель — максимизировать разделяемость известных категорий. Так что если PCA пытается перейти к новым осям координат, беря за основу наибольшую дисперсию в многомерном пространстве, LDA переходит к новым координатам, стараясь оптимизировать разницу между средними и дисперсией известных групп.</p>
+<p><img src="images/LDA.png" /></p>
+</div>
+<div id="сравнение-pca-и-lda" class="section level3">
+<h3>9. Сравнение PCA и LDA</h3>
+<div id="нанайские-данные" class="section level4">
+<h4>9.1 Нанайские данные</h4>
+<p>В этом датасете представлены три нанайских гласных i, ɪ и e, произнесенные нанайским носителем мужского пола из селения Джуен. Каждая строчка — отдельное произнесение. Переменные:</p>
+<ul>
+<li>f1 — первая форманта</li>
+<li>f2 — вторая форманта</li>
+</ul>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1"></a>nanai &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;https://goo.gl/9uGBoQ&quot;</span>)</span>
+<span id="cb34-2"><a href="#cb34-2"></a>nanai <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb34-3"><a href="#cb34-3"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(f2, f1, <span class="dt">label =</span> sound, <span class="dt">color =</span> sound))<span class="op">+</span></span>
+<span id="cb34-4"><a href="#cb34-4"></a><span class="st">  </span><span class="kw">geom_text</span>()<span class="op">+</span></span>
+<span id="cb34-5"><a href="#cb34-5"></a><span class="st">  </span><span class="kw">geom_rug</span>()<span class="op">+</span></span>
+<span id="cb34-6"><a href="#cb34-6"></a><span class="st">  </span><span class="kw">scale_y_reverse</span>()<span class="op">+</span></span>
+<span id="cb34-7"><a href="#cb34-7"></a><span class="st">  </span><span class="kw">scale_x_reverse</span>()<span class="op">+</span></span>
+<span id="cb34-8"><a href="#cb34-8"></a><span class="st">  </span><span class="kw">stat_ellipse</span>()<span class="op">+</span></span>
+<span id="cb34-9"><a href="#cb34-9"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>)<span class="op">+</span></span>
+<span id="cb34-10"><a href="#cb34-10"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Нанайские гласные в произнесении мужчины из селения Джуен&quot;</span>)</span></code></pre></div>
+<p><img src="6_PCA_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<p>Применим PCA. Обязательно нормировать переменные:</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1"></a>pca &lt;-<span class="st"> </span><span class="kw">prcomp</span>(nanai[, <span class="dv">-1</span>], <span class="dt">center =</span> <span class="ot">TRUE</span>, <span class="dt">scale. =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb35-2"><a href="#cb35-2"></a><span class="kw">summary</span>(pca)</span></code></pre></div>
+<pre><code>## Importance of components:
+##                           PC1    PC2
+## Standard deviation     1.2959 0.5663
+## Proportion of Variance 0.8397 0.1603
+## Cumulative Proportion  0.8397 1.0000</code></pre>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1"></a>prop.pca &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">c</span>(<span class="st">&quot;PCA1 &quot;</span>, <span class="st">&quot;PCA2 &quot;</span>),</span>
+<span id="cb37-2"><a href="#cb37-2"></a>                   <span class="st">&quot;(&quot;</span>,</span>
+<span id="cb37-3"><a href="#cb37-3"></a>                   <span class="kw">round</span>(pca<span class="op">$</span>sdev<span class="op">^</span><span class="dv">2</span><span class="op">/</span><span class="kw">sum</span>(pca<span class="op">$</span>sdev<span class="op">^</span><span class="dv">2</span>), <span class="dv">2</span>), </span>
+<span id="cb37-4"><a href="#cb37-4"></a>                   <span class="st">&quot;%)&quot;</span>)</span>
+<span id="cb37-5"><a href="#cb37-5"></a>prop.pca</span></code></pre></div>
+<pre><code>## [1] &quot;PCA1 (0.84%)&quot; &quot;PCA2 (0.16%)&quot;</code></pre>
+<p>Применим LDA:</p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1"></a>lda &lt;-<span class="st"> </span>MASS<span class="op">::</span><span class="kw">lda</span>(sound <span class="op">~</span><span class="st"> </span>f1 <span class="op">+</span><span class="st"> </span>f2, nanai)</span>
+<span id="cb39-2"><a href="#cb39-2"></a>lda</span></code></pre></div>
+<pre><code>## Call:
+## lda(sound ~ f1 + f2, data = nanai)
+## 
+## Prior probabilities of groups:
+##         e         i         ɪ 
+## 0.3776722 0.4489311 0.1733967 
+## 
+## Group means:
+##         f1       f2
+## e 452.8164 1295.328
+## i 318.2667 2092.761
+## ɪ 458.9413 1907.553
+## 
+## Coefficients of linear discriminants:
+##             LD1         LD2
+## f1 -0.009603642 0.024154629
+## f2  0.006947067 0.003913338
+## 
+## Proportion of trace:
+##    LD1    LD2 
+## 0.9072 0.0928</code></pre>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1"></a>prop.lda &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">c</span>(<span class="st">&quot;LDA1 &quot;</span>, <span class="st">&quot;LDA2 &quot;</span>),</span>
+<span id="cb41-2"><a href="#cb41-2"></a>                   <span class="st">&quot;(&quot;</span>,</span>
+<span id="cb41-3"><a href="#cb41-3"></a>                   <span class="kw">round</span>(lda<span class="op">$</span>svd<span class="op">^</span><span class="dv">2</span><span class="op">/</span><span class="kw">sum</span>(lda<span class="op">$</span>svd<span class="op">^</span><span class="dv">2</span>), <span class="dv">2</span>), </span>
+<span id="cb41-4"><a href="#cb41-4"></a>                   <span class="st">&quot;%)&quot;</span>)</span>
+<span id="cb41-5"><a href="#cb41-5"></a>prop.lda</span></code></pre></div>
+<pre><code>## [1] &quot;LDA1 (0.91%)&quot; &quot;LDA2 (0.09%)&quot;</code></pre>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1"></a>plda &lt;-<span class="st"> </span><span class="kw">predict</span>(<span class="dt">object =</span> lda, <span class="dt">newdata =</span> nanai)</span>
+<span id="cb43-2"><a href="#cb43-2"></a><span class="kw">head</span>(plda<span class="op">$</span>x)</span></code></pre></div>
+<pre><code>##         LD1         LD2
+## 1  2.755845  0.08781396
+## 2  1.414956  0.29058264
+## 3 -3.272616 -5.98204507
+## 4  4.981263 -0.65448203
+## 5  2.237146 -0.75823208
+## 6  6.042266  0.62783102</code></pre>
+<p>Соединим все в один датасет:</p>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1"></a>dataset &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">sound =</span> nanai[,<span class="st">&quot;sound&quot;</span>],</span>
+<span id="cb45-2"><a href="#cb45-2"></a>                      <span class="dt">pca =</span> pca<span class="op">$</span>x, </span>
+<span id="cb45-3"><a href="#cb45-3"></a>                      <span class="dt">lda =</span> plda<span class="op">$</span>x)</span></code></pre></div>
+<p>Визуализируем:</p>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1"></a>nanai <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb46-2"><a href="#cb46-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(f2, f1, <span class="dt">label =</span> sound, <span class="dt">color =</span> sound))<span class="op">+</span></span>
+<span id="cb46-3"><a href="#cb46-3"></a><span class="st">  </span><span class="kw">geom_text</span>()<span class="op">+</span></span>
+<span id="cb46-4"><a href="#cb46-4"></a><span class="st">  </span><span class="kw">scale_y_reverse</span>()<span class="op">+</span></span>
+<span id="cb46-5"><a href="#cb46-5"></a><span class="st">  </span><span class="kw">scale_x_reverse</span>()<span class="op">+</span></span>
+<span id="cb46-6"><a href="#cb46-6"></a><span class="st">  </span><span class="kw">stat_ellipse</span>()<span class="op">+</span></span>
+<span id="cb46-7"><a href="#cb46-7"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>) -&gt;</span>
+<span id="cb46-8"><a href="#cb46-8"></a><span class="st">  </span>p1</span>
+<span id="cb46-9"><a href="#cb46-9"></a></span>
+<span id="cb46-10"><a href="#cb46-10"></a>dataset <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb46-11"><a href="#cb46-11"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(pca.PC1, pca.PC2, <span class="dt">colour =</span> sound, <span class="dt">label =</span> sound)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb46-12"><a href="#cb46-12"></a><span class="st">  </span><span class="kw">geom_text</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb46-13"><a href="#cb46-13"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> prop.pca[<span class="dv">1</span>], <span class="dt">y =</span> prop.pca[<span class="dv">2</span>])<span class="op">+</span></span>
+<span id="cb46-14"><a href="#cb46-14"></a><span class="st">  </span><span class="kw">stat_ellipse</span>() <span class="op">+</span></span>
+<span id="cb46-15"><a href="#cb46-15"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>) -&gt;</span>
+<span id="cb46-16"><a href="#cb46-16"></a><span class="st">  </span>p2</span>
+<span id="cb46-17"><a href="#cb46-17"></a></span>
+<span id="cb46-18"><a href="#cb46-18"></a>dataset <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb46-19"><a href="#cb46-19"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(lda.LD1, lda.LD2, <span class="dt">colour =</span> sound, <span class="dt">label =</span> sound)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb46-20"><a href="#cb46-20"></a><span class="st">  </span><span class="kw">geom_text</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb46-21"><a href="#cb46-21"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> prop.lda[<span class="dv">1</span>], <span class="dt">y =</span> prop.lda[<span class="dv">2</span>])<span class="op">+</span></span>
+<span id="cb46-22"><a href="#cb46-22"></a><span class="st">  </span><span class="kw">stat_ellipse</span>() <span class="op">+</span></span>
+<span id="cb46-23"><a href="#cb46-23"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>) -&gt;</span>
+<span id="cb46-24"><a href="#cb46-24"></a><span class="st">  </span>p3</span>
+<span id="cb46-25"><a href="#cb46-25"></a></span>
+<span id="cb46-26"><a href="#cb46-26"></a>gridExtra<span class="op">::</span><span class="kw">grid.arrange</span>(p1, p2, p3)</span></code></pre></div>
+<p><img src="6_PCA_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+</div>
+<div id="register-variation-in-the-british-national-corpus" class="section level4">
+<h4>9.2 Register variation in the British National Corpus</h4>
+<p>Dataset and discription from Natalia Levshina’s package <code>Rling</code>. This is a data set with relative frequencies (proportions) of different word classes in 69 subcorpora of the <a href="http://corpus.byu.edu/bnc">British National Corpus</a> (the BYU-BNC version).</p>
+<ul>
+<li>Reg — a factor that describes the metaregister with levels Acad, Fiction, Misc, News, NonacProse and Spok</li>
+<li>Ncomm — a numeric vector with relative frequencies of common nouns.</li>
+<li>Nprop — a numeric vector with relative frequencies of proper nouns.</li>
+<li>Vpres — a numeric vector with relative frequencies of verbs in the present tense form, 3rd person singular.</li>
+<li>Vpast — a numeric vector with relative frequencies of verbs in the past tense form.</li>
+<li>P1 — a numeric vector with relative frequencies of the first-person pronouns.</li>
+<li>P2 — a numeric vector with relative frequencies of the second-person pronouns.</li>
+<li>Adj — a numeric vector with relative frequencies of adjectives.</li>
+<li>ConjCoord — a numeric vector with relative frequencies of coordinating conjunctions.</li>
+<li>ConjSub — a numeric vectorwith relative frequencies of subordinating conjunctions.</li>
+<li>Interject — a numeric vector with relative frequencies of interjections.</li>
+<li>Num — a numeric vector with relative frequencies of numerals.</li>
+</ul>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1"></a>reg_bnc &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;https://goo.gl/19QywL&quot;</span>)</span></code></pre></div>
+<p>Применим PCA. Обязательно нормировать переменные:</p>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1"></a>pca &lt;-<span class="st"> </span><span class="kw">prcomp</span>(reg_bnc[, <span class="dv">-1</span>], <span class="dt">center =</span> <span class="ot">TRUE</span>, <span class="dt">scale. =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb48-2"><a href="#cb48-2"></a><span class="kw">summary</span>(pca)</span></code></pre></div>
+<pre><code>## Importance of components:
+##                           PC1    PC2    PC3     PC4     PC5     PC6    PC7
+## Standard deviation     2.2513 1.3683 1.1730 0.88886 0.80320 0.64940 0.5480
+## Proportion of Variance 0.4607 0.1702 0.1251 0.07183 0.05865 0.03834 0.0273
+## Cumulative Proportion  0.4607 0.6310 0.7560 0.82786 0.88650 0.92484 0.9521
+##                            PC8     PC9    PC10    PC11
+## Standard deviation     0.43204 0.37908 0.32981 0.29551
+## Proportion of Variance 0.01697 0.01306 0.00989 0.00794
+## Cumulative Proportion  0.96911 0.98217 0.99206 1.00000</code></pre>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1"></a>prop.pca &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">c</span>(<span class="st">&quot;PCA1 &quot;</span>, <span class="st">&quot;PCA2 &quot;</span>),</span>
+<span id="cb50-2"><a href="#cb50-2"></a>                   <span class="st">&quot;(&quot;</span>,</span>
+<span id="cb50-3"><a href="#cb50-3"></a>                   <span class="kw">round</span>(pca<span class="op">$</span>sdev<span class="op">^</span><span class="dv">2</span><span class="op">/</span><span class="kw">sum</span>(pca<span class="op">$</span>sdev<span class="op">^</span><span class="dv">2</span>), <span class="dv">2</span>)<span class="op">*</span><span class="dv">100</span>, </span>
+<span id="cb50-4"><a href="#cb50-4"></a>                   <span class="st">&quot;%)&quot;</span>)</span>
+<span id="cb50-5"><a href="#cb50-5"></a>prop.pca</span></code></pre></div>
+<pre><code>##  [1] &quot;PCA1 (46%)&quot; &quot;PCA2 (17%)&quot; &quot;PCA1 (13%)&quot; &quot;PCA2 (7%)&quot;  &quot;PCA1 (6%)&quot; 
+##  [6] &quot;PCA2 (4%)&quot;  &quot;PCA1 (3%)&quot;  &quot;PCA2 (2%)&quot;  &quot;PCA1 (1%)&quot;  &quot;PCA2 (1%)&quot; 
+## [11] &quot;PCA1 (1%)&quot;</code></pre>
+<p>Применим LDA:</p>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1"></a>lda &lt;-<span class="st"> </span>MASS<span class="op">::</span><span class="kw">lda</span>(Reg <span class="op">~</span><span class="st"> </span>., reg_bnc) <span class="co"># точка здесь означает все остальные переменные</span></span>
+<span id="cb52-2"><a href="#cb52-2"></a>lda</span></code></pre></div>
+<pre><code>## Call:
+## lda(Reg ~ ., data = reg_bnc)
+## 
+## Prior probabilities of groups:
+##       Acad    Fiction       Misc       News NonacProse       Spok 
+## 0.08695652 0.04347826 0.20289855 0.23188406 0.08695652 0.34782609 
+## 
+## Group means:
+##                Ncomm      Nprop      Vpres      Vpast          P1           P2
+## Acad       0.2549420 0.02266485 0.02904719 0.02126151 0.004105998 0.0005405686
+## Fiction    0.1955041 0.04178816 0.03038170 0.04548496 0.030593736 0.0157916198
+## Misc       0.2343928 0.03550175 0.02651374 0.02315834 0.013141775 0.0056901996
+## News       0.2378307 0.07106673 0.02822461 0.03365907 0.007803970 0.0020222830
+## NonacProse 0.2499477 0.04212051 0.02589905 0.02704461 0.004550642 0.0027800044
+## Spok       0.1687050 0.01799012 0.03893423 0.02438672 0.030547406 0.0219079840
+##                   Adj  ConjCoord    ConjSub    Interject         Num
+## Acad       0.09482774 0.03543711 0.02442643 0.0001529274 0.027937153
+## Fiction    0.06244320 0.03530775 0.02052828 0.0032991461 0.008623133
+## Misc       0.07606038 0.03649929 0.02321892 0.0004648388 0.023046086
+## News       0.07388502 0.03036116 0.01913741 0.0003298421 0.026427816
+## NonacProse 0.08578270 0.03628245 0.02212339 0.0002005514 0.024857053
+## Spok       0.05286300 0.03723121 0.03175828 0.0118121512 0.022938509
+## 
+## Coefficients of linear discriminants:
+##                  LD1         LD2        LD3         LD4          LD5
+## Ncomm     -14.975910   33.038613  -13.75794   -9.762794   -0.3627041
+## Nprop     -31.817659    1.680262  -51.20818  -26.679090  -17.4961099
+## Vpres      21.949722   77.322406  -17.27444  137.775687   26.8626816
+## Vpast     -19.768647   80.118231   10.44288   93.006137  -19.1976952
+## P1         29.248688  107.556231   83.43757   36.133339   88.1194007
+## P2        -24.775453  131.904744   12.86914   23.705959 -105.8680052
+## Adj       -31.055573  -31.813406   65.91946   99.586559  -14.1475120
+## ConjCoord 112.139915 -163.557542  -35.33204 -159.069109  -61.6664488
+## ConjSub    91.669633 -125.858658 -173.82587  -33.940312  -58.0035162
+## Interject   3.624572 -128.365272 -100.95408  -16.955043  -33.7161488
+## Num        75.705268  -95.261979  -28.39224   79.729523   41.6955600
+## 
+## Proportion of trace:
+##    LD1    LD2    LD3    LD4    LD5 
+## 0.6095 0.2670 0.0782 0.0419 0.0034</code></pre>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1"></a>prop.lda &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">c</span>(<span class="st">&quot;LDA1 &quot;</span>, <span class="st">&quot;LDA2 &quot;</span>),</span>
+<span id="cb54-2"><a href="#cb54-2"></a>                   <span class="st">&quot;(&quot;</span>,</span>
+<span id="cb54-3"><a href="#cb54-3"></a>                   <span class="kw">round</span>(lda<span class="op">$</span>svd<span class="op">^</span><span class="dv">2</span><span class="op">/</span><span class="kw">sum</span>(lda<span class="op">$</span>svd<span class="op">^</span><span class="dv">2</span>), <span class="dv">2</span>)<span class="op">*</span><span class="dv">100</span>, </span>
+<span id="cb54-4"><a href="#cb54-4"></a>                   <span class="st">&quot;%)&quot;</span>)</span>
+<span id="cb54-5"><a href="#cb54-5"></a>prop.lda</span></code></pre></div>
+<pre><code>## [1] &quot;LDA1 (61%)&quot; &quot;LDA2 (27%)&quot; &quot;LDA1 (8%)&quot;  &quot;LDA2 (4%)&quot;  &quot;LDA1 (0%)&quot;</code></pre>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1"></a>plda &lt;-<span class="st"> </span><span class="kw">predict</span>(<span class="dt">object =</span> lda, <span class="dt">newdata =</span> reg_bnc)</span></code></pre></div>
+<p>Соединим все в один датасет:</p>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1"></a>dataset &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">Reg =</span> reg_bnc[,<span class="st">&quot;Reg&quot;</span>],</span>
+<span id="cb57-2"><a href="#cb57-2"></a>                      <span class="dt">pca =</span> pca<span class="op">$</span>x, </span>
+<span id="cb57-3"><a href="#cb57-3"></a>                      <span class="dt">lda =</span> plda<span class="op">$</span>x)</span></code></pre></div>
+<p>Визуализируем:</p>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1"></a>dataset <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb58-2"><a href="#cb58-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(pca.PC1, pca.PC2, <span class="dt">colour =</span> Reg)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb58-3"><a href="#cb58-3"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb58-4"><a href="#cb58-4"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> prop.pca[<span class="dv">1</span>], <span class="dt">y =</span> prop.pca[<span class="dv">2</span>])<span class="op">+</span></span>
+<span id="cb58-5"><a href="#cb58-5"></a><span class="st">  </span><span class="kw">stat_ellipse</span>() -&gt;</span>
+<span id="cb58-6"><a href="#cb58-6"></a><span class="st">  </span>p1</span>
+<span id="cb58-7"><a href="#cb58-7"></a></span>
+<span id="cb58-8"><a href="#cb58-8"></a>dataset <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb58-9"><a href="#cb58-9"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(lda.LD1, lda.LD2, <span class="dt">colour =</span> Reg)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb58-10"><a href="#cb58-10"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb58-11"><a href="#cb58-11"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> prop.lda[<span class="dv">1</span>], <span class="dt">y =</span> prop.lda[<span class="dv">2</span>])<span class="op">+</span></span>
+<span id="cb58-12"><a href="#cb58-12"></a><span class="st">  </span><span class="kw">stat_ellipse</span>() -&gt;</span>
+<span id="cb58-13"><a href="#cb58-13"></a><span class="st">  </span>p2</span>
+<span id="cb58-14"><a href="#cb58-14"></a></span>
+<span id="cb58-15"><a href="#cb58-15"></a>gridExtra<span class="op">::</span><span class="kw">grid.arrange</span>(p1, p2)</span></code></pre></div>
+<pre><code>## Warning: Removed 1 rows containing missing values (geom_path).
+
+## Warning: Removed 1 rows containing missing values (geom_path).</code></pre>
+<p><img src="6_PCA_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
+</div>
+</div>
+
+<br><br><br>
+<p><center> &copy; Г. Мороз 2020 с помощью RMarkdown. Исходный код на 
+<a href="https://github.com/agricolamz/2020_ds4l"> GitHub </center> </p>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -15,17 +15,12 @@ navbar:
       href: 4_Confidence_intervals.html
     - text: 5. Коэффициент Байеса
       href: 5_Bayes_factor.html
-    - text: 6. Байесовская регрессия
-      href: 6_Bayesian_regressian.html
-      
   - text: уменьшение размерности
     menu:
-    - text: 5. PCA, LDA
-      href: 5_PCA.html
-    - text: 6. CA, DCA, MCA
-      href: 6_CA_MCA.html
-    - text: 7. Кластеризация
-      href: 7_Clustering.pdf
+    - text: 6. PCA, LDA
+      href: 6_PCA.html
+    - text: 7. CA, DCA, MCA
+      href: 7_CA_MCA.html
   - text: регрессия
     menu:
     - text: 8. Еще о регрессионных моделях
