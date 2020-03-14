@@ -703,7 +703,7 @@ div.tocify {
 ## стиффи  -0.40770488 -0.13773815 -0.11544756
 ## сэр     -0.09007671  0.04324016  0.25194682</code></pre>
 <p>Как читать полученное? Мы сменили оси координат и в новом пространстве (точно так же 9-мерном) мы можем перейти используя полученные значения:</p>
-<p><span class="math display">\[PC1 = гарольд \times 0.03548428 + гасси \times 0.08477226 + далия \times -0.11013760 + дживс \times -0.48849572 +\]</span> <span class="math display">\[ + мадлен \times 0.12377778 + оутс \times -0.04712363 + спод \times 0.09814424 + стиффи \times 0.05838698 + сэр \times -0.84274152\]</span></p>
+<p><span class="math display">\[PC1 = гарольд \times 0.04446386 + гасси \times 0.08779348 + далия \times -0.15615004 + дживс \times  -0.50150883 +\]</span> <span class="math display">\[ + мадлен \times 0.11753413 + оутс \times -0.08429973 + спод \times 0.21798564 + стиффи \times 0.07986552 + сэр \times -0.79975269\]</span></p>
 <p>Как полученные компоненты объясняют дисперсию в переменных?</p>
 <div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a><span class="kw">summary</span>(PCA)</span></code></pre></div>
 <pre><code>## Importance of components:
@@ -729,6 +729,14 @@ div.tocify {
 <span id="cb32-6"><a href="#cb32-6"></a>         <span class="dt">loadings.label =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
 <p><img src="6_PCA_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
 <p>Числа на этом графике — номера глав романа, красные линии — оси старых осей координат. Сам график называется биплот. Чем ближе друг к другустарые оси координат, тем больше скоррелированы переменные (вообще, косинус угла между ними равен коэфициенту корреляции между соответствующими переменными).</p>
+<p>PCA чувствителен к дисперсии в переменных, т. е. если дисперсия в одной переменной будет большой, то PCA расположит эту переменную на PC1 и т. п. Чтобы этого избежать можно использовать аргумент <code>scale.</code></p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1"></a>PCA &lt;-<span class="st"> </span><span class="kw">prcomp</span>(wodehouse_<span class="dv">2</span>, <span class="dt">scale. =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb33-2"><a href="#cb33-2"></a><span class="kw">autoplot</span>(PCA,</span>
+<span id="cb33-3"><a href="#cb33-3"></a>         <span class="dt">shape =</span> <span class="ot">FALSE</span>,</span>
+<span id="cb33-4"><a href="#cb33-4"></a>         <span class="dt">loadings =</span> <span class="ot">TRUE</span>,</span>
+<span id="cb33-5"><a href="#cb33-5"></a>         <span class="dt">label =</span> <span class="ot">TRUE</span>,</span>
+<span id="cb33-6"><a href="#cb33-6"></a>         <span class="dt">loadings.label =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<p><img src="6_PCA_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
 </div>
 <div id="что-дальше" class="section level3">
 <h3>5. Что дальше?</h3>
@@ -743,7 +751,7 @@ div.tocify {
 </div>
 <div id="евангелия" class="section level3">
 <h3>7. Евангелия</h3>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1"></a>gospels &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;https://tinyurl.com/y8tcf3uw&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1"></a>gospels &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;https://tinyurl.com/y8tcf3uw&quot;</span>)</span></code></pre></div>
 <p>Постройте PCA и нарисуйте биплот. Чем вызвано такое расхождение евангелистов?</p>
 </div>
 <div id="линейный-дискриминантный-анализ" class="section level3">
@@ -760,34 +768,34 @@ div.tocify {
 <li>f1 — первая форманта</li>
 <li>f2 — вторая форманта</li>
 </ul>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1"></a>nanai &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;https://goo.gl/9uGBoQ&quot;</span>)</span>
-<span id="cb34-2"><a href="#cb34-2"></a>nanai <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb34-3"><a href="#cb34-3"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(f2, f1, <span class="dt">label =</span> sound, <span class="dt">color =</span> sound))<span class="op">+</span></span>
-<span id="cb34-4"><a href="#cb34-4"></a><span class="st">  </span><span class="kw">geom_text</span>()<span class="op">+</span></span>
-<span id="cb34-5"><a href="#cb34-5"></a><span class="st">  </span><span class="kw">geom_rug</span>()<span class="op">+</span></span>
-<span id="cb34-6"><a href="#cb34-6"></a><span class="st">  </span><span class="kw">scale_y_reverse</span>()<span class="op">+</span></span>
-<span id="cb34-7"><a href="#cb34-7"></a><span class="st">  </span><span class="kw">scale_x_reverse</span>()<span class="op">+</span></span>
-<span id="cb34-8"><a href="#cb34-8"></a><span class="st">  </span><span class="kw">stat_ellipse</span>()<span class="op">+</span></span>
-<span id="cb34-9"><a href="#cb34-9"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>)<span class="op">+</span></span>
-<span id="cb34-10"><a href="#cb34-10"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Нанайские гласные в произнесении мужчины из селения Джуен&quot;</span>)</span></code></pre></div>
-<p><img src="6_PCA_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1"></a>nanai &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;https://goo.gl/9uGBoQ&quot;</span>)</span>
+<span id="cb35-2"><a href="#cb35-2"></a>nanai <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb35-3"><a href="#cb35-3"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(f2, f1, <span class="dt">label =</span> sound, <span class="dt">color =</span> sound))<span class="op">+</span></span>
+<span id="cb35-4"><a href="#cb35-4"></a><span class="st">  </span><span class="kw">geom_text</span>()<span class="op">+</span></span>
+<span id="cb35-5"><a href="#cb35-5"></a><span class="st">  </span><span class="kw">geom_rug</span>()<span class="op">+</span></span>
+<span id="cb35-6"><a href="#cb35-6"></a><span class="st">  </span><span class="kw">scale_y_reverse</span>()<span class="op">+</span></span>
+<span id="cb35-7"><a href="#cb35-7"></a><span class="st">  </span><span class="kw">scale_x_reverse</span>()<span class="op">+</span></span>
+<span id="cb35-8"><a href="#cb35-8"></a><span class="st">  </span><span class="kw">stat_ellipse</span>()<span class="op">+</span></span>
+<span id="cb35-9"><a href="#cb35-9"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>)<span class="op">+</span></span>
+<span id="cb35-10"><a href="#cb35-10"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Нанайские гласные в произнесении мужчины из селения Джуен&quot;</span>)</span></code></pre></div>
+<p><img src="6_PCA_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
 <p>Применим PCA. Обязательно нормировать переменные:</p>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1"></a>pca &lt;-<span class="st"> </span><span class="kw">prcomp</span>(nanai[, <span class="dv">-1</span>], <span class="dt">center =</span> <span class="ot">TRUE</span>, <span class="dt">scale. =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb35-2"><a href="#cb35-2"></a><span class="kw">summary</span>(pca)</span></code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1"></a>pca &lt;-<span class="st"> </span><span class="kw">prcomp</span>(nanai[, <span class="dv">-1</span>], <span class="dt">center =</span> <span class="ot">TRUE</span>, <span class="dt">scale. =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb36-2"><a href="#cb36-2"></a><span class="kw">summary</span>(pca)</span></code></pre></div>
 <pre><code>## Importance of components:
 ##                           PC1    PC2
 ## Standard deviation     1.2959 0.5663
 ## Proportion of Variance 0.8397 0.1603
 ## Cumulative Proportion  0.8397 1.0000</code></pre>
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1"></a>prop.pca &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">c</span>(<span class="st">&quot;PCA1 &quot;</span>, <span class="st">&quot;PCA2 &quot;</span>),</span>
-<span id="cb37-2"><a href="#cb37-2"></a>                   <span class="st">&quot;(&quot;</span>,</span>
-<span id="cb37-3"><a href="#cb37-3"></a>                   <span class="kw">round</span>(pca<span class="op">$</span>sdev<span class="op">^</span><span class="dv">2</span><span class="op">/</span><span class="kw">sum</span>(pca<span class="op">$</span>sdev<span class="op">^</span><span class="dv">2</span>), <span class="dv">2</span>), </span>
-<span id="cb37-4"><a href="#cb37-4"></a>                   <span class="st">&quot;%)&quot;</span>)</span>
-<span id="cb37-5"><a href="#cb37-5"></a>prop.pca</span></code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1"></a>prop.pca &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">c</span>(<span class="st">&quot;PCA1 &quot;</span>, <span class="st">&quot;PCA2 &quot;</span>),</span>
+<span id="cb38-2"><a href="#cb38-2"></a>                   <span class="st">&quot;(&quot;</span>,</span>
+<span id="cb38-3"><a href="#cb38-3"></a>                   <span class="kw">round</span>(pca<span class="op">$</span>sdev<span class="op">^</span><span class="dv">2</span><span class="op">/</span><span class="kw">sum</span>(pca<span class="op">$</span>sdev<span class="op">^</span><span class="dv">2</span>), <span class="dv">2</span>), </span>
+<span id="cb38-4"><a href="#cb38-4"></a>                   <span class="st">&quot;%)&quot;</span>)</span>
+<span id="cb38-5"><a href="#cb38-5"></a>prop.pca</span></code></pre></div>
 <pre><code>## [1] &quot;PCA1 (0.84%)&quot; &quot;PCA2 (0.16%)&quot;</code></pre>
 <p>Применим LDA:</p>
-<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1"></a>lda &lt;-<span class="st"> </span>MASS<span class="op">::</span><span class="kw">lda</span>(sound <span class="op">~</span><span class="st"> </span>f1 <span class="op">+</span><span class="st"> </span>f2, nanai)</span>
-<span id="cb39-2"><a href="#cb39-2"></a>lda</span></code></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1"></a>lda &lt;-<span class="st"> </span>MASS<span class="op">::</span><span class="kw">lda</span>(sound <span class="op">~</span><span class="st"> </span>f1 <span class="op">+</span><span class="st"> </span>f2, nanai)</span>
+<span id="cb40-2"><a href="#cb40-2"></a>lda</span></code></pre></div>
 <pre><code>## Call:
 ## lda(sound ~ f1 + f2, data = nanai)
 ## 
@@ -809,14 +817,14 @@ div.tocify {
 ## Proportion of trace:
 ##    LD1    LD2 
 ## 0.9072 0.0928</code></pre>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1"></a>prop.lda &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">c</span>(<span class="st">&quot;LDA1 &quot;</span>, <span class="st">&quot;LDA2 &quot;</span>),</span>
-<span id="cb41-2"><a href="#cb41-2"></a>                   <span class="st">&quot;(&quot;</span>,</span>
-<span id="cb41-3"><a href="#cb41-3"></a>                   <span class="kw">round</span>(lda<span class="op">$</span>svd<span class="op">^</span><span class="dv">2</span><span class="op">/</span><span class="kw">sum</span>(lda<span class="op">$</span>svd<span class="op">^</span><span class="dv">2</span>), <span class="dv">2</span>), </span>
-<span id="cb41-4"><a href="#cb41-4"></a>                   <span class="st">&quot;%)&quot;</span>)</span>
-<span id="cb41-5"><a href="#cb41-5"></a>prop.lda</span></code></pre></div>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1"></a>prop.lda &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">c</span>(<span class="st">&quot;LDA1 &quot;</span>, <span class="st">&quot;LDA2 &quot;</span>),</span>
+<span id="cb42-2"><a href="#cb42-2"></a>                   <span class="st">&quot;(&quot;</span>,</span>
+<span id="cb42-3"><a href="#cb42-3"></a>                   <span class="kw">round</span>(lda<span class="op">$</span>svd<span class="op">^</span><span class="dv">2</span><span class="op">/</span><span class="kw">sum</span>(lda<span class="op">$</span>svd<span class="op">^</span><span class="dv">2</span>), <span class="dv">2</span>), </span>
+<span id="cb42-4"><a href="#cb42-4"></a>                   <span class="st">&quot;%)&quot;</span>)</span>
+<span id="cb42-5"><a href="#cb42-5"></a>prop.lda</span></code></pre></div>
 <pre><code>## [1] &quot;LDA1 (0.91%)&quot; &quot;LDA2 (0.09%)&quot;</code></pre>
-<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1"></a>plda &lt;-<span class="st"> </span><span class="kw">predict</span>(<span class="dt">object =</span> lda, <span class="dt">newdata =</span> nanai)</span>
-<span id="cb43-2"><a href="#cb43-2"></a><span class="kw">head</span>(plda<span class="op">$</span>x)</span></code></pre></div>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1"></a>plda &lt;-<span class="st"> </span><span class="kw">predict</span>(<span class="dt">object =</span> lda, <span class="dt">newdata =</span> nanai)</span>
+<span id="cb44-2"><a href="#cb44-2"></a><span class="kw">head</span>(plda<span class="op">$</span>x)</span></code></pre></div>
 <pre><code>##         LD1         LD2
 ## 1  2.755845  0.08781396
 ## 2  1.414956  0.29058264
@@ -825,37 +833,37 @@ div.tocify {
 ## 5  2.237146 -0.75823208
 ## 6  6.042266  0.62783102</code></pre>
 <p>Соединим все в один датасет:</p>
-<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1"></a>dataset &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">sound =</span> nanai[,<span class="st">&quot;sound&quot;</span>],</span>
-<span id="cb45-2"><a href="#cb45-2"></a>                      <span class="dt">pca =</span> pca<span class="op">$</span>x, </span>
-<span id="cb45-3"><a href="#cb45-3"></a>                      <span class="dt">lda =</span> plda<span class="op">$</span>x)</span></code></pre></div>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1"></a>dataset &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">sound =</span> nanai[,<span class="st">&quot;sound&quot;</span>],</span>
+<span id="cb46-2"><a href="#cb46-2"></a>                      <span class="dt">pca =</span> pca<span class="op">$</span>x, </span>
+<span id="cb46-3"><a href="#cb46-3"></a>                      <span class="dt">lda =</span> plda<span class="op">$</span>x)</span></code></pre></div>
 <p>Визуализируем:</p>
-<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1"></a>nanai <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb46-2"><a href="#cb46-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(f2, f1, <span class="dt">label =</span> sound, <span class="dt">color =</span> sound))<span class="op">+</span></span>
-<span id="cb46-3"><a href="#cb46-3"></a><span class="st">  </span><span class="kw">geom_text</span>()<span class="op">+</span></span>
-<span id="cb46-4"><a href="#cb46-4"></a><span class="st">  </span><span class="kw">scale_y_reverse</span>()<span class="op">+</span></span>
-<span id="cb46-5"><a href="#cb46-5"></a><span class="st">  </span><span class="kw">scale_x_reverse</span>()<span class="op">+</span></span>
-<span id="cb46-6"><a href="#cb46-6"></a><span class="st">  </span><span class="kw">stat_ellipse</span>()<span class="op">+</span></span>
-<span id="cb46-7"><a href="#cb46-7"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>) -&gt;</span>
-<span id="cb46-8"><a href="#cb46-8"></a><span class="st">  </span>p1</span>
-<span id="cb46-9"><a href="#cb46-9"></a></span>
-<span id="cb46-10"><a href="#cb46-10"></a>dataset <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb46-11"><a href="#cb46-11"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(pca.PC1, pca.PC2, <span class="dt">colour =</span> sound, <span class="dt">label =</span> sound)) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb46-12"><a href="#cb46-12"></a><span class="st">  </span><span class="kw">geom_text</span>() <span class="op">+</span><span class="st"> </span></span>
-<span id="cb46-13"><a href="#cb46-13"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> prop.pca[<span class="dv">1</span>], <span class="dt">y =</span> prop.pca[<span class="dv">2</span>])<span class="op">+</span></span>
-<span id="cb46-14"><a href="#cb46-14"></a><span class="st">  </span><span class="kw">stat_ellipse</span>() <span class="op">+</span></span>
-<span id="cb46-15"><a href="#cb46-15"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>) -&gt;</span>
-<span id="cb46-16"><a href="#cb46-16"></a><span class="st">  </span>p2</span>
-<span id="cb46-17"><a href="#cb46-17"></a></span>
-<span id="cb46-18"><a href="#cb46-18"></a>dataset <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb46-19"><a href="#cb46-19"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(lda.LD1, lda.LD2, <span class="dt">colour =</span> sound, <span class="dt">label =</span> sound)) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb46-20"><a href="#cb46-20"></a><span class="st">  </span><span class="kw">geom_text</span>() <span class="op">+</span><span class="st"> </span></span>
-<span id="cb46-21"><a href="#cb46-21"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> prop.lda[<span class="dv">1</span>], <span class="dt">y =</span> prop.lda[<span class="dv">2</span>])<span class="op">+</span></span>
-<span id="cb46-22"><a href="#cb46-22"></a><span class="st">  </span><span class="kw">stat_ellipse</span>() <span class="op">+</span></span>
-<span id="cb46-23"><a href="#cb46-23"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>) -&gt;</span>
-<span id="cb46-24"><a href="#cb46-24"></a><span class="st">  </span>p3</span>
-<span id="cb46-25"><a href="#cb46-25"></a></span>
-<span id="cb46-26"><a href="#cb46-26"></a>gridExtra<span class="op">::</span><span class="kw">grid.arrange</span>(p1, p2, p3)</span></code></pre></div>
-<p><img src="6_PCA_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1"></a>nanai <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb47-2"><a href="#cb47-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(f2, f1, <span class="dt">label =</span> sound, <span class="dt">color =</span> sound))<span class="op">+</span></span>
+<span id="cb47-3"><a href="#cb47-3"></a><span class="st">  </span><span class="kw">geom_text</span>()<span class="op">+</span></span>
+<span id="cb47-4"><a href="#cb47-4"></a><span class="st">  </span><span class="kw">scale_y_reverse</span>()<span class="op">+</span></span>
+<span id="cb47-5"><a href="#cb47-5"></a><span class="st">  </span><span class="kw">scale_x_reverse</span>()<span class="op">+</span></span>
+<span id="cb47-6"><a href="#cb47-6"></a><span class="st">  </span><span class="kw">stat_ellipse</span>()<span class="op">+</span></span>
+<span id="cb47-7"><a href="#cb47-7"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>) -&gt;</span>
+<span id="cb47-8"><a href="#cb47-8"></a><span class="st">  </span>p1</span>
+<span id="cb47-9"><a href="#cb47-9"></a></span>
+<span id="cb47-10"><a href="#cb47-10"></a>dataset <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb47-11"><a href="#cb47-11"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(pca.PC1, pca.PC2, <span class="dt">colour =</span> sound, <span class="dt">label =</span> sound)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb47-12"><a href="#cb47-12"></a><span class="st">  </span><span class="kw">geom_text</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb47-13"><a href="#cb47-13"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> prop.pca[<span class="dv">1</span>], <span class="dt">y =</span> prop.pca[<span class="dv">2</span>])<span class="op">+</span></span>
+<span id="cb47-14"><a href="#cb47-14"></a><span class="st">  </span><span class="kw">stat_ellipse</span>() <span class="op">+</span></span>
+<span id="cb47-15"><a href="#cb47-15"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>) -&gt;</span>
+<span id="cb47-16"><a href="#cb47-16"></a><span class="st">  </span>p2</span>
+<span id="cb47-17"><a href="#cb47-17"></a></span>
+<span id="cb47-18"><a href="#cb47-18"></a>dataset <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb47-19"><a href="#cb47-19"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(lda.LD1, lda.LD2, <span class="dt">colour =</span> sound, <span class="dt">label =</span> sound)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb47-20"><a href="#cb47-20"></a><span class="st">  </span><span class="kw">geom_text</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb47-21"><a href="#cb47-21"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> prop.lda[<span class="dv">1</span>], <span class="dt">y =</span> prop.lda[<span class="dv">2</span>])<span class="op">+</span></span>
+<span id="cb47-22"><a href="#cb47-22"></a><span class="st">  </span><span class="kw">stat_ellipse</span>() <span class="op">+</span></span>
+<span id="cb47-23"><a href="#cb47-23"></a><span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>) -&gt;</span>
+<span id="cb47-24"><a href="#cb47-24"></a><span class="st">  </span>p3</span>
+<span id="cb47-25"><a href="#cb47-25"></a></span>
+<span id="cb47-26"><a href="#cb47-26"></a>gridExtra<span class="op">::</span><span class="kw">grid.arrange</span>(p1, p2, p3)</span></code></pre></div>
+<p><img src="6_PCA_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
 </div>
 <div id="register-variation-in-the-british-national-corpus" class="section level4">
 <h4>9.2 Register variation in the British National Corpus</h4>
@@ -874,10 +882,10 @@ div.tocify {
 <li>Interject — a numeric vector with relative frequencies of interjections.</li>
 <li>Num — a numeric vector with relative frequencies of numerals.</li>
 </ul>
-<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1"></a>reg_bnc &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;https://goo.gl/19QywL&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1"></a>reg_bnc &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;https://goo.gl/19QywL&quot;</span>)</span></code></pre></div>
 <p>Применим PCA. Обязательно нормировать переменные:</p>
-<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1"></a>pca &lt;-<span class="st"> </span><span class="kw">prcomp</span>(reg_bnc[, <span class="dv">-1</span>], <span class="dt">center =</span> <span class="ot">TRUE</span>, <span class="dt">scale. =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb48-2"><a href="#cb48-2"></a><span class="kw">summary</span>(pca)</span></code></pre></div>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1"></a>pca &lt;-<span class="st"> </span><span class="kw">prcomp</span>(reg_bnc[, <span class="dv">-1</span>], <span class="dt">center =</span> <span class="ot">TRUE</span>, <span class="dt">scale. =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb49-2"><a href="#cb49-2"></a><span class="kw">summary</span>(pca)</span></code></pre></div>
 <pre><code>## Importance of components:
 ##                           PC1    PC2    PC3     PC4     PC5     PC6    PC7
 ## Standard deviation     2.2513 1.3683 1.1730 0.88886 0.80320 0.64940 0.5480
@@ -887,17 +895,17 @@ div.tocify {
 ## Standard deviation     0.43204 0.37908 0.32981 0.29551
 ## Proportion of Variance 0.01697 0.01306 0.00989 0.00794
 ## Cumulative Proportion  0.96911 0.98217 0.99206 1.00000</code></pre>
-<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1"></a>prop.pca &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">c</span>(<span class="st">&quot;PCA1 &quot;</span>, <span class="st">&quot;PCA2 &quot;</span>),</span>
-<span id="cb50-2"><a href="#cb50-2"></a>                   <span class="st">&quot;(&quot;</span>,</span>
-<span id="cb50-3"><a href="#cb50-3"></a>                   <span class="kw">round</span>(pca<span class="op">$</span>sdev<span class="op">^</span><span class="dv">2</span><span class="op">/</span><span class="kw">sum</span>(pca<span class="op">$</span>sdev<span class="op">^</span><span class="dv">2</span>), <span class="dv">2</span>)<span class="op">*</span><span class="dv">100</span>, </span>
-<span id="cb50-4"><a href="#cb50-4"></a>                   <span class="st">&quot;%)&quot;</span>)</span>
-<span id="cb50-5"><a href="#cb50-5"></a>prop.pca</span></code></pre></div>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1"></a>prop.pca &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">c</span>(<span class="st">&quot;PCA1 &quot;</span>, <span class="st">&quot;PCA2 &quot;</span>),</span>
+<span id="cb51-2"><a href="#cb51-2"></a>                   <span class="st">&quot;(&quot;</span>,</span>
+<span id="cb51-3"><a href="#cb51-3"></a>                   <span class="kw">round</span>(pca<span class="op">$</span>sdev<span class="op">^</span><span class="dv">2</span><span class="op">/</span><span class="kw">sum</span>(pca<span class="op">$</span>sdev<span class="op">^</span><span class="dv">2</span>), <span class="dv">2</span>)<span class="op">*</span><span class="dv">100</span>, </span>
+<span id="cb51-4"><a href="#cb51-4"></a>                   <span class="st">&quot;%)&quot;</span>)</span>
+<span id="cb51-5"><a href="#cb51-5"></a>prop.pca</span></code></pre></div>
 <pre><code>##  [1] &quot;PCA1 (46%)&quot; &quot;PCA2 (17%)&quot; &quot;PCA1 (13%)&quot; &quot;PCA2 (7%)&quot;  &quot;PCA1 (6%)&quot; 
 ##  [6] &quot;PCA2 (4%)&quot;  &quot;PCA1 (3%)&quot;  &quot;PCA2 (2%)&quot;  &quot;PCA1 (1%)&quot;  &quot;PCA2 (1%)&quot; 
 ## [11] &quot;PCA1 (1%)&quot;</code></pre>
 <p>Применим LDA:</p>
-<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1"></a>lda &lt;-<span class="st"> </span>MASS<span class="op">::</span><span class="kw">lda</span>(Reg <span class="op">~</span><span class="st"> </span>., reg_bnc) <span class="co"># точка здесь означает все остальные переменные</span></span>
-<span id="cb52-2"><a href="#cb52-2"></a>lda</span></code></pre></div>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1"></a>lda &lt;-<span class="st"> </span>MASS<span class="op">::</span><span class="kw">lda</span>(Reg <span class="op">~</span><span class="st"> </span>., reg_bnc) <span class="co"># точка здесь означает все остальные переменные</span></span>
+<span id="cb53-2"><a href="#cb53-2"></a>lda</span></code></pre></div>
 <pre><code>## Call:
 ## lda(Reg ~ ., data = reg_bnc)
 ## 
@@ -938,37 +946,37 @@ div.tocify {
 ## Proportion of trace:
 ##    LD1    LD2    LD3    LD4    LD5 
 ## 0.6095 0.2670 0.0782 0.0419 0.0034</code></pre>
-<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1"></a>prop.lda &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">c</span>(<span class="st">&quot;LDA1 &quot;</span>, <span class="st">&quot;LDA2 &quot;</span>),</span>
-<span id="cb54-2"><a href="#cb54-2"></a>                   <span class="st">&quot;(&quot;</span>,</span>
-<span id="cb54-3"><a href="#cb54-3"></a>                   <span class="kw">round</span>(lda<span class="op">$</span>svd<span class="op">^</span><span class="dv">2</span><span class="op">/</span><span class="kw">sum</span>(lda<span class="op">$</span>svd<span class="op">^</span><span class="dv">2</span>), <span class="dv">2</span>)<span class="op">*</span><span class="dv">100</span>, </span>
-<span id="cb54-4"><a href="#cb54-4"></a>                   <span class="st">&quot;%)&quot;</span>)</span>
-<span id="cb54-5"><a href="#cb54-5"></a>prop.lda</span></code></pre></div>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1"></a>prop.lda &lt;-<span class="st"> </span><span class="kw">paste0</span>(<span class="kw">c</span>(<span class="st">&quot;LDA1 &quot;</span>, <span class="st">&quot;LDA2 &quot;</span>),</span>
+<span id="cb55-2"><a href="#cb55-2"></a>                   <span class="st">&quot;(&quot;</span>,</span>
+<span id="cb55-3"><a href="#cb55-3"></a>                   <span class="kw">round</span>(lda<span class="op">$</span>svd<span class="op">^</span><span class="dv">2</span><span class="op">/</span><span class="kw">sum</span>(lda<span class="op">$</span>svd<span class="op">^</span><span class="dv">2</span>), <span class="dv">2</span>)<span class="op">*</span><span class="dv">100</span>, </span>
+<span id="cb55-4"><a href="#cb55-4"></a>                   <span class="st">&quot;%)&quot;</span>)</span>
+<span id="cb55-5"><a href="#cb55-5"></a>prop.lda</span></code></pre></div>
 <pre><code>## [1] &quot;LDA1 (61%)&quot; &quot;LDA2 (27%)&quot; &quot;LDA1 (8%)&quot;  &quot;LDA2 (4%)&quot;  &quot;LDA1 (0%)&quot;</code></pre>
-<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1"></a>plda &lt;-<span class="st"> </span><span class="kw">predict</span>(<span class="dt">object =</span> lda, <span class="dt">newdata =</span> reg_bnc)</span></code></pre></div>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1"></a>plda &lt;-<span class="st"> </span><span class="kw">predict</span>(<span class="dt">object =</span> lda, <span class="dt">newdata =</span> reg_bnc)</span></code></pre></div>
 <p>Соединим все в один датасет:</p>
-<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1"></a>dataset &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">Reg =</span> reg_bnc[,<span class="st">&quot;Reg&quot;</span>],</span>
-<span id="cb57-2"><a href="#cb57-2"></a>                      <span class="dt">pca =</span> pca<span class="op">$</span>x, </span>
-<span id="cb57-3"><a href="#cb57-3"></a>                      <span class="dt">lda =</span> plda<span class="op">$</span>x)</span></code></pre></div>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1"></a>dataset &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">Reg =</span> reg_bnc[,<span class="st">&quot;Reg&quot;</span>],</span>
+<span id="cb58-2"><a href="#cb58-2"></a>                      <span class="dt">pca =</span> pca<span class="op">$</span>x, </span>
+<span id="cb58-3"><a href="#cb58-3"></a>                      <span class="dt">lda =</span> plda<span class="op">$</span>x)</span></code></pre></div>
 <p>Визуализируем:</p>
-<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1"></a>dataset <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb58-2"><a href="#cb58-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(pca.PC1, pca.PC2, <span class="dt">colour =</span> Reg)) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb58-3"><a href="#cb58-3"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span></span>
-<span id="cb58-4"><a href="#cb58-4"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> prop.pca[<span class="dv">1</span>], <span class="dt">y =</span> prop.pca[<span class="dv">2</span>])<span class="op">+</span></span>
-<span id="cb58-5"><a href="#cb58-5"></a><span class="st">  </span><span class="kw">stat_ellipse</span>() -&gt;</span>
-<span id="cb58-6"><a href="#cb58-6"></a><span class="st">  </span>p1</span>
-<span id="cb58-7"><a href="#cb58-7"></a></span>
-<span id="cb58-8"><a href="#cb58-8"></a>dataset <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb58-9"><a href="#cb58-9"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(lda.LD1, lda.LD2, <span class="dt">colour =</span> Reg)) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb58-10"><a href="#cb58-10"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span></span>
-<span id="cb58-11"><a href="#cb58-11"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> prop.lda[<span class="dv">1</span>], <span class="dt">y =</span> prop.lda[<span class="dv">2</span>])<span class="op">+</span></span>
-<span id="cb58-12"><a href="#cb58-12"></a><span class="st">  </span><span class="kw">stat_ellipse</span>() -&gt;</span>
-<span id="cb58-13"><a href="#cb58-13"></a><span class="st">  </span>p2</span>
-<span id="cb58-14"><a href="#cb58-14"></a></span>
-<span id="cb58-15"><a href="#cb58-15"></a>gridExtra<span class="op">::</span><span class="kw">grid.arrange</span>(p1, p2)</span></code></pre></div>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1"></a>dataset <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb59-2"><a href="#cb59-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(pca.PC1, pca.PC2, <span class="dt">colour =</span> Reg)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb59-3"><a href="#cb59-3"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb59-4"><a href="#cb59-4"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> prop.pca[<span class="dv">1</span>], <span class="dt">y =</span> prop.pca[<span class="dv">2</span>])<span class="op">+</span></span>
+<span id="cb59-5"><a href="#cb59-5"></a><span class="st">  </span><span class="kw">stat_ellipse</span>() -&gt;</span>
+<span id="cb59-6"><a href="#cb59-6"></a><span class="st">  </span>p1</span>
+<span id="cb59-7"><a href="#cb59-7"></a></span>
+<span id="cb59-8"><a href="#cb59-8"></a>dataset <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb59-9"><a href="#cb59-9"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(lda.LD1, lda.LD2, <span class="dt">colour =</span> Reg)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb59-10"><a href="#cb59-10"></a><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb59-11"><a href="#cb59-11"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> prop.lda[<span class="dv">1</span>], <span class="dt">y =</span> prop.lda[<span class="dv">2</span>])<span class="op">+</span></span>
+<span id="cb59-12"><a href="#cb59-12"></a><span class="st">  </span><span class="kw">stat_ellipse</span>() -&gt;</span>
+<span id="cb59-13"><a href="#cb59-13"></a><span class="st">  </span>p2</span>
+<span id="cb59-14"><a href="#cb59-14"></a></span>
+<span id="cb59-15"><a href="#cb59-15"></a>gridExtra<span class="op">::</span><span class="kw">grid.arrange</span>(p1, p2)</span></code></pre></div>
 <pre><code>## Warning: Removed 1 rows containing missing values (geom_path).
 
 ## Warning: Removed 1 rows containing missing values (geom_path).</code></pre>
-<p><img src="6_PCA_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
+<p><img src="6_PCA_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
 </div>
 </div>
 
