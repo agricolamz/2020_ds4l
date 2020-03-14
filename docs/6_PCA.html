@@ -536,7 +536,7 @@ div.tocify {
 <li>стиффи — частотность появления имени в каждой из глав</li>
 <li>сэр — частотность появления имени в каждой из глав</li>
 </ul>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>wodehouse &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;https://goo.gl/8RJDwK&quot;</span>)</span>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>wodehouse &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;https://goo.gl/8RJDwK&quot;</span>)</span>
 <span id="cb2-2"><a href="#cb2-2"></a><span class="kw">library</span>(GGally)</span>
 <span id="cb2-3"><a href="#cb2-3"></a><span class="kw">ggpairs</span>(wodehouse[,<span class="op">-</span><span class="dv">1</span>])</span></code></pre></div>
 <p><img src="6_PCA_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
@@ -717,8 +717,8 @@ div.tocify {
 ## Cumulative Proportion  0.9945700 0.9991400 1.0000000</code></pre>
 <p>Т. е. первые две компоненты объясняют почти 80 процентов дисперсии, это достаточно высокое значение, которое позволяет нам применять данный метод.</p>
 <p>В выдаче PCA мы видели порядок, который отображает порядок следования в датасете, чтобы не потерять информацию о главе, мы прибегнем к хитрости:</p>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a>wodehouse_<span class="dv">2</span> &lt;-<span class="st"> </span>wodehouse[,<span class="op">-</span><span class="dv">1</span>]</span>
-<span id="cb31-2"><a href="#cb31-2"></a><span class="kw">rownames</span>(wodehouse_<span class="dv">2</span>) &lt;-<span class="st"> </span>wodehouse[, <span class="dv">1</span>]</span>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a>wodehouse_<span class="dv">2</span> &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(wodehouse[,<span class="op">-</span><span class="dv">1</span>])</span>
+<span id="cb31-2"><a href="#cb31-2"></a><span class="kw">rownames</span>(wodehouse_<span class="dv">2</span>) &lt;-<span class="st"> </span>wodehouse<span class="op">$</span>chapter</span>
 <span id="cb31-3"><a href="#cb31-3"></a>PCA &lt;-<span class="st"> </span><span class="kw">prcomp</span>(wodehouse_<span class="dv">2</span>)</span></code></pre></div>
 <p>Дальнейшая визуализация возможна благодаря пакету <code>ggfortify</code>:</p>
 <div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1"></a><span class="kw">library</span>(ggfortify)</span>

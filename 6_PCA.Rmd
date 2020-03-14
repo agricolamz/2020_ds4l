@@ -36,7 +36,7 @@ library(GGally)
 * сэр --- частотность появления имени в каждой из глав
 
 ```{r}
-wodehouse <- read.csv("https://goo.gl/8RJDwK")
+wodehouse <- read_csv("https://goo.gl/8RJDwK")
 library(GGally)
 ggpairs(wodehouse[,-1])
 ```
@@ -123,8 +123,8 @@ summary(PCA)
 
 В выдаче PCA мы видели порядок, который отображает порядок следования в датасете, чтобы не потерять информацию о главе, мы прибегнем к хитрости:
 ```{r}
-wodehouse_2 <- wodehouse[,-1]
-rownames(wodehouse_2) <- wodehouse[, 1]
+wodehouse_2 <- as.data.frame(wodehouse[,-1])
+rownames(wodehouse_2) <- wodehouse$chapter
 PCA <- prcomp(wodehouse_2)
 ```
 
