@@ -1,5 +1,5 @@
 ---
-title: "6. Уменьшение размерности: CA и MCA"
+title: "7. Уменьшение размерности: CA и MCA"
 author: "Г. Мороз"
 editor_options: 
   chunk_output_type: console
