@@ -106,4 +106,4 @@ dutch_caus %>%
 Комбинация CA и  дискрименантного анализа называется Discriminant Correspondence Analysis.
 
 ### 5. Домашнее задание 4
-Ссылка на [домашнее задание 2](https://classroom.github.com/a/c7gFmjuF)
+Ссылка на [домашнее задание 4](https://classroom.github.com/a/c7gFmjuF)
