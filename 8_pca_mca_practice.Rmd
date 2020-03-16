@@ -169,7 +169,7 @@ autocheck_question(answer = 0.4568)
 
 Давайте рассмотрим [датасет](https://raw.githubusercontent.com/agricolamz/2020_ds4l/master/data/mushrooms.csv) с грибами  (взято [отсюда](https://www.kaggle.com/uciml/mushroom-classification)) со следующими переменными:
 
-* attribute Information: (classes: edible=e, poisonous=p)
+* classes: edible=e, poisonous=p
 * cap-shape: bell=b,conical=c,convex=x,flat=f, knobbed=k,sunken=s
 * cap-surface: fibrous=f,grooves=g,scaly=y,smooth=s
 * cap-color: brown=n,buff=b,cinnamon=c,gray=g,green=r,pink=p,purple=u,red=e,white=w,yellow=y
@@ -192,3 +192,22 @@ autocheck_question(answer = 0.4568)
 * spore-print-color: black=k,brown=n,buff=b,chocolate=h,green=r,orange=o,purple=u,white=w,yellow=y
 * population: abundant=a,clustered=c,numerous=n,scattered=s,several=v,solitary=y
 * habitat: grasses=g,leaves=l,meadows=m,paths=p,urban=u,waste=w,woods=d
+
+Используйте все переменные кроме `classes` для анализа MCA и постройте следующий график:
+
+```{r, echo=FALSE, eval=FALSE}
+df <- read.csv("https://raw.githubusercontent.com/agricolamz/2020_ds4l/master/data/mushrooms.csv")
+MCA <- MASS::mca(df[,-1])
+
+df <- cbind(df, MCA$rs)
+variables <- as_tibble(MCA$cs)
+variables$var_names <- rownames(MCA$cs)
+df %>% 
+  ggplot(aes(`1`, `2`))+
+  geom_point(aes(color = class))+
+  stat_ellipse(aes(color = class))+
+  geom_text(data = variables, aes(`1`, `2`, label = var_names))+
+  theme_bw()
+```
+
+Что можно сказать про получившиеся кластеры?

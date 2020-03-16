@@ -676,17 +676,15 @@ div.tocify {
 ## 
 ## Correlations 0.577 0.458  cumulative % explained  9.62 17.25</code></pre>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>dutch_caus &lt;-<span class="st"> </span><span class="kw">cbind</span>(dutch_caus, MCA<span class="op">$</span>rs)</span>
-<span id="cb14-2"><a href="#cb14-2"></a>variables &lt;-<span class="st"> </span><span class="kw">as_data_frame</span>(MCA<span class="op">$</span>cs)</span></code></pre></div>
-<pre><code>## Warning: `as_data_frame()` is deprecated, use `as_tibble()` (but mind the new semantics).
-## This warning is displayed once per session.</code></pre>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a>variables<span class="op">$</span>var_names &lt;-<span class="st"> </span><span class="kw">rownames</span>(MCA<span class="op">$</span>cs)</span>
-<span id="cb16-2"><a href="#cb16-2"></a>dutch_caus <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb16-3"><a href="#cb16-3"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="st">`</span><span class="dt">1</span><span class="st">`</span>, <span class="st">`</span><span class="dt">2</span><span class="st">`</span>))<span class="op">+</span></span>
-<span id="cb16-4"><a href="#cb16-4"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">color =</span> Aux))<span class="op">+</span></span>
-<span id="cb16-5"><a href="#cb16-5"></a><span class="st">  </span><span class="kw">stat_ellipse</span>(<span class="kw">aes</span>(<span class="dt">color =</span> Aux))<span class="op">+</span></span>
-<span id="cb16-6"><a href="#cb16-6"></a><span class="st">  </span><span class="kw">geom_text</span>(<span class="dt">data =</span> variables, <span class="kw">aes</span>(<span class="st">`</span><span class="dt">1</span><span class="st">`</span>, <span class="st">`</span><span class="dt">2</span><span class="st">`</span>, <span class="dt">label =</span> var_names))<span class="op">+</span></span>
-<span id="cb16-7"><a href="#cb16-7"></a><span class="st">  </span><span class="kw">theme_bw</span>()<span class="op">+</span></span>
-<span id="cb16-8"><a href="#cb16-8"></a><span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">limits =</span> <span class="kw">c</span>(<span class="op">-</span><span class="fl">0.015</span>, <span class="fl">0.02</span>))</span></code></pre></div>
+<span id="cb14-2"><a href="#cb14-2"></a>variables &lt;-<span class="st"> </span><span class="kw">as_tibble</span>(MCA<span class="op">$</span>cs)</span>
+<span id="cb14-3"><a href="#cb14-3"></a>variables<span class="op">$</span>var_names &lt;-<span class="st"> </span><span class="kw">rownames</span>(MCA<span class="op">$</span>cs)</span>
+<span id="cb14-4"><a href="#cb14-4"></a>dutch_caus <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb14-5"><a href="#cb14-5"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="st">`</span><span class="dt">1</span><span class="st">`</span>, <span class="st">`</span><span class="dt">2</span><span class="st">`</span>))<span class="op">+</span></span>
+<span id="cb14-6"><a href="#cb14-6"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">color =</span> Aux))<span class="op">+</span></span>
+<span id="cb14-7"><a href="#cb14-7"></a><span class="st">  </span><span class="kw">stat_ellipse</span>(<span class="kw">aes</span>(<span class="dt">color =</span> Aux))<span class="op">+</span></span>
+<span id="cb14-8"><a href="#cb14-8"></a><span class="st">  </span><span class="kw">geom_text</span>(<span class="dt">data =</span> variables, <span class="kw">aes</span>(<span class="st">`</span><span class="dt">1</span><span class="st">`</span>, <span class="st">`</span><span class="dt">2</span><span class="st">`</span>, <span class="dt">label =</span> var_names))<span class="op">+</span></span>
+<span id="cb14-9"><a href="#cb14-9"></a><span class="st">  </span><span class="kw">theme_bw</span>()<span class="op">+</span></span>
+<span id="cb14-10"><a href="#cb14-10"></a><span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">limits =</span> <span class="kw">c</span>(<span class="op">-</span><span class="fl">0.015</span>, <span class="fl">0.02</span>))</span></code></pre></div>
 <pre><code>## Warning: Removed 2 rows containing missing values (geom_text).</code></pre>
 <p><img src="7_CA_MCA_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 </div>
