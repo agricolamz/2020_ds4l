@@ -14,19 +14,135 @@ theme_set(theme_bw())
 
 ## 1.
 
-Давайте рассмотрим датасет продаж видеоигр (взято [отсюда](https://www.kaggle.com/gregorut/videogamesales#vgsales.csv)). 
+Давайте рассмотрим [датасет](https://raw.githubusercontent.com/agricolamz/2020_ds4l/master/data/vgsales.csv) продаж видеоигр в миллионах долларов (взято [отсюда](https://www.kaggle.com/gregorut/videogamesales#vgsales.csv)) со следующими переменными:
 
-```{r}
-df <- read_csv("/home/agricolamz/Desktop/vgsales2.csv")
+* `Name`
+* `Platform`
+* `Year`
+* `Genre`
+* `Publisher`
+* `NA_Sales`
+* `EU_Sales`
+* `JP_Sales`
+* `Other_Sales`
+
+Используйте переменные по продажам для того, чтобы построить PCA (не забудьте нормализовать). Так как названия повторяются, в качестве имен строчек я использовал комбинацию переменных `Name` и `Platform`. Отфильтруйте те игры, которые заработали больше миллиона долларов, а потом постройте следующий график:
+
+```{r, echo=FALSE}
+df <- read_csv("https://raw.githubusercontent.com/agricolamz/2020_ds4l/master/data/vgsales.csv")
+
+df %>% 
+  mutate(sum = NA_Sales + EU_Sales + JP_Sales + Other_Sales) %>% 
+  filter(sum > 1) ->
+  df
 
 df2 <- as.data.frame(df[,6:9])
 rownames(df2) <- paste(df$Name, df$Platform)
 PCA <- prcomp(df2, scale. = TRUE)
 
 df %>% 
-  bind_cols(as.data.frame(PCA$x)) %>% 
+  bind_cols(as.data.frame(PCA$x)) ->
+  full
+
+full %>% 
   ggplot(aes(PC1, PC2, color = Genre))+
   geom_point(show.legend = FALSE)+
   facet_wrap(~Genre)
+```
+
+Что это за аутлайер наверху в жанре `Action`?
+
+```{r, results='asis', echo=FALSE}
+library(checkdown)
+
+full %>% 
+  filter(Genre == "Action", PC2 > 5) %>% 
+  select(Name) %>% 
+  unlist() %>% 
+  unname() ->
+  answer
+autocheck_question(answer)
+```
+
+Что это за аутлайер наверху в жанре `Sports`?
+
+```{r, results='asis', echo=FALSE}
+library(checkdown)
+
+full %>% 
+  filter(Genre == "Sports", PC1 > 20) %>% 
+  select(Name) %>% 
+  unlist() %>% 
+  unname() ->
+  answer
+autocheck_question(answer)
+```
+
+Что это за аутлайер внизу в `Role-Playing`?
+
+```{r, results='asis', echo=FALSE}
+library(checkdown)
+
+full %>% 
+  filter(Genre == "Role-Playing", PC1 > 10) %>% 
+  select(Name) %>% 
+  unlist() %>% 
+  unname() ->
+  answer
+autocheck_question(answer)
+```
+
+Укажите кумулятивную долю дисперсии, объясненная PC1 и PC2 с точностью до трех знаков после запятой:
+
+```{r, results='asis', echo = FALSE}
+autocheck_question(answer = c("0.8290", "0.829"))
+```
+
+## 2
+Давайте рассмотрим [датасет](https://raw.githubusercontent.com/agricolamz/2020_ds4l/master/data/winequality-red.csv) посвященный  (взято [отсюда](https://www.kaggle.com/uciml/red-wine-quality-cortez-et-al-2009)) со следующими переменными:
+
+* fixed acidity
+* volatile acidity
+* citric acid
+* residual sugar
+* chlorides
+* free sulfur dioxide
+* total sulfur dioxide
+* density
+* pH
+* sulphates
+* alcohol
+
+Output variable (based on sensory data):
+
+* quality (score between 0 and 10) 
+
+Проведите PCA анализ, исключив переменную `quality`, и постройте следующий график:
+
+```{r, eval = FALSE}
+df <- read_csv("https://raw.githubusercontent.com/agricolamz/2020_ds4l/master/data/winequality-red.csv")
+PCA <- prcomp(df[,-12], scale. = TRUE)
+
+autoplot(PCA,
+         loadings = TRUE,
+         loadings.label = TRUE)
+```
+
+Что можно сказать про переменные `alcohol` и `residual sugar`?
+
+```{r, results='asis', echo=FALSE}
+autocheck_question(answer = "переменные отрицательно скоррелированы", 
+                   options = c("переменные положительно скоррелированы", 
+                               "переменные отрицательно скоррелированы", 
+                               "переменные не коррелируют"))
+```
+
+
+```{r, eval = FALSE}
+library(GGally)
+df %>% 
+  bind_cols(as.data.frame(PCA$x)) %>% 
+  select(quality, PC1, PC2) %>% 
+  ggpairs()
 ```
 
