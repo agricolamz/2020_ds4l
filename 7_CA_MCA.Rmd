@@ -108,4 +108,4 @@ dutch_caus %>%
 ### 5. Домашнее задание 4
 Ссылка на [домашнее задание 4](https://classroom.github.com/a/c7gFmjuF)
 
-### 6. [Практика по PCA, MCA](https://classroom.github.com/a/c7gFmjuF)
+### 6. [Практика по PCA, MCA](https://agricolamz.github.io/2020_ds4l/8_pca_mca_practice.html)
