@@ -1,0 +1,32 @@
+---
+title: "Уменьшение размерности: практика"
+author: "Г. Мороз"
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(message = FALSE)
+library(tidyverse)
+theme_set(theme_bw())
+```
+
+
+## 1.
+
+Давайте рассмотрим датасет продаж видеоигр (взято [отсюда](https://www.kaggle.com/gregorut/videogamesales#vgsales.csv)). 
+
+```{r}
+df <- read_csv("/home/agricolamz/Desktop/vgsales2.csv")
+
+df2 <- as.data.frame(df[,6:9])
+rownames(df2) <- paste(df$Name, df$Platform)
+PCA <- prcomp(df2, scale. = TRUE)
+
+df %>% 
+  bind_cols(as.data.frame(PCA$x)) %>% 
+  ggplot(aes(PC1, PC2, color = Genre))+
+  geom_point(show.legend = FALSE)+
+  facet_wrap(~Genre)
+```
+
