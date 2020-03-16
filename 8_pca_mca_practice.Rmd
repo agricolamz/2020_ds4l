@@ -119,16 +119,17 @@ Output variable (based on sensory data):
 
 Проведите PCA анализ, исключив переменную `quality`, и постройте следующий график:
 
-```{r, eval = FALSE}
+```{r}
 df <- read_csv("https://raw.githubusercontent.com/agricolamz/2020_ds4l/master/data/winequality-red.csv")
 PCA <- prcomp(df[,-12], scale. = TRUE)
 
+library(ggfortify)
 autoplot(PCA,
          loadings = TRUE,
          loadings.label = TRUE)
 ```
 
-Что можно сказать про переменные `alcohol` и `residual sugar`?
+Что можно сказать про переменные `alcohol` и `total sulfur dioxide`?
 
 ```{r, results='asis', echo=FALSE}
 autocheck_question(answer = "переменные отрицательно скоррелированы", 
@@ -137,8 +138,18 @@ autocheck_question(answer = "переменные отрицательно ск�
                                "переменные не коррелируют"))
 ```
 
+Что можно сказать про переменные `alcohol` и `fixed acidity`?
 
-```{r, eval = FALSE}
+```{r, results='asis', echo=FALSE}
+autocheck_question(answer = "переменные практически не коррелируют", 
+                   options = c("переменные положительно скоррелированы", 
+                               "переменные отрицательно скоррелированы", 
+                               "переменные практически не коррелируют"))
+```
+
+Позволяют ли полученные первые две компоненты предсказывать переменную `quality`?
+
+```{r}
 library(GGally)
 df %>% 
   bind_cols(as.data.frame(PCA$x)) %>% 
@@ -146,3 +157,38 @@ df %>%
   ggpairs()
 ```
 
+Укажите кумулятивную долю дисперсии, объясненная PC1 и PC2 с точностью до четырех знаков после запятой:
+
+```{r, results='asis', echo = FALSE}
+autocheck_question(answer = 0.4568)
+```
+
+Как вы считаете, стоит ли полагаться на полученное преобразование? Почему?
+
+## 3.
+
+Давайте рассмотрим [датасет](https://raw.githubusercontent.com/agricolamz/2020_ds4l/master/data/mushrooms.csv) с грибами  (взято [отсюда](https://www.kaggle.com/uciml/mushroom-classification)) со следующими переменными:
+
+* attribute Information: (classes: edible=e, poisonous=p)
+* cap-shape: bell=b,conical=c,convex=x,flat=f, knobbed=k,sunken=s
+* cap-surface: fibrous=f,grooves=g,scaly=y,smooth=s
+* cap-color: brown=n,buff=b,cinnamon=c,gray=g,green=r,pink=p,purple=u,red=e,white=w,yellow=y
+* bruises: bruises=t,no=f
+* odor: almond=a,anise=l,creosote=c,fishy=y,foul=f,musty=m,none=n,pungent=p,spicy=s
+* gill-attachment: attached=a,descending=d,free=f,notched=n
+* gill-spacing: close=c,crowded=w,distant=d
+* gill-size: broad=b,narrow=n
+* gill-color: black=k,brown=n,buff=b,chocolate=h,gray=g, green=r,orange=o,pink=p,purple=u,red=e,white=w,yellow=y
+* stalk-shape: enlarging=e,tapering=t
+* stalk-root: bulbous=b,club=c,cup=u,equal=e,rhizomorphs=z,rooted=r,missing=?
+* stalk-surface-above-ring: fibrous=f,scaly=y,silky=k,smooth=s
+* stalk-surface-below-ring: fibrous=f,scaly=y,silky=k,smooth=s
+* stalk-color-above-ring: brown=n,buff=b,cinnamon=c,gray=g,orange=o,pink=p,red=e,white=w,yellow=y
+* stalk-color-below-ring: brown=n,buff=b,cinnamon=c,gray=g,orange=o,pink=p,red=e,white=w,yellow=y
+* veil-type: partial=p,universal=u
+* veil-color: brown=n,orange=o,white=w,yellow=y
+* ring-number: none=n,one=o,two=t
+* ring-type: cobwebby=c,evanescent=e,flaring=f,large=l,none=n,pendant=p,sheathing=s,zone=z
+* spore-print-color: black=k,brown=n,buff=b,chocolate=h,green=r,orange=o,purple=u,white=w,yellow=y
+* population: abundant=a,clustered=c,numerous=n,scattered=s,several=v,solitary=y
+* habitat: grasses=g,leaves=l,meadows=m,paths=p,urban=u,waste=w,woods=d

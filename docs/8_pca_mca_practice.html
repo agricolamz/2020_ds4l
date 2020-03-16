@@ -529,29 +529,29 @@ div.tocify {
 <p>Используйте переменные по продажам для того, чтобы построить PCA (не забудьте нормализовать). Так как названия повторяются, в качестве имен строчек я использовал комбинацию переменных <code>Name</code> и <code>Platform</code>. Отфильтруйте те игры, которые заработали больше миллиона долларов, а потом постройте следующий график:</p>
 <p><img src="8_pca_mca_practice_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
 <p>Что это за аутлайер наверху в жанре <code>Action</code>?</p>
-<form name="form_62682" onsubmit="return validate_form_62682()" method="post">
-<input type="text" name="answer_62682"><input type="submit" value="check">
+<form name="form_52497" onsubmit="return validate_form_52497()" method="post">
+<input type="text" name="answer_52497"><input type="submit" value="check">
 </form>
 <br>
-<script> function validate_form_62682() {var x = document.forms["form_62682"]["answer_62682"].value;if (x == "Grand Theft Auto: San Andreas"){alert("Correct");return false;} else {alert("I have a different answer");return false;}} </script>
+<script> function validate_form_52497() {var x = document.forms["form_52497"]["answer_52497"].value;if (x == "Grand Theft Auto: San Andreas"){alert("Correct");return false;} else {alert("I have a different answer");return false;}} </script>
 <p>Что это за аутлайер наверху в жанре <code>Sports</code>?</p>
-<form name="form_53784" onsubmit="return validate_form_53784()" method="post">
-<input type="text" name="answer_53784"><input type="submit" value="check">
+<form name="form_39039" onsubmit="return validate_form_39039()" method="post">
+<input type="text" name="answer_39039"><input type="submit" value="check">
 </form>
 <br>
-<script> function validate_form_53784() {var x = document.forms["form_53784"]["answer_53784"].value;if (x == "Wii Sports"){alert("Correct");return false;} else {alert("I have a different answer");return false;}} </script>
+<script> function validate_form_39039() {var x = document.forms["form_39039"]["answer_39039"].value;if (x == "Wii Sports"){alert("Correct");return false;} else {alert("I have a different answer");return false;}} </script>
 <p>Что это за аутлайер внизу в <code>Role-Playing</code>?</p>
-<form name="form_68825" onsubmit="return validate_form_68825()" method="post">
-<input type="text" name="answer_68825"><input type="submit" value="check">
+<form name="form_62070" onsubmit="return validate_form_62070()" method="post">
+<input type="text" name="answer_62070"><input type="submit" value="check">
 </form>
 <br>
-<script> function validate_form_68825() {var x = document.forms["form_68825"]["answer_68825"].value;if (x == "Pokemon Red/Pokemon Blue"){alert("Correct");return false;} else {alert("I have a different answer");return false;}} </script>
+<script> function validate_form_62070() {var x = document.forms["form_62070"]["answer_62070"].value;if (x == "Pokemon Red/Pokemon Blue"){alert("Correct");return false;} else {alert("I have a different answer");return false;}} </script>
 <p>Укажите кумулятивную долю дисперсии, объясненная PC1 и PC2 с точностью до трех знаков после запятой:</p>
-<form name="form_58285" onsubmit="return validate_form_58285()" method="post">
-<input type="text" name="answer_58285"><input type="submit" value="check">
+<form name="form_10472" onsubmit="return validate_form_10472()" method="post">
+<input type="text" name="answer_10472"><input type="submit" value="check">
 </form>
 <br>
-<script> function validate_form_58285() {var x = document.forms["form_58285"]["answer_58285"].value;if (x == "0.8290"|x == "0.829"){alert("Correct");return false;} else {alert("I have a different answer");return false;}} </script>
+<script> function validate_form_10472() {var x = document.forms["form_10472"]["answer_10472"].value;if (x == "0.8290"|x == "0.829"){alert("Correct");return false;} else {alert("I have a different answer");return false;}} </script>
 </div>
 <div id="section-1" class="section level2">
 <h2>2</h2>
@@ -577,20 +577,37 @@ div.tocify {
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>df &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/agricolamz/2020_ds4l/master/data/winequality-red.csv&quot;</span>)</span>
 <span id="cb1-2"><a href="#cb1-2"></a>PCA &lt;-<span class="st"> </span><span class="kw">prcomp</span>(df[,<span class="op">-</span><span class="dv">12</span>], <span class="dt">scale. =</span> <span class="ot">TRUE</span>)</span>
 <span id="cb1-3"><a href="#cb1-3"></a></span>
-<span id="cb1-4"><a href="#cb1-4"></a><span class="kw">autoplot</span>(PCA,</span>
-<span id="cb1-5"><a href="#cb1-5"></a>         <span class="dt">loadings =</span> <span class="ot">TRUE</span>,</span>
-<span id="cb1-6"><a href="#cb1-6"></a>         <span class="dt">loadings.label =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
-<p>Что можно сказать про переменные <code>alcohol</code> и <code>residual sugar</code>?</p>
-<form name="form_82529" onsubmit="return validate_form_82529()" method="post">
-<select name="answer_82529"><option> переменные положительно скоррелированы </option><option> переменные отрицательно скоррелированы </option><option> переменные не коррелируют </option></select><input type="submit" value="check">
+<span id="cb1-4"><a href="#cb1-4"></a><span class="kw">library</span>(ggfortify)</span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="kw">autoplot</span>(PCA,</span>
+<span id="cb1-6"><a href="#cb1-6"></a>         <span class="dt">loadings =</span> <span class="ot">TRUE</span>,</span>
+<span id="cb1-7"><a href="#cb1-7"></a>         <span class="dt">loadings.label =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<p><img src="8_pca_mca_practice_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>Что можно сказать про переменные <code>alcohol</code> и <code>total sulfur dioxide</code>?</p>
+<form name="form_13408" onsubmit="return validate_form_13408()" method="post">
+<select name="answer_13408"><option> переменные положительно скоррелированы </option><option> переменные отрицательно скоррелированы </option><option> переменные не коррелируют </option></select><input type="submit" value="check">
 </form>
 <br>
-<script> function validate_form_82529() {var x = document.forms["form_82529"]["answer_82529"].value;if (x == "переменные отрицательно скоррелированы"){alert("Correct");return false;} else {alert("I have a different answer");return false;}} </script>
+<script> function validate_form_13408() {var x = document.forms["form_13408"]["answer_13408"].value;if (x == "переменные отрицательно скоррелированы"){alert("Correct");return false;} else {alert("I have a different answer");return false;}} </script>
+<p>Что можно сказать про переменные <code>alcohol</code> и <code>fixed acidity</code>?</p>
+<form name="form_28800" onsubmit="return validate_form_28800()" method="post">
+<select name="answer_28800"><option> переменные положительно скоррелированы </option><option> переменные отрицательно скоррелированы </option><option> переменные практически не коррелируют </option></select><input type="submit" value="check">
+</form>
+<br>
+<script> function validate_form_28800() {var x = document.forms["form_28800"]["answer_28800"].value;if (x == "переменные практически не коррелируют"){alert("Correct");return false;} else {alert("I have a different answer");return false;}} </script>
+<p>Позволяют ли полученные первые две компоненты предсказывать переменную <code>quality</code>?</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">library</span>(GGally)</span>
 <span id="cb2-2"><a href="#cb2-2"></a>df <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb2-3"><a href="#cb2-3"></a><span class="st">  </span><span class="kw">bind_cols</span>(<span class="kw">as.data.frame</span>(PCA<span class="op">$</span>x)) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb2-4"><a href="#cb2-4"></a><span class="st">  </span><span class="kw">select</span>(quality, PC1, PC2) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb2-5"><a href="#cb2-5"></a><span class="st">  </span><span class="kw">ggpairs</span>()</span></code></pre></div>
+<p><img src="8_pca_mca_practice_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p>Укажите кумулятивную долю дисперсии, объясненная PC1 и PC2 с точностью до четырех знаков после запятой:</p>
+<form name="form_41008" onsubmit="return validate_form_41008()" method="post">
+<input type="text" name="answer_41008"><input type="submit" value="check">
+</form>
+<br>
+<script> function validate_form_41008() {var x = document.forms["form_41008"]["answer_41008"].value;if (x == "0.4568"){alert("Correct");return false;} else {alert("I have a different answer");return false;}} </script>
+<p>Как вы считаете, стоит ли полагаться на полученное преобразование? Почему?</p>
 </div>
 
 <br><br><br>
