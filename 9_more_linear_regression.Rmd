@@ -284,8 +284,5 @@ upsid %>%
   theme_bw()+
   geom_line(data = fortify(fit5), aes(x = consonants, y = .fitted, color = area))
 
-fit0 <- lmer(vowels ~ 1 + (1|area) + (0+consonants|area), data = upsid)
-summary(fit0)
-
-anova(fit5, fit4, fit3, fit2, fit1, fit0)
+anova(fit5, fit4, fit3, fit2, fit1)
 ```
