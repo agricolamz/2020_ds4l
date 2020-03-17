@@ -937,6 +937,23 @@ div.tocify {
   </script>
 </div>
 </div>
+<div id="section" class="section level3">
+<h3>6.</h3>
+<p>В <a href="https://raw.githubusercontent.com/agricolamz/2020_ds4l/master/data/student_g1.csv">датасете</a> содержатся оценки студентов двух школ дополнительного образования по математике и португальскому <code>G1</code>, а также гендер <code>gender</code>и время, которое тратили на обучение <code>studytime</code> (весь датасет доступен <a href="https://www.kaggle.com/dipam7/student-grade-prediction">здесь</a>). Постройте следующий график, используя <code>geom_smooth()</code> с аргументом <code>se = FALSE</code>:</p>
+<p><img src="9_more_linear_regression_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<p>Постройте две модели предсказывающую оценку на основании переменных <code>gender</code> и <code>studytime</code> используя модели со случайным свободным интерсептом и со случайными интерсептом и слоупом:</p>
+<pre><code>## boundary (singular) fit: see ?isSingular</code></pre>
+<p><img src="9_more_linear_regression_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<pre><code>## boundary (singular) fit: see ?isSingular</code></pre>
+<p><img src="9_more_linear_regression_files/figure-html/unnamed-chunk-18-2.png" width="672" /></p>
+Приведите значение наименьшего <code>AIC</code>.
+<form name="form_20811" onsubmit="return validate_form_20811()" method="post">
+<input type="text" name="answer_20811"><input type="submit" value="check">
+</form>
+<p id="result_20811">
+</p>
+<script> function validate_form_20811() {var x, text; var x = document.forms["form_20811"]["answer_20811"].value;if (x == "2061.944"){text = "Correct";} else {text = "I have a different answer";} document.getElementById("result_20811").innerHTML = text; return false;} </script>
+</div>
 
 <br><br><br>
 <p><center> &copy; Г. Мороз 2020 с помощью RMarkdown. Исходный код на 

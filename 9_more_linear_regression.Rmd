@@ -187,9 +187,6 @@ ldt %>%
   * 1 < VIF < 5 (Moderately correlated)
   * VIF >=5 (Highly correlated)
 
-
-
-
 ### 5. Независимость наблюдений
 Наблюдения должны быть независимы.
 
@@ -286,3 +283,44 @@ upsid %>%
 
 anova(fit5, fit4, fit3, fit2, fit1)
 ```
+
+
+### 6. 
+
+В [датасете](https://raw.githubusercontent.com/agricolamz/2020_ds4l/master/data/student_g1.csv) содержатся оценки студентов двух школ дополнительного образования по математике и португальскому `G1`, а также гендер `gender`и время, которое тратили на обучение `studytime` (весь датасет доступен [здесь](https://www.kaggle.com/dipam7/student-grade-prediction)). Постройте следующий график, используя `geom_smooth()` с аргументом `se = FALSE`:
+
+```{r, echo=FALSE, message=FALSE}
+stud <- read_csv("https://raw.githubusercontent.com/agricolamz/2020_ds4l/master/data/student_g1.csv")
+stud %>% 
+  ggplot(aes(studytime, G1, color = gender))+
+  geom_point()+
+  geom_smooth(method = "lm", se = FALSE)+
+  facet_wrap(~school, scales = "free")
+```
+
+Постройте две модели предсказывающую оценку на основании переменных `gender` и `studytime` используя модели со случайным свободным интерсептом и со случайными интерсептом и слоупом:
+
+```{r, echo = FALSE}
+f1 <- lmer(G1 ~ studytime + gender + (1|school), data = stud)
+
+stud %>% 
+  ggplot(aes(studytime, G1, color = gender))+
+  geom_point()+
+  facet_wrap(~school, scales = "free")+
+  geom_line(data = fortify(f1), aes(x = studytime, y = .fitted, color = gender))
+
+f2 <- lmer(G1 ~ studytime + gender + (1+studytime + gender|school), data = stud)
+
+stud %>% 
+  ggplot(aes(studytime, G1, color = gender))+
+  geom_point()+
+  facet_wrap(~school, scales = "free")+
+  geom_line(data = fortify(f2), aes(x = studytime, y = .fitted, color = gender))
+```
+
+Приведите значение наименьшего `AIC`.
+```{r, results= 'asis', echo = FALSE}
+library(checkdown)
+autocheck_question(2061.944)
+```
+
