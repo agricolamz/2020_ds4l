@@ -19,14 +19,16 @@ navbar:
     menu:
     - text: 6. PCA, LDA
       href: 6_PCA.html
-    - text: 7. CA, DCA, MCA
+    - text: 7. CA, MCA
       href: 7_CA_MCA.html
+    - text: 8. практика PCA и MCA
+      href: 8_pca_mca_practice.html
   - text: регрессия
     menu:
-    - text: 8. Еще о регрессионных моделях
-      href: 8_more_linear_regression.html
-    - text: 9. Логистическая и мультиномиальная регрессии
-      href: 9_logit_multinom.html
+    - text: 9. Еще о регрессионных моделях
+      href: 9_more_linear_regression.html
+    - text: 10. Логистическая и мультиномиальная регрессии
+      href: 10_logit_multinom.html
 output_dir: docs
 output: 
     html_document:

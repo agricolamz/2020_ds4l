@@ -469,7 +469,10 @@ div.tocify {
       <a href="6_PCA.html">6. PCA, LDA</a>
     </li>
     <li>
-      <a href="7_CA_MCA.html">7. CA, DCA, MCA</a>
+      <a href="7_CA_MCA.html">7. CA, MCA</a>
+    </li>
+    <li>
+      <a href="8_pca_mca_practice.html">8. практика PCA и MCA</a>
     </li>
   </ul>
 </li>
@@ -481,10 +484,10 @@ div.tocify {
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="8_more_linear_regression.html">8. Еще о регрессионных моделях</a>
+      <a href="9_more_linear_regression.html">9. Еще о регрессионных моделях</a>
     </li>
     <li>
-      <a href="9_logit_multinom.html">9. Логистическая и мультиномиальная регрессии</a>
+      <a href="10_logit_multinom.html">10. Логистическая и мультиномиальная регрессии</a>
     </li>
   </ul>
 </li>
@@ -536,9 +539,6 @@ div.tocify {
 </ul>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>wodehouse &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;https://goo.gl/bSxdMZ&quot;</span>)</span>
 <span id="cb2-2"><a href="#cb2-2"></a>GGally<span class="op">::</span><span class="kw">ggpairs</span>(wodehouse[,<span class="op">-</span><span class="dv">1</span>])</span></code></pre></div>
-<pre><code>## Registered S3 method overwritten by &#39;GGally&#39;:
-##   method from   
-##   +.gg   ggplot2</code></pre>
 <p><img src="7_CA_MCA_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
 </div>
 <div id="нидерланлские-каузативы" class="section level4">
@@ -551,14 +551,14 @@ div.tocify {
 <li>EPTrans — a factor that specifies the transitivity of the Effected Predicate with levels Intr (intransitive) and Tr (transitive).</li>
 <li>EPTrans1 — a factor with levels Intr and Tr. It is very similar to the previous one, except for a few observations.</li>
 </ul>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>dutch_caus &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;https://goo.gl/2yAR3T&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>dutch_caus &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;https://goo.gl/2yAR3T&quot;</span>)</span></code></pre></div>
 </div>
 </div>
 <div id="ca" class="section level3">
 <h3>2. CA</h3>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="kw">rownames</span>(wodehouse) &lt;-<span class="st"> </span>wodehouse<span class="op">$</span>chapter</span>
-<span id="cb5-2"><a href="#cb5-2"></a>ca &lt;-<span class="st"> </span><span class="kw">ca</span>(wodehouse[<span class="op">-</span><span class="dv">1</span>])</span>
-<span id="cb5-3"><a href="#cb5-3"></a>ca</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="kw">rownames</span>(wodehouse) &lt;-<span class="st"> </span>wodehouse<span class="op">$</span>chapter</span>
+<span id="cb4-2"><a href="#cb4-2"></a>ca &lt;-<span class="st"> </span><span class="kw">ca</span>(wodehouse[<span class="op">-</span><span class="dv">1</span>])</span>
+<span id="cb4-3"><a href="#cb4-3"></a>ca</span></code></pre></div>
 <pre><code>## 
 ##  Principal inertias (eigenvalues):
 ##            1        2        3        4        5        6        7       
@@ -597,7 +597,7 @@ div.tocify {
 ## Inertia 0.110100  0.058925
 ## Dim. 1  1.658337  0.247022
 ## Dim. 2  1.331784 -0.882475</code></pre>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="kw">summary</span>(ca) <span class="co"># extended results</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="kw">summary</span>(ca) <span class="co"># extended results</span></span></code></pre></div>
 <pre><code>## Warning in abbreviate(rnames.temp, 4): abbreviate used with non-ASCII chars
 
 ## Warning in abbreviate(rnames.temp, 4): abbreviate used with non-ASCII chars
@@ -648,43 +648,43 @@ div.tocify {
 ## 7 | спод |  135  832  190 | -738 606 274 |  450 226 132 |
 ## 8 | стиф |   84  846  172 |  860 564 231 |  608 282 149 |
 ## 9 |  сэр |  287  871   92 |  128  80  18 | -403 791 224 |</code></pre>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>wodehouse_col &lt;-<span class="st"> </span><span class="kw">data.frame</span>(ca<span class="op">$</span>colcoord)</span>
-<span id="cb11-2"><a href="#cb11-2"></a>wodehouse_col<span class="op">$</span>rows &lt;-<span class="st"> </span><span class="kw">rownames</span>(ca<span class="op">$</span>colcoord)</span>
-<span id="cb11-3"><a href="#cb11-3"></a></span>
-<span id="cb11-4"><a href="#cb11-4"></a>wodehouse_row &lt;-<span class="st"> </span><span class="kw">data.frame</span>(ca<span class="op">$</span>rowcoord)</span>
-<span id="cb11-5"><a href="#cb11-5"></a>wodehouse_row<span class="op">$</span>rows &lt;-<span class="st"> </span><span class="kw">rownames</span>(ca<span class="op">$</span>rowcoord)</span>
-<span id="cb11-6"><a href="#cb11-6"></a></span>
-<span id="cb11-7"><a href="#cb11-7"></a>wodehouse_col <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb11-8"><a href="#cb11-8"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(Dim1, Dim2, <span class="dt">label =</span> rows))<span class="op">+</span></span>
-<span id="cb11-9"><a href="#cb11-9"></a><span class="st">  </span><span class="kw">geom_text</span>(<span class="dt">color =</span> <span class="st">&quot;blue&quot;</span>)<span class="op">+</span></span>
-<span id="cb11-10"><a href="#cb11-10"></a><span class="st">  </span><span class="kw">geom_text</span>(<span class="dt">data =</span> wodehouse_row, <span class="dt">color =</span> <span class="st">&quot;red&quot;</span>)<span class="op">+</span></span>
-<span id="cb11-11"><a href="#cb11-11"></a><span class="st">  </span><span class="kw">theme_bw</span>()<span class="op">+</span></span>
-<span id="cb11-12"><a href="#cb11-12"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Dim1 (42.1%)&quot;</span>,</span>
-<span id="cb11-13"><a href="#cb11-13"></a>       <span class="dt">y =</span> <span class="st">&quot;Dim2 (32.6%)&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>wodehouse_col &lt;-<span class="st"> </span><span class="kw">data.frame</span>(ca<span class="op">$</span>colcoord)</span>
+<span id="cb10-2"><a href="#cb10-2"></a>wodehouse_col<span class="op">$</span>rows &lt;-<span class="st"> </span><span class="kw">rownames</span>(ca<span class="op">$</span>colcoord)</span>
+<span id="cb10-3"><a href="#cb10-3"></a></span>
+<span id="cb10-4"><a href="#cb10-4"></a>wodehouse_row &lt;-<span class="st"> </span><span class="kw">data.frame</span>(ca<span class="op">$</span>rowcoord)</span>
+<span id="cb10-5"><a href="#cb10-5"></a>wodehouse_row<span class="op">$</span>rows &lt;-<span class="st"> </span><span class="kw">rownames</span>(ca<span class="op">$</span>rowcoord)</span>
+<span id="cb10-6"><a href="#cb10-6"></a></span>
+<span id="cb10-7"><a href="#cb10-7"></a>wodehouse_col <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb10-8"><a href="#cb10-8"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(Dim1, Dim2, <span class="dt">label =</span> rows))<span class="op">+</span></span>
+<span id="cb10-9"><a href="#cb10-9"></a><span class="st">  </span><span class="kw">geom_text</span>(<span class="dt">color =</span> <span class="st">&quot;blue&quot;</span>)<span class="op">+</span></span>
+<span id="cb10-10"><a href="#cb10-10"></a><span class="st">  </span><span class="kw">geom_text</span>(<span class="dt">data =</span> wodehouse_row, <span class="dt">color =</span> <span class="st">&quot;red&quot;</span>)<span class="op">+</span></span>
+<span id="cb10-11"><a href="#cb10-11"></a><span class="st">  </span><span class="kw">theme_bw</span>()<span class="op">+</span></span>
+<span id="cb10-12"><a href="#cb10-12"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Dim1 (42.1%)&quot;</span>,</span>
+<span id="cb10-13"><a href="#cb10-13"></a>       <span class="dt">y =</span> <span class="st">&quot;Dim2 (32.6%)&quot;</span>)</span></code></pre></div>
 <p><img src="7_CA_MCA_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 <p>Сравните с соответствующими данными PCA:</p>
 <p><img src="7_CA_MCA_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
 </div>
 <div id="mca" class="section level3">
 <h3>3. MCA</h3>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>MCA &lt;-<span class="st"> </span>MASS<span class="op">::</span><span class="kw">mca</span>(dutch_caus[,<span class="op">-</span><span class="dv">1</span>])</span>
-<span id="cb12-2"><a href="#cb12-2"></a>MCA</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>MCA &lt;-<span class="st"> </span>MASS<span class="op">::</span><span class="kw">mca</span>(dutch_caus[,<span class="op">-</span><span class="dv">1</span>])</span>
+<span id="cb11-2"><a href="#cb11-2"></a>MCA</span></code></pre></div>
 <pre><code>## Call:
 ## MASS::mca(df = dutch_caus[, -1])
 ## 
 ## Multiple correspondence analysis of 500 cases of 7 factors
 ## 
 ## Correlations 0.577 0.458  cumulative % explained  9.62 17.25</code></pre>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>dutch_caus &lt;-<span class="st"> </span><span class="kw">cbind</span>(dutch_caus, MCA<span class="op">$</span>rs)</span>
-<span id="cb14-2"><a href="#cb14-2"></a>variables &lt;-<span class="st"> </span><span class="kw">as_tibble</span>(MCA<span class="op">$</span>cs)</span>
-<span id="cb14-3"><a href="#cb14-3"></a>variables<span class="op">$</span>var_names &lt;-<span class="st"> </span><span class="kw">rownames</span>(MCA<span class="op">$</span>cs)</span>
-<span id="cb14-4"><a href="#cb14-4"></a>dutch_caus <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb14-5"><a href="#cb14-5"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="st">`</span><span class="dt">1</span><span class="st">`</span>, <span class="st">`</span><span class="dt">2</span><span class="st">`</span>))<span class="op">+</span></span>
-<span id="cb14-6"><a href="#cb14-6"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">color =</span> Aux))<span class="op">+</span></span>
-<span id="cb14-7"><a href="#cb14-7"></a><span class="st">  </span><span class="kw">stat_ellipse</span>(<span class="kw">aes</span>(<span class="dt">color =</span> Aux))<span class="op">+</span></span>
-<span id="cb14-8"><a href="#cb14-8"></a><span class="st">  </span><span class="kw">geom_text</span>(<span class="dt">data =</span> variables, <span class="kw">aes</span>(<span class="st">`</span><span class="dt">1</span><span class="st">`</span>, <span class="st">`</span><span class="dt">2</span><span class="st">`</span>, <span class="dt">label =</span> var_names))<span class="op">+</span></span>
-<span id="cb14-9"><a href="#cb14-9"></a><span class="st">  </span><span class="kw">theme_bw</span>()<span class="op">+</span></span>
-<span id="cb14-10"><a href="#cb14-10"></a><span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">limits =</span> <span class="kw">c</span>(<span class="op">-</span><span class="fl">0.015</span>, <span class="fl">0.02</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>dutch_caus &lt;-<span class="st"> </span><span class="kw">cbind</span>(dutch_caus, MCA<span class="op">$</span>rs)</span>
+<span id="cb13-2"><a href="#cb13-2"></a>variables &lt;-<span class="st"> </span><span class="kw">as_tibble</span>(MCA<span class="op">$</span>cs)</span>
+<span id="cb13-3"><a href="#cb13-3"></a>variables<span class="op">$</span>var_names &lt;-<span class="st"> </span><span class="kw">rownames</span>(MCA<span class="op">$</span>cs)</span>
+<span id="cb13-4"><a href="#cb13-4"></a>dutch_caus <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb13-5"><a href="#cb13-5"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="st">`</span><span class="dt">1</span><span class="st">`</span>, <span class="st">`</span><span class="dt">2</span><span class="st">`</span>))<span class="op">+</span></span>
+<span id="cb13-6"><a href="#cb13-6"></a><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">color =</span> Aux))<span class="op">+</span></span>
+<span id="cb13-7"><a href="#cb13-7"></a><span class="st">  </span><span class="kw">stat_ellipse</span>(<span class="kw">aes</span>(<span class="dt">color =</span> Aux))<span class="op">+</span></span>
+<span id="cb13-8"><a href="#cb13-8"></a><span class="st">  </span><span class="kw">geom_text</span>(<span class="dt">data =</span> variables, <span class="kw">aes</span>(<span class="st">`</span><span class="dt">1</span><span class="st">`</span>, <span class="st">`</span><span class="dt">2</span><span class="st">`</span>, <span class="dt">label =</span> var_names))<span class="op">+</span></span>
+<span id="cb13-9"><a href="#cb13-9"></a><span class="st">  </span><span class="kw">theme_bw</span>()<span class="op">+</span></span>
+<span id="cb13-10"><a href="#cb13-10"></a><span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="dt">limits =</span> <span class="kw">c</span>(<span class="op">-</span><span class="fl">0.015</span>, <span class="fl">0.02</span>))</span></code></pre></div>
 <pre><code>## Warning: Removed 2 rows containing missing values (geom_text).</code></pre>
 <p><img src="7_CA_MCA_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 </div>

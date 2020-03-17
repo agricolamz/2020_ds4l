@@ -469,7 +469,10 @@ div.tocify {
       <a href="6_PCA.html">6. PCA, LDA</a>
     </li>
     <li>
-      <a href="7_CA_MCA.html">7. CA, DCA, MCA</a>
+      <a href="7_CA_MCA.html">7. CA, MCA</a>
+    </li>
+    <li>
+      <a href="8_pca_mca_practice.html">8. практика PCA и MCA</a>
     </li>
   </ul>
 </li>
@@ -481,10 +484,10 @@ div.tocify {
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="8_more_linear_regression.html">8. Еще о регрессионных моделях</a>
+      <a href="9_more_linear_regression.html">9. Еще о регрессионных моделях</a>
     </li>
     <li>
-      <a href="9_logit_multinom.html">9. Логистическая и мультиномиальная регрессии</a>
+      <a href="10_logit_multinom.html">10. Логистическая и мультиномиальная регрессии</a>
     </li>
   </ul>
 </li>
@@ -529,29 +532,33 @@ div.tocify {
 <p>Используйте переменные по продажам для того, чтобы построить PCA (не забудьте нормализовать). Так как названия повторяются, в качестве имен строчек я использовал комбинацию переменных <code>Name</code> и <code>Platform</code>. Отфильтруйте те игры, которые заработали больше миллиона долларов, а потом постройте следующий график:</p>
 <p><img src="8_pca_mca_practice_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
 <p>Что это за аутлайер наверху в жанре <code>Action</code>?</p>
-<form name="form_59795" onsubmit="return validate_form_59795()" method="post">
-<input type="text" name="answer_59795"><input type="submit" value="check">
+<form name="form_73092" onsubmit="return validate_form_73092()" method="post">
+<input type="text" name="answer_73092"><input type="submit" value="check">
 </form>
-<br>
-<script> function validate_form_59795() {var x = document.forms["form_59795"]["answer_59795"].value;if (x == "Grand Theft Auto: San Andreas"){alert("Correct");return false;} else {alert("I have a different answer");return false;}} </script>
+<p id="result_73092">
+</p>
+<script> function validate_form_73092() {var x, text; var x = document.forms["form_73092"]["answer_73092"].value;if (x == "Grand Theft Auto: San Andreas"){text = "Correct";} else {text = "I have a different answer";} document.getElementById("result_73092").innerHTML = text; return false;} </script>
 <p>Что это за аутлайер наверху в жанре <code>Sports</code>?</p>
-<form name="form_540" onsubmit="return validate_form_540()" method="post">
-<input type="text" name="answer_540"><input type="submit" value="check">
+<form name="form_14596" onsubmit="return validate_form_14596()" method="post">
+<input type="text" name="answer_14596"><input type="submit" value="check">
 </form>
-<br>
-<script> function validate_form_540() {var x = document.forms["form_540"]["answer_540"].value;if (x == "Wii Sports"){alert("Correct");return false;} else {alert("I have a different answer");return false;}} </script>
+<p id="result_14596">
+</p>
+<script> function validate_form_14596() {var x, text; var x = document.forms["form_14596"]["answer_14596"].value;if (x == "Wii Sports"){text = "Correct";} else {text = "I have a different answer";} document.getElementById("result_14596").innerHTML = text; return false;} </script>
 <p>Что это за аутлайер внизу в <code>Role-Playing</code>?</p>
-<form name="form_85600" onsubmit="return validate_form_85600()" method="post">
-<input type="text" name="answer_85600"><input type="submit" value="check">
+<form name="form_7417" onsubmit="return validate_form_7417()" method="post">
+<input type="text" name="answer_7417"><input type="submit" value="check">
 </form>
-<br>
-<script> function validate_form_85600() {var x = document.forms["form_85600"]["answer_85600"].value;if (x == "Pokemon Red/Pokemon Blue"){alert("Correct");return false;} else {alert("I have a different answer");return false;}} </script>
+<p id="result_7417">
+</p>
+<script> function validate_form_7417() {var x, text; var x = document.forms["form_7417"]["answer_7417"].value;if (x == "Pokemon Red/Pokemon Blue"){text = "Correct";} else {text = "I have a different answer";} document.getElementById("result_7417").innerHTML = text; return false;} </script>
 <p>Укажите кумулятивную долю дисперсии, объясненная PC1 и PC2 с точностью до трех знаков после запятой:</p>
-<form name="form_14683" onsubmit="return validate_form_14683()" method="post">
-<input type="text" name="answer_14683"><input type="submit" value="check">
+<form name="form_4676" onsubmit="return validate_form_4676()" method="post">
+<input type="text" name="answer_4676"><input type="submit" value="check">
 </form>
-<br>
-<script> function validate_form_14683() {var x = document.forms["form_14683"]["answer_14683"].value;if (x == "0.8290"|x == "0.829"){alert("Correct");return false;} else {alert("I have a different answer");return false;}} </script>
+<p id="result_4676">
+</p>
+<script> function validate_form_4676() {var x, text; var x = document.forms["form_4676"]["answer_4676"].value;if (x == "0.8290"|x == "0.829"){text = "Correct";} else {text = "I have a different answer";} document.getElementById("result_4676").innerHTML = text; return false;} </script>
 </div>
 <div id="section-1" class="section level2">
 <h2>2</h2>
@@ -583,17 +590,19 @@ div.tocify {
 <span id="cb1-7"><a href="#cb1-7"></a>         <span class="dt">loadings.label =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
 <p><img src="8_pca_mca_practice_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 <p>Что можно сказать про переменные <code>alcohol</code> и <code>total sulfur dioxide</code>?</p>
-<form name="form_12576" onsubmit="return validate_form_12576()" method="post">
-<select name="answer_12576"><option> переменные положительно скоррелированы </option><option> переменные отрицательно скоррелированы </option><option> переменные не коррелируют </option></select><input type="submit" value="check">
+<form name="form_48715" onsubmit="return validate_form_48715()" method="post">
+<select name="answer_48715"><option> переменные положительно скоррелированы </option><option> переменные отрицательно скоррелированы </option><option> переменные не коррелируют </option></select><input type="submit" value="check">
 </form>
-<br>
-<script> function validate_form_12576() {var x = document.forms["form_12576"]["answer_12576"].value;if (x == "переменные отрицательно скоррелированы"){alert("Correct");return false;} else {alert("I have a different answer");return false;}} </script>
+<p id="result_48715">
+</p>
+<script> function validate_form_48715() {var x, text; var x = document.forms["form_48715"]["answer_48715"].value;if (x == "переменные отрицательно скоррелированы"){text = "Correct";} else {text = "I have a different answer";} document.getElementById("result_48715").innerHTML = text; return false;} </script>
 <p>Что можно сказать про переменные <code>alcohol</code> и <code>fixed acidity</code>?</p>
-<form name="form_40863" onsubmit="return validate_form_40863()" method="post">
-<select name="answer_40863"><option> переменные положительно скоррелированы </option><option> переменные отрицательно скоррелированы </option><option> переменные практически не коррелируют </option></select><input type="submit" value="check">
+<form name="form_55305" onsubmit="return validate_form_55305()" method="post">
+<select name="answer_55305"><option> переменные положительно скоррелированы </option><option> переменные отрицательно скоррелированы </option><option> переменные практически не коррелируют </option></select><input type="submit" value="check">
 </form>
-<br>
-<script> function validate_form_40863() {var x = document.forms["form_40863"]["answer_40863"].value;if (x == "переменные практически не коррелируют"){alert("Correct");return false;} else {alert("I have a different answer");return false;}} </script>
+<p id="result_55305">
+</p>
+<script> function validate_form_55305() {var x, text; var x = document.forms["form_55305"]["answer_55305"].value;if (x == "переменные практически не коррелируют"){text = "Correct";} else {text = "I have a different answer";} document.getElementById("result_55305").innerHTML = text; return false;} </script>
 <p>Позволяют ли полученные первые две компоненты предсказывать переменную <code>quality</code>?</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">library</span>(GGally)</span>
 <span id="cb2-2"><a href="#cb2-2"></a>df <span class="op">%&gt;%</span><span class="st"> </span></span>
@@ -602,11 +611,12 @@ div.tocify {
 <span id="cb2-5"><a href="#cb2-5"></a><span class="st">  </span><span class="kw">ggpairs</span>()</span></code></pre></div>
 <p><img src="8_pca_mca_practice_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
 <p>Укажите кумулятивную долю дисперсии, объясненная PC1 и PC2 с точностью до четырех знаков после запятой:</p>
-<form name="form_44425" onsubmit="return validate_form_44425()" method="post">
-<input type="text" name="answer_44425"><input type="submit" value="check">
+<form name="form_17311" onsubmit="return validate_form_17311()" method="post">
+<input type="text" name="answer_17311"><input type="submit" value="check">
 </form>
-<br>
-<script> function validate_form_44425() {var x = document.forms["form_44425"]["answer_44425"].value;if (x == "0.4568"){alert("Correct");return false;} else {alert("I have a different answer");return false;}} </script>
+<p id="result_17311">
+</p>
+<script> function validate_form_17311() {var x, text; var x = document.forms["form_17311"]["answer_17311"].value;if (x == "0.4568"){text = "Correct";} else {text = "I have a different answer";} document.getElementById("result_17311").innerHTML = text; return false;} </script>
 <p>Как вы считаете, стоит ли полагаться на полученное преобразование? Почему?</p>
 </div>
 <div id="section-2" class="section level2">
