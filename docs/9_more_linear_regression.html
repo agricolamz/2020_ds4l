@@ -597,9 +597,9 @@ div.tocify {
 ## -224.93  -85.42  -30.52   81.90  632.66 
 ## 
 ## Coefficients:
-##               Estimate Std. Error t value             Pr(&gt;|t|)    
-## (Intercept) 826.998242  15.229783  54.301 &lt; 0.0000000000000002 ***
-## Freq         -0.005595   0.001486  -3.765             0.000284 ***
+##               Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 826.998242  15.229783  54.301  &lt; 2e-16 ***
+## Freq         -0.005595   0.001486  -3.765 0.000284 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
@@ -632,15 +632,15 @@ div.tocify {
 ## -242.36  -76.66  -17.49   48.64  630.49 
 ## 
 ## Coefficients:
-##               Estimate Std. Error t value             Pr(&gt;|t|)    
-## (Intercept)    1001.60      29.79  33.627 &lt; 0.0000000000000002 ***
-## log(Freq + 1)   -34.03       4.76  -7.149       0.000000000158 ***
+##               Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)    1001.60      29.79  33.627  &lt; 2e-16 ***
+## log(Freq + 1)   -34.03       4.76  -7.149 1.58e-10 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
 ## Residual standard error: 124.8 on 98 degrees of freedom
 ## Multiple R-squared:  0.3428, Adjusted R-squared:  0.3361 
-## F-statistic: 51.11 on 1 and 98 DF,  p-value: 0.0000000001576</code></pre>
+## F-statistic: 51.11 on 1 and 98 DF,  p-value: 1.576e-10</code></pre>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a>m1<span class="op">$</span>adj.r.squared</span></code></pre></div>
 <pre><code>## [1] 0.1174405</code></pre>
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a>m2<span class="op">$</span>adj.r.squared</span></code></pre></div>
@@ -665,7 +665,7 @@ div.tocify {
 <p><span class="math display">\[y_j - y_i = \beta_0+\beta_1\times x_j - (\beta_0+\beta_1\times x_i)  = \beta_1(x_j - x_i)\]</span></p>
 <p>Т. е. <span class="math inline">\(y\)</span> увеличится на <span class="math inline">\(\beta_1\)</span> , если <span class="math inline">\(x\)</span> увеличится на 1. Что же будет с логарифмированными переменными? Как изменится <span class="math inline">\(y_j\)</span>, если мы увеличем <span class="math inline">\(x_i + 1 = x_j\)</span>?</p>
 <p><span class="math display">\[\log(y_j) - \log(y_i) = \beta_1\times (\log(x_j) - \log(x_i))\]</span></p>
-<p><span class="math display">\[\log\left(\frac{y_j}{y_i}\right) = \beta_1\times \log\left(\frac{x_j}{x_i}\right) = \log\left(\frac{x_j}{x_i}\right) ^ {\beta_1}\]</span></p>
+<p><span class="math display">\[\log\left(\frac{y_j}{y_i}\right) = \beta_1\times \log\left(\frac{x_j}{x_i}\right) = \log\left(\left(\frac{x_j}{x_i}\right) ^ {\beta_1}\right)\]</span></p>
 <p><span class="math display">\[\frac{y_j}{y_i}= \left(\frac{x_j}{x_i}\right) ^ {\beta_1}\]</span></p>
 <p>Т. е. <span class="math inline">\(y\)</span> увеличится на <span class="math inline">\(\beta_1\)</span> процентов, если <span class="math inline">\(x\)</span> увеличится на 1 процент.</p>
 <p>Логарифмирование — не единственный вид траснформации:</p>
@@ -751,15 +751,15 @@ div.tocify {
 ## -8.148 -2.897 -1.208  2.441 33.203 
 ## 
 ## Coefficients:
-##             Estimate Std. Error t value             Pr(&gt;|t|)    
-## (Intercept)  5.96920    0.56512  10.563 &lt; 0.0000000000000002 ***
-## consonants   0.11259    0.02317   4.859           0.00000163 ***
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  5.96920    0.56512  10.563  &lt; 2e-16 ***
+## consonants   0.11259    0.02317   4.859 1.63e-06 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
 ## Residual standard error: 4.67 on 449 degrees of freedom
 ## Multiple R-squared:  0.04996,    Adjusted R-squared:  0.04785 
-## F-statistic: 23.61 on 1 and 449 DF,  p-value: 0.00000163</code></pre>
+## F-statistic: 23.61 on 1 and 449 DF,  p-value: 1.63e-06</code></pre>
 <div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1"></a>upsid <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb36-2"><a href="#cb36-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(consonants, vowels))<span class="op">+</span></span>
 <span id="cb36-3"><a href="#cb36-3"></a><span class="st">  </span><span class="kw">geom_point</span>()<span class="op">+</span></span>
@@ -871,9 +871,9 @@ div.tocify {
 ## Number of obs: 451, groups:  area, 6
 ## 
 ## Fixed effects:
-##              Estimate Std. Error        df t value            Pr(&gt;|t|)    
-## (Intercept)   6.93418    0.61286 437.37643  11.314 &lt;0.0000000000000002 ***
-## consonants    0.03417    0.04630   8.68189   0.738                0.48    
+##              Estimate Std. Error        df t value Pr(&gt;|t|)    
+## (Intercept)   6.93418    0.61286 437.37643  11.314   &lt;2e-16 ***
+## consonants    0.03417    0.04630   8.68189   0.738     0.48    
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
@@ -962,7 +962,7 @@ div.tocify {
 <pre><code>## refitting model(s) with ML (instead of REML)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Df"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["AIC"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["BIC"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["logLik"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["deviance"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["Chisq"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["Chi Df"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["Pr(>Chisq)"],"name":[8],"type":["dbl"],"align":["right"]}],"data":[{"1":"3","2":"2673.985","3":"2686.319","4":"-1333.992","5":"2667.985","6":"NA","7":"NA","8":"NA","_rn_":"fit1"},{"1":"4","2":"2654.968","3":"2671.413","4":"-1323.484","5":"2646.968","6":"21.017026","7":"1","8":"0.000004552201","_rn_":"fit4"},{"1":"4","2":"2653.088","3":"2669.534","4":"-1322.544","5":"2645.088","6":"1.879526","7":"0","8":"0.000000000000","_rn_":"fit2"},{"1":"4","2":"2649.730","3":"2666.176","4":"-1320.865","5":"2641.730","6":"3.358331","7":"0","8":"0.000000000000","_rn_":"fit0"},{"1":"5","2":"2650.706","3":"2671.263","4":"-1320.353","5":"2640.706","6":"1.024031","7":"1","8":"0.311564744984","_rn_":"fit5"},{"1":"6","2":"2649.440","3":"2674.108","4":"-1318.720","5":"2637.440","6":"3.266132","7":"1","8":"0.070724189495","_rn_":"fit3"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["Df"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["AIC"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["BIC"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["logLik"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["deviance"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["Chisq"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["Chi Df"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["Pr(>Chisq)"],"name":[8],"type":["dbl"],"align":["right"]}],"data":[{"1":"3","2":"2673.985","3":"2686.319","4":"-1333.992","5":"2667.985","6":"NA","7":"NA","8":"NA","_rn_":"fit1"},{"1":"4","2":"2654.968","3":"2671.413","4":"-1323.484","5":"2646.968","6":"21.017026","7":"1","8":"4.552201e-06","_rn_":"fit4"},{"1":"4","2":"2653.088","3":"2669.534","4":"-1322.544","5":"2645.088","6":"1.879526","7":"0","8":"0.000000e+00","_rn_":"fit2"},{"1":"4","2":"2649.730","3":"2666.176","4":"-1320.865","5":"2641.730","6":"3.358331","7":"0","8":"0.000000e+00","_rn_":"fit0"},{"1":"5","2":"2650.706","3":"2671.263","4":"-1320.353","5":"2640.706","6":"1.024031","7":"1","8":"3.115647e-01","_rn_":"fit5"},{"1":"6","2":"2649.440","3":"2674.108","4":"-1318.720","5":"2637.440","6":"3.266132","7":"1","8":"7.072419e-02","_rn_":"fit3"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
