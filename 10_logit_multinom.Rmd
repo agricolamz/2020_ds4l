@@ -88,8 +88,6 @@ nanai %>%
 ```
 
 
-
-
 ### 1. Логистическая регрессия
 Мы хотим чего-то такого:
 $$\underbrace{y}_{[-\infty, +\infty]}=\underbrace{\mbox{β}_0+\mbox{β}_1\cdot x_1+\mbox{β}_2\cdot x_2 + \dots +\mbox{β}_k\cdot x_k +\mbox{ε}_i}_{[-\infty, +\infty]}$$
@@ -115,6 +113,18 @@ tibble(n = 10,
 Как связаны вероятность и логарифм шансов:
 $$\log(odds) = \log\left(\frac{p}{1-p}\right)$$
 $$p = \frac{\exp(\log(odds))}{1+\exp(\log(odds))}$$
+
+```{r, include=FALSE}
+log_odds <- log(5/20)
+```
+
+Логарифм шансов равен `r log_odds`. Посчитайте вероятность успеха:
+
+```{r, results='asis', echo = FALSE}
+library(checkdown)
+check_question(answer = exp(log_odds)/(1+exp(log_odds)))
+```
+
 
 Как связаны вероятность и логарифм шансов:
 
@@ -160,6 +170,12 @@ log(6/13) # β0
 exp(log(6/13))/(1+exp(log(6/13))) # p
 ```
 
+Мы посчитали количество букв “а” в рассказе А. П. Чехова и получили 58 букв из рассказа длинной 699 букв (пробелы и латинские буквы выкинуты). Какой коэфициент логистической регрессии, мы получим, запустив модель без предикторов (6 знаков после запятой)?
+
+```{r, echo=FALSE, results='asis'}
+check_question(round(log(58/(699-58)), 6))
+```
+
 ### 1.3 Логит: модель c одним числовым предиктором
 ```{r}
 logit_1 <- glm(ejectives~consonants, family = "binomial", data = ej_n_cons)
@@ -192,6 +208,16 @@ predict(logit_1, newdata = data.frame(consonants = 29))
 predict(logit_1, newdata = data.frame(consonants = 29), type = "response")
 ```
 
+Какой логорифм шансов предсказывает наша модель для языка с 25 согласными (6 знаков после запятой)?
+```{r, results='asis', echo = FALSE}
+check_question(round(predict(logit_1, newdata = data.frame(consonants = 25)), 6))
+```
+
+Какую вероятность предсказывает наша модель для языка с 25 согласными (6 знаков после запятой)?
+```{r, results='asis', echo = FALSE}
+check_question(round(predict(logit_1, newdata = data.frame(consonants = 25), type = "response"), 6))
+```
+
 ### 1.4 Логит: модель c одним категориальным предиктором
 ```{r}
 logit_2 <- glm(ejectives~area, family = "binomial", data = ej_n_cons)
@@ -202,8 +228,6 @@ log(1/6) # Eurasia
 log(3/1) # North America
 ```
 
-
-
 ### 1.5 Логит: множественная регрессия
 ```{r}
 logit_3 <- glm(ejectives~consonants+area, family = "binomial", data = ej_n_cons)
@@ -212,10 +236,13 @@ summary(logit_3)
 
 ### 1.6 Логит: сравнение моделей
 ```{r}
-AIC(logit_0)
-AIC(logit_1)
-AIC(logit_2)
-AIC(logit_3)
+AIC(logit_0, logit_1, logit_2, logit_3)
+```
+
+Выберите наилучшую модель согласно AIC:
+
+```{r, results='asis', echo = FALSE}
+check_question("logit_1", options = paste0("logit_", 0:3), alignment = TRUE, type = "radio")
 ```
 
 Для того, чтобы интерпретировать коэффициенты нужно проделать трансформацю:
@@ -228,8 +255,6 @@ AIC(logit_3)
 ```{r}
 pscl::pR2(logit_1)
 ```
-
-
 
 ### 2. Порядковая логистическая регрессия
 ```{r}

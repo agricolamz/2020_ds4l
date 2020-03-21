@@ -635,6 +635,13 @@ div.tocify {
   </script>
 </div>
 <p>Как связаны вероятность и логарифм шансов: <span class="math display">\[\log(odds) = \log\left(\frac{p}{1-p}\right)\]</span> <span class="math display">\[p = \frac{\exp(\log(odds))}{1+\exp(\log(odds))}\]</span></p>
+<p>Логарифм шансов равен -1.3862944. Посчитайте вероятность успеха:</p>
+<form name="form_55008" onsubmit="return validate_form_55008()" method="post">
+<input type="text" name="answer_55008"><br><input type="submit" value="check">
+</form>
+<p id="result_55008">
+</p>
+<script> function validate_form_55008() {var x, text; var x = document.forms["form_55008"]["answer_55008"].value;if (x == "0.2"){text = "Correct";} else {text = "I have a different answer";} document.getElementById("result_55008").innerHTML = text; return false;} </script>
 <p>Как связаны вероятность и логарифм шансов:</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="kw">tibble</span>(<span class="dt">p =</span> <span class="kw">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="fl">0.001</span>),</span>
 <span id="cb10-2"><a href="#cb10-2"></a>           <span class="dt">log_odds =</span> <span class="kw">log</span>(p<span class="op">/</span>(<span class="dv">1</span><span class="op">-</span>p))) <span class="op">%&gt;%</span><span class="st"> </span></span>
@@ -642,7 +649,7 @@ div.tocify {
 <span id="cb10-4"><a href="#cb10-4"></a><span class="st">  </span><span class="kw">geom_line</span>()<span class="op">+</span></span>
 <span id="cb10-5"><a href="#cb10-5"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> latex2exp<span class="op">::</span><span class="kw">TeX</span>(<span class="st">&quot;$log</span><span class="ch">\\</span><span class="st">left(</span><span class="ch">\\</span><span class="st">frac{p}{1-p}</span><span class="ch">\\</span><span class="st">right)$&quot;</span>))<span class="op">+</span></span>
 <span id="cb10-6"><a href="#cb10-6"></a><span class="st">  </span><span class="kw">theme_bw</span>()</span></code></pre></div>
-<p><img src="10_logit_multinom_files/figure-html/unnamed-chunk-6-1.png" width="864" /></p>
+<p><img src="10_logit_multinom_files/figure-html/unnamed-chunk-8-1.png" width="864" /></p>
 </div>
 <div id="почему-не-линейную-регрессию" class="section level3">
 <h3>1.1 Почему не линейную регрессию?</h3>
@@ -671,7 +678,7 @@ div.tocify {
 <span id="cb15-4"><a href="#cb15-4"></a><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>)<span class="op">+</span></span>
 <span id="cb15-5"><a href="#cb15-5"></a><span class="st">  </span><span class="kw">theme_bw</span>()<span class="op">+</span></span>
 <span id="cb15-6"><a href="#cb15-6"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">y =</span> <span class="st">&quot;ejectives (yes = 2, no = 1)&quot;</span>)</span></code></pre></div>
-<p><img src="10_logit_multinom_files/figure-html/unnamed-chunk-8-1.png" width="864" /></p>
+<p><img src="10_logit_multinom_files/figure-html/unnamed-chunk-10-1.png" width="864" /></p>
 </div>
 <div id="логит-модель-без-предиктора" class="section level3">
 <h3>1.2 Логит: модель без предиктора</h3>
@@ -710,6 +717,13 @@ div.tocify {
 <pre><code>## [1] 0.3157895</code></pre>
 <div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a><span class="kw">exp</span>(<span class="kw">log</span>(<span class="dv">6</span><span class="op">/</span><span class="dv">13</span>))<span class="op">/</span>(<span class="dv">1</span><span class="op">+</span><span class="kw">exp</span>(<span class="kw">log</span>(<span class="dv">6</span><span class="op">/</span><span class="dv">13</span>))) <span class="co"># p</span></span></code></pre></div>
 <pre><code>## [1] 0.3157895</code></pre>
+<p>Мы посчитали количество букв “а” в рассказе А. П. Чехова и получили 58 букв из рассказа длинной 699 букв (пробелы и латинские буквы выкинуты). Какой коэфициент логистической регрессии, мы получим, запустив модель без предикторов (6 знаков после запятой)?</p>
+<form name="form_54525" onsubmit="return validate_form_54525()" method="post">
+<input type="text" name="answer_54525"><br><input type="submit" value="check">
+</form>
+<p id="result_54525">
+</p>
+<script> function validate_form_54525() {var x, text; var x = document.forms["form_54525"]["answer_54525"].value;if (x == "-2.402586"){text = "Correct";} else {text = "I have a different answer";} document.getElementById("result_54525").innerHTML = text; return false;} </script>
 </div>
 <div id="логит-модель-c-одним-числовым-предиктором" class="section level3">
 <h3>1.3 Логит: модель c одним числовым предиктором</h3>
@@ -748,7 +762,7 @@ div.tocify {
 <span id="cb32-6"><a href="#cb32-6"></a><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;glm&quot;</span>, </span>
 <span id="cb32-7"><a href="#cb32-7"></a>              <span class="dt">method.args =</span> <span class="kw">list</span>(<span class="dt">family =</span> <span class="st">&quot;binomial&quot;</span>),</span>
 <span id="cb32-8"><a href="#cb32-8"></a>              <span class="dt">se =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
-<p><img src="10_logit_multinom_files/figure-html/unnamed-chunk-10-1.png" width="864" /></p>
+<p><img src="10_logit_multinom_files/figure-html/unnamed-chunk-13-1.png" width="864" /></p>
 <p>Какова вероятность, что в языке с 29 согласными есть абруптивные?</p>
 <div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1"></a>logit_<span class="dv">1</span><span class="op">$</span>coefficients</span></code></pre></div>
 <pre><code>## (Intercept)  consonants 
@@ -762,6 +776,20 @@ div.tocify {
 <span id="cb37-2"><a href="#cb37-2"></a><span class="kw">predict</span>(logit_<span class="dv">1</span>, <span class="dt">newdata =</span> <span class="kw">data.frame</span>(<span class="dt">consonants =</span> <span class="dv">29</span>), <span class="dt">type =</span> <span class="st">&quot;response&quot;</span>)</span></code></pre></div>
 <pre><code>##         1 
 ## 0.7610312</code></pre>
+Какой логорифм шансов предсказывает наша модель для языка с 25 согласными (6 знаков после запятой)?
+<form name="form_16880" onsubmit="return validate_form_16880()" method="post">
+<input type="text" name="answer_16880"><br><input type="submit" value="check">
+</form>
+<p id="result_16880">
+</p>
+<script> function validate_form_16880() {var x, text; var x = document.forms["form_16880"]["answer_16880"].value;if (x == "-0.672097"){text = "Correct";} else {text = "I have a different answer";} document.getElementById("result_16880").innerHTML = text; return false;} </script>
+Какую вероятность предсказывает наша модель для языка с 25 согласными (6 знаков после запятой)?
+<form name="form_4195" onsubmit="return validate_form_4195()" method="post">
+<input type="text" name="answer_4195"><br><input type="submit" value="check">
+</form>
+<p id="result_4195">
+</p>
+<script> function validate_form_4195() {var x, text; var x = document.forms["form_4195"]["answer_4195"].value;if (x == "0.338028"){text = "Correct";} else {text = "I have a different answer";} document.getElementById("result_4195").innerHTML = text; return false;} </script>
 </div>
 <div id="логит-модель-c-одним-категориальным-предиктором" class="section level3">
 <h3>1.4 Логит: модель c одним категориальным предиктором</h3>
@@ -839,31 +867,36 @@ div.tocify {
 </div>
 <div id="логит-сравнение-моделей" class="section level3">
 <h3>1.6 Логит: сравнение моделей</h3>
-<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1"></a><span class="kw">AIC</span>(logit_<span class="dv">0</span>)</span></code></pre></div>
-<pre><code>## [1] 25.69888</code></pre>
-<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1"></a><span class="kw">AIC</span>(logit_<span class="dv">1</span>)</span></code></pre></div>
-<pre><code>## [1] 16.19167</code></pre>
-<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1"></a><span class="kw">AIC</span>(logit_<span class="dv">2</span>)</span></code></pre></div>
-<pre><code>## [1] 27.78549</code></pre>
-<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1"></a><span class="kw">AIC</span>(logit_<span class="dv">3</span>)</span></code></pre></div>
-<pre><code>## [1] 20.79005</code></pre>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1"></a><span class="kw">AIC</span>(logit_<span class="dv">0</span>, logit_<span class="dv">1</span>, logit_<span class="dv">2</span>, logit_<span class="dv">3</span>)</span></code></pre></div>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["df"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["AIC"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"25.69888","_rn_":"logit_0"},{"1":"2","2":"16.19167","_rn_":"logit_1"},{"1":"6","2":"27.78549","_rn_":"logit_2"},{"1":"7","2":"20.79005","_rn_":"logit_3"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>Выберите наилучшую модель согласно AIC:</p>
+<form name="form_35320" onsubmit="return validate_form_35320()" method="post">
+<input type="radio" name="answer_35320" id="35320_1" value="logit_0"><label for="logit_0">logit_0</label> <input type="radio" name="answer_35320" id="35320_2" value="logit_1"><label for="logit_1">logit_1</label> <input type="radio" name="answer_35320" id="35320_3" value="logit_2"><label for="logit_2">logit_2</label> <input type="radio" name="answer_35320" id="35320_4" value="logit_3"><label for="logit_3">logit_3</label> <br><input type="submit" value="check">
+</form>
+<p id="result_35320">
+</p>
+<script> function validate_form_35320() {var x, text; var x = document.forms["form_35320"]["answer_35320"].value;if (x == "logit_1"){text = "Correct";} else {text = "I have a different answer";} document.getElementById("result_35320").innerHTML = text; return false;} </script>
 <p>Для того, чтобы интерпретировать коэффициенты нужно проделать трансформацю:</p>
-<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1"></a>(<span class="kw">exp</span>(logit_<span class="dv">1</span><span class="op">$</span>coefficients)<span class="op">-</span><span class="dv">1</span>)<span class="op">*</span><span class="dv">100</span></span></code></pre></div>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1"></a>(<span class="kw">exp</span>(logit_<span class="dv">1</span><span class="op">$</span>coefficients)<span class="op">-</span><span class="dv">1</span>)<span class="op">*</span><span class="dv">100</span></span></code></pre></div>
 <pre><code>## (Intercept)  consonants 
 ##   -99.99945    58.02918</code></pre>
 <p>Перед нами процентное изменние шансов при увеличении независимой переменной на 1.</p>
 <p>Было предложено много аналогов R<span class="math inline">\(^2\)</span>, например, McFadden’s R squared:</p>
-<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1"></a>pscl<span class="op">::</span><span class="kw">pR2</span>(logit_<span class="dv">1</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1"></a>pscl<span class="op">::</span><span class="kw">pR2</span>(logit_<span class="dv">1</span>)</span></code></pre></div>
 <pre><code>##         llh     llhNull          G2    McFadden        r2ML        r2CU 
 ##  -6.0958355 -11.8494421  11.5072132   0.4855593   0.4542765   0.6373812</code></pre>
 </div>
 <div id="порядковая-логистическая-регрессия" class="section level3">
 <h3>2. Порядковая логистическая регрессия</h3>
-<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1"></a>marginal_verbs<span class="op">$</span>Score &lt;-<span class="st"> </span><span class="kw">factor</span>(marginal_verbs<span class="op">$</span>Score)</span>
-<span id="cb63-2"><a href="#cb63-2"></a><span class="kw">levels</span>(marginal_verbs<span class="op">$</span>Score)</span></code></pre></div>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1"></a>marginal_verbs<span class="op">$</span>Score &lt;-<span class="st"> </span><span class="kw">factor</span>(marginal_verbs<span class="op">$</span>Score)</span>
+<span id="cb56-2"><a href="#cb56-2"></a><span class="kw">levels</span>(marginal_verbs<span class="op">$</span>Score)</span></code></pre></div>
 <pre><code>## [1] &quot;A&quot; &quot;B&quot; &quot;C&quot; &quot;D&quot; &quot;E&quot;</code></pre>
-<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1"></a>ordinal &lt;-<span class="st"> </span>MASS<span class="op">::</span><span class="kw">polr</span>(Score<span class="op">~</span>Prefix<span class="op">+</span>WordType<span class="op">+</span>CorpusFrequency, <span class="dt">data =</span> marginal_verbs)</span>
-<span id="cb65-2"><a href="#cb65-2"></a><span class="kw">summary</span>(ordinal)</span></code></pre></div>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1"></a>ordinal &lt;-<span class="st"> </span>MASS<span class="op">::</span><span class="kw">polr</span>(Score<span class="op">~</span>Prefix<span class="op">+</span>WordType<span class="op">+</span>CorpusFrequency, <span class="dt">data =</span> marginal_verbs)</span>
+<span id="cb58-2"><a href="#cb58-2"></a><span class="kw">summary</span>(ordinal)</span></code></pre></div>
 <pre><code>## 
 ## Re-fitting to get Hessian</code></pre>
 <pre><code>## Call:
@@ -886,19 +919,19 @@ div.tocify {
 ## 
 ## Residual Deviance: 13138.47 
 ## AIC: 13154.47</code></pre>
-<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1"></a>ordinal<span class="op">$</span>coefficients</span></code></pre></div>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1"></a>ordinal<span class="op">$</span>coefficients</span></code></pre></div>
 <pre><code>##          Prefixu    WordTypenonce WordTypestandard  CorpusFrequency 
 ##      0.136619412      1.340602696     -4.655327418     -0.001014583</code></pre>
 <p>Как и раньше, можно преобразовать коэффициенты:</p>
-<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1"></a>(<span class="kw">exp</span>(ordinal<span class="op">$</span>coefficients)<span class="op">-</span><span class="dv">1</span>)<span class="op">*</span><span class="dv">100</span></span></code></pre></div>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1"></a>(<span class="kw">exp</span>(ordinal<span class="op">$</span>coefficients)<span class="op">-</span><span class="dv">1</span>)<span class="op">*</span><span class="dv">100</span></span></code></pre></div>
 <pre><code>##          Prefixu    WordTypenonce WordTypestandard  CorpusFrequency 
 ##       14.6391763      282.1345921      -99.0489201       -0.1014068</code></pre>
 <p><span class="math display">\[\log(\frac{p(A)}{p(B|C|D|E)}) = -2.6275 + 0.136619412 \times Prefixu + 1.340602696 \times WordTypenonce -\]</span><br />
 <span class="math display">\[-4.655327418 \times WordTypestandard -0.001014583\times CorpusFrequency\]</span> <span class="math display">\[\log(\frac{p(A|B)}{p(C|D|E)}) = -1.4531 + 0.136619412 \times Prefixu + 1.340602696 \times WordTypenonce\]</span> <span class="math display">\[-4.655327418 \times WordTypestandard -0.001014583\times CorpusFrequency\]</span> <span class="math display">\[\log(\frac{p(A|B|C)}{p(D|E)}) = -0.2340 + 0.136619412 \times Prefixu + 1.340602696 \times WordTypenonce\]</span> <span class="math display">\[-4.655327418 \times WordTypestandard -0.001014583\times CorpusFrequency\]</span> <span class="math display">\[\log(\frac{p(A|B|C|D)}{p(E)}) = 0.7324 + 0.136619412 \times Prefixu + 1.340602696 \times WordTypenonce\]</span> <span class="math display">\[-4.655327418 \times WordTypestandard -0.001014583\times CorpusFrequency\]</span></p>
-<div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1"></a><span class="kw">head</span>(<span class="kw">predict</span>(ordinal))</span></code></pre></div>
+<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1"></a><span class="kw">head</span>(<span class="kw">predict</span>(ordinal))</span></code></pre></div>
 <pre><code>## [1] A A E E A A
 ## Levels: A B C D E</code></pre>
-<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1"></a><span class="kw">head</span>(<span class="kw">predict</span>(ordinal, <span class="dt">type =</span> <span class="st">&quot;probs&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1"></a><span class="kw">head</span>(<span class="kw">predict</span>(ordinal, <span class="dt">type =</span> <span class="st">&quot;probs&quot;</span>))</span></code></pre></div>
 <pre><code>##            A           B           C            D            E
 ## 1 0.99178000 0.005665533 0.001798242 0.0004683707 0.0002878525
 ## 2 0.93841926 0.041706786 0.013917668 0.0036817261 0.0022745617
@@ -906,18 +939,18 @@ div.tocify {
 ## 4 0.01855865 0.039108932 0.113894002 0.1808984667 0.6475399508
 ## 5 0.90986002 0.060436871 0.020738032 0.0055351143 0.0034299624
 ## 6 0.91496678 0.057117954 0.019500629 0.0051963745 0.0032182669</code></pre>
-<div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1"></a>marginal_verbs <span class="op">%&gt;%</span></span>
-<span id="cb76-2"><a href="#cb76-2"></a><span class="st">  </span><span class="kw">bind_cols</span>(<span class="kw">as_tibble</span>(<span class="kw">predict</span>(ordinal, <span class="dt">type =</span> <span class="st">&quot;probs&quot;</span>))) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb76-3"><a href="#cb76-3"></a><span class="st">  </span><span class="kw">gather</span>(score, predictions, A<span class="op">:</span>E) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb76-4"><a href="#cb76-4"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> score, <span class="dt">y =</span> predictions, <span class="dt">fill =</span> score)) <span class="op">+</span></span>
-<span id="cb76-5"><a href="#cb76-5"></a><span class="st">  </span><span class="kw">geom_col</span>(<span class="dt">position =</span> <span class="st">&quot;dodge&quot;</span>)<span class="op">+</span></span>
-<span id="cb76-6"><a href="#cb76-6"></a><span class="st">  </span><span class="kw">facet_grid</span>(Prefix<span class="op">~</span>WordType)<span class="op">+</span></span>
-<span id="cb76-7"><a href="#cb76-7"></a><span class="st">  </span><span class="kw">theme_bw</span>()</span></code></pre></div>
-<p><img src="10_logit_multinom_files/figure-html/unnamed-chunk-20-1.png" width="864" /></p>
+<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1"></a>marginal_verbs <span class="op">%&gt;%</span></span>
+<span id="cb69-2"><a href="#cb69-2"></a><span class="st">  </span><span class="kw">bind_cols</span>(<span class="kw">as_tibble</span>(<span class="kw">predict</span>(ordinal, <span class="dt">type =</span> <span class="st">&quot;probs&quot;</span>))) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb69-3"><a href="#cb69-3"></a><span class="st">  </span><span class="kw">gather</span>(score, predictions, A<span class="op">:</span>E) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb69-4"><a href="#cb69-4"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> score, <span class="dt">y =</span> predictions, <span class="dt">fill =</span> score)) <span class="op">+</span></span>
+<span id="cb69-5"><a href="#cb69-5"></a><span class="st">  </span><span class="kw">geom_col</span>(<span class="dt">position =</span> <span class="st">&quot;dodge&quot;</span>)<span class="op">+</span></span>
+<span id="cb69-6"><a href="#cb69-6"></a><span class="st">  </span><span class="kw">facet_grid</span>(Prefix<span class="op">~</span>WordType)<span class="op">+</span></span>
+<span id="cb69-7"><a href="#cb69-7"></a><span class="st">  </span><span class="kw">theme_bw</span>()</span></code></pre></div>
+<p><img src="10_logit_multinom_files/figure-html/unnamed-chunk-26-1.png" width="864" /></p>
 </div>
 <div id="мультиномиальная-регрессия" class="section level3">
 <h3>3. Мультиномиальная регрессия</h3>
-<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1"></a>mult &lt;-<span class="st"> </span>nnet<span class="op">::</span><span class="kw">multinom</span>(sound<span class="op">~</span>f1<span class="op">+</span>f2, <span class="dt">data =</span> nanai)</span></code></pre></div>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1"></a>mult &lt;-<span class="st"> </span>nnet<span class="op">::</span><span class="kw">multinom</span>(sound<span class="op">~</span>f1<span class="op">+</span>f2, <span class="dt">data =</span> nanai)</span></code></pre></div>
 <pre><code>## # weights:  12 (6 variable)
 ## initial  value 462.515774 
 ## iter  10 value 51.522626
@@ -927,7 +960,7 @@ div.tocify {
 ## iter  40 value 44.807654
 ## final  value 44.807654 
 ## converged</code></pre>
-<div class="sourceCode" id="cb79"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1"></a>mult</span></code></pre></div>
+<div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1"></a>mult</span></code></pre></div>
 <pre><code>## Call:
 ## nnet::multinom(formula = sound ~ f1 + f2, data = nanai)
 ## 
@@ -939,18 +972,18 @@ div.tocify {
 ## Residual Deviance: 89.61531 
 ## AIC: 101.6153</code></pre>
 <p><span class="math display">\[\log(\frac{p(e)}{p(ɪ)}) = -41.46147 + 0.02360077\times f1 +0.01937067\times f2\]</span> <span class="math display">\[\log(\frac{p(i)}{p(ɪ)}) = -22.85202 -0.04263175\times f1 +  0.02315226\times f2\]</span></p>
-<div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1"></a>nanai <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb81-2"><a href="#cb81-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prediction =</span> <span class="kw">predict</span>(mult),</span>
-<span id="cb81-3"><a href="#cb81-3"></a>         <span class="dt">correctness =</span> sound <span class="op">==</span><span class="st"> </span>prediction) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb81-4"><a href="#cb81-4"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(f1, f2, <span class="dt">label =</span> sound, <span class="dt">color =</span> correctness))<span class="op">+</span></span>
-<span id="cb81-5"><a href="#cb81-5"></a><span class="st">  </span><span class="kw">geom_text</span>(<span class="kw">aes</span>(<span class="dt">size =</span> <span class="op">!</span>correctness), <span class="dt">show.legend =</span> <span class="ot">FALSE</span>)<span class="op">+</span></span>
-<span id="cb81-6"><a href="#cb81-6"></a><span class="st">  </span><span class="kw">scale_y_reverse</span>()<span class="op">+</span></span>
-<span id="cb81-7"><a href="#cb81-7"></a><span class="st">  </span><span class="kw">scale_x_reverse</span>()<span class="op">+</span></span>
-<span id="cb81-8"><a href="#cb81-8"></a><span class="st">  </span><span class="kw">theme_bw</span>()<span class="op">+</span></span>
-<span id="cb81-9"><a href="#cb81-9"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Нанайские гласные в произнесении мужчины из селения Джуен&quot;</span>,</span>
-<span id="cb81-10"><a href="#cb81-10"></a>       <span class="dt">subtitle =</span> <span class="st">&quot;мультиномиальная регрессия&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1"></a>nanai <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb74-2"><a href="#cb74-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prediction =</span> <span class="kw">predict</span>(mult),</span>
+<span id="cb74-3"><a href="#cb74-3"></a>         <span class="dt">correctness =</span> sound <span class="op">==</span><span class="st"> </span>prediction) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb74-4"><a href="#cb74-4"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(f1, f2, <span class="dt">label =</span> sound, <span class="dt">color =</span> correctness))<span class="op">+</span></span>
+<span id="cb74-5"><a href="#cb74-5"></a><span class="st">  </span><span class="kw">geom_text</span>(<span class="kw">aes</span>(<span class="dt">size =</span> <span class="op">!</span>correctness), <span class="dt">show.legend =</span> <span class="ot">FALSE</span>)<span class="op">+</span></span>
+<span id="cb74-6"><a href="#cb74-6"></a><span class="st">  </span><span class="kw">scale_y_reverse</span>()<span class="op">+</span></span>
+<span id="cb74-7"><a href="#cb74-7"></a><span class="st">  </span><span class="kw">scale_x_reverse</span>()<span class="op">+</span></span>
+<span id="cb74-8"><a href="#cb74-8"></a><span class="st">  </span><span class="kw">theme_bw</span>()<span class="op">+</span></span>
+<span id="cb74-9"><a href="#cb74-9"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Нанайские гласные в произнесении мужчины из селения Джуен&quot;</span>,</span>
+<span id="cb74-10"><a href="#cb74-10"></a>       <span class="dt">subtitle =</span> <span class="st">&quot;мультиномиальная регрессия&quot;</span>)</span></code></pre></div>
 <pre><code>## Warning: Using size for a discrete variable is not advised.</code></pre>
-<p><img src="10_logit_multinom_files/figure-html/unnamed-chunk-22-1.png" width="864" /></p>
+<p><img src="10_logit_multinom_files/figure-html/unnamed-chunk-28-1.png" width="864" /></p>
 </div>
 
 <br><br><br>
