@@ -776,20 +776,13 @@ div.tocify {
 ## -1.66511  -0.55525  -0.00013   0.75853   1.97277  
 ## 
 ## Coefficients:
-##                                    Estimate                Std. Error z value
-## (Intercept)          0.00000000000000001319    1.00000000000000022204   0.000
-## areaAustralia      -18.56606850986639756229 6522.63867912151636119233  -0.003
-## areaEurasia         -1.79175946922805429118    1.47196014438797462276  -1.217
-## areaNorth America    1.09861228866810822780    1.52752523165194653565   0.719
-## areaPapua          -18.56606850986345591537 6522.63867912202567822533  -0.003
-## areaSouth America  -18.56606850986376500146 4612.20209544148292479804  -0.004
-##                   Pr(&gt;|z|)
-## (Intercept)          1.000
-## areaAustralia        0.998
-## areaEurasia          0.224
-## areaNorth America    0.472
-## areaPapua            0.998
-## areaSouth America    0.997
+##                     Estimate Std. Error z value Pr(&gt;|z|)
+## (Intercept)        1.319e-17  1.000e+00   0.000    1.000
+## areaAustralia     -1.857e+01  6.523e+03  -0.003    0.998
+## areaEurasia       -1.792e+00  1.472e+00  -1.217    0.224
+## areaNorth America  1.099e+00  1.528e+00   0.719    0.472
+## areaPapua         -1.857e+01  6.523e+03  -0.003    0.998
+## areaSouth America -1.857e+01  4.612e+03  -0.004    0.997
 ## 
 ## (Dispersion parameter for binomial family taken to be 1)
 ## 
@@ -799,12 +792,10 @@ div.tocify {
 ## 
 ## Number of Fisher Scoring iterations: 17</code></pre>
 <div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1"></a>logit_<span class="dv">2</span><span class="op">$</span>coefficients</span></code></pre></div>
-<pre><code>##                 (Intercept)               areaAustralia 
-##   0.00000000000000001318587 -18.56606850986639756229124 
-##                 areaEurasia           areaNorth America 
-##  -1.79175946922805429117886   1.09861228866810822779598 
-##                   areaPapua           areaSouth America 
-## -18.56606850986345591536519 -18.56606850986376500145525</code></pre>
+<pre><code>##       (Intercept)     areaAustralia       areaEurasia areaNorth America 
+##      1.318587e-17     -1.856607e+01     -1.791759e+00      1.098612e+00 
+##         areaPapua areaSouth America 
+##     -1.856607e+01     -1.856607e+01</code></pre>
 <div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1"></a><span class="kw">table</span>(ej_n_cons<span class="op">$</span>ejectives, ej_n_cons<span class="op">$</span>area)</span></code></pre></div>
 <pre><code>##      
 ##       Africa Australia Eurasia North America Papua South America
@@ -881,10 +872,10 @@ div.tocify {
 ## 
 ## Coefficients:
 ##                      Value Std. Error t value
-## Prefixu           0.136619 0.05286365   2.584
-## WordTypenonce     1.340603 0.05692826  23.549
-## WordTypestandard -4.655327 0.12510542 -37.211
-## CorpusFrequency  -0.001015 0.00007879 -12.876
+## Prefixu           0.136619  5.286e-02   2.584
+## WordTypenonce     1.340603  5.693e-02  23.549
+## WordTypestandard -4.655327  1.251e-01 -37.211
+## CorpusFrequency  -0.001015  7.879e-05 -12.876
 ## 
 ## Intercepts:
 ##     Value    Std. Error t value 
@@ -915,8 +906,8 @@ div.tocify {
 ## 4 0.01855865 0.039108932 0.113894002 0.1808984667 0.6475399508
 ## 5 0.90986002 0.060436871 0.020738032 0.0055351143 0.0034299624
 ## 6 0.91496678 0.057117954 0.019500629 0.0051963745 0.0032182669</code></pre>
-<div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1"></a>marginal_verbs &lt;-<span class="st"> </span><span class="kw">cbind</span>(marginal_verbs, <span class="kw">predict</span>(ordinal, <span class="dt">type =</span> <span class="st">&quot;probs&quot;</span>))</span>
-<span id="cb76-2"><a href="#cb76-2"></a>marginal_verbs <span class="op">%&gt;%</span></span>
+<div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1"></a>marginal_verbs <span class="op">%&gt;%</span></span>
+<span id="cb76-2"><a href="#cb76-2"></a><span class="st">  </span><span class="kw">bind_cols</span>(<span class="kw">as_tibble</span>(<span class="kw">predict</span>(ordinal, <span class="dt">type =</span> <span class="st">&quot;probs&quot;</span>))) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb76-3"><a href="#cb76-3"></a><span class="st">  </span><span class="kw">gather</span>(score, predictions, A<span class="op">:</span>E) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb76-4"><a href="#cb76-4"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> score, <span class="dt">y =</span> predictions, <span class="dt">fill =</span> score)) <span class="op">+</span></span>
 <span id="cb76-5"><a href="#cb76-5"></a><span class="st">  </span><span class="kw">geom_col</span>(<span class="dt">position =</span> <span class="st">&quot;dodge&quot;</span>)<span class="op">+</span></span>
@@ -947,7 +938,7 @@ div.tocify {
 ## 
 ## Residual Deviance: 89.61531 
 ## AIC: 101.6153</code></pre>
-<p><span class="math display">\[\log(\frac{p(e)}{p(ɪ)}) = 40.88718 -0.02298543\times f1 -0.019176619\times f2\]</span> <span class="math display">\[\log(\frac{p(i)}{p(ɪ)}) = 18.15078 -0.06593461\times f1 +  0.003949284\times f2\]</span></p>
+<p><span class="math display">\[\log(\frac{p(e)}{p(ɪ)}) = -41.46147 + 0.02360077\times f1 +0.01937067\times f2\]</span> <span class="math display">\[\log(\frac{p(i)}{p(ɪ)}) = -22.85202 -0.04263175\times f1 +  0.02315226\times f2\]</span></p>
 <div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1"></a>nanai <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb81-2"><a href="#cb81-2"></a><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">prediction =</span> <span class="kw">predict</span>(mult),</span>
 <span id="cb81-3"><a href="#cb81-3"></a>         <span class="dt">correctness =</span> sound <span class="op">==</span><span class="st"> </span>prediction) <span class="op">%&gt;%</span><span class="st"> </span></span>

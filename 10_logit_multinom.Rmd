@@ -257,8 +257,8 @@ $$-4.655327418 \times WordTypestandard -0.001014583\times CorpusFrequency$$
 ```{r}
 head(predict(ordinal))
 head(predict(ordinal, type = "probs"))
-marginal_verbs <- cbind(marginal_verbs, predict(ordinal, type = "probs"))
 marginal_verbs %>%
+  bind_cols(as_tibble(predict(ordinal, type = "probs"))) %>% 
   gather(score, predictions, A:E) %>% 
   ggplot(aes(x = score, y = predictions, fill = score)) +
   geom_col(position = "dodge")+
@@ -272,8 +272,8 @@ mult <- nnet::multinom(sound~f1+f2, data = nanai)
 mult
 ```
 
-$$\log(\frac{p(e)}{p(ɪ)}) = 40.88718 -0.02298543\times f1 -0.019176619\times f2$$
-$$\log(\frac{p(i)}{p(ɪ)}) = 18.15078 -0.06593461\times f1 +  0.003949284\times f2$$
+$$\log(\frac{p(e)}{p(ɪ)}) = -41.46147 + 0.02360077\times f1 +0.01937067\times f2$$
+$$\log(\frac{p(i)}{p(ɪ)}) = -22.85202 -0.04263175\times f1 +  0.02315226\times f2$$
 
 ```{r}
 nanai %>% 
